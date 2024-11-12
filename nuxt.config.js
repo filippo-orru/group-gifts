@@ -12,13 +12,11 @@ export default defineNuxtConfig({
     port: 2425,
   },
 
-  modules: ['@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-gtag', '@nuxtjs/i18n', 'nuxt-svgo'],
+  modules: ['@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-gtag', '@nuxtjs/i18n', 'nuxt-svgo', '@pinia/nuxt'],
 
   gtag: {
     id: '', // TODO: Add your google analytics 4 tag here
   },
-
-  srcDir: './src',
 
   runtimeConfig: {
     public: {
@@ -28,8 +26,7 @@ export default defineNuxtConfig({
 
   plugins: [
     {
-      src: '@/plugins/aos',
-      ssr: false,
+      src: '~/plugins/aos.js',
       mode: 'client',
     },
   ],
@@ -43,6 +40,7 @@ export default defineNuxtConfig({
         },
       ],
     },
+    keepalive: true,
   },
 
   tailwindcss: {

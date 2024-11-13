@@ -20,14 +20,23 @@ const group = store.groups.find(g => g.id === groupId)!;
 
 const title = computed(() => props.mode.mode === 'add' ? 'Add Gift' : 'Edit Gift');
 
-const defaultFields = computed<MemberGift>(() => {
+type EditMemberGift = {
+    name: string;
+    date: string;
+    buyerId: string;
+    price: number;
+}
+
+const defaultFields = computed<EditMemberGift>(() => {
   if (props.mode.mode === 'edit') {
-    return props.mode.gift;
+    return {
+      ...props.mode.gift,
+      date: new Date(props.mode.gift.date).toISOString().substring(0, 10)
+    };
   } else {
     return {
-      id: 'placeholder',
       name: '',
-      date: new Date().getTime(),
+      date: new Date().toISOString().substring(0, 10),
       buyerId: store.myId,
       price: 0
     }
@@ -39,7 +48,7 @@ const addGift = () => {
   props.onClose({
     id: 'placeholder',
     name: fields.value.name,
-    date: fields.value.date,
+    date: new Date(fields.value.date).getTime(),
     buyerId: fields.value.buyerId,
     price: fields.value.price,
   });

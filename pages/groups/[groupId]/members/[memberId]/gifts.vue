@@ -87,7 +87,20 @@ const editGift = (gift: MemberGift) => {
 </script>
 
 <template>
-  <MemberHome activeTab="gifts">
+  <div v-if="member.id == store.myId" class="p-4 h-screen flex items-center">
+    <div class="alert alert-warning">
+      <i class="las la-exclamation-triangle text-2xl"></i>
+      <p>
+        <b>No access.</b>
+        Sorry, you aren't allowed to view your own profile or gifts.
+      </p>
+      <NuxtLink :to="`/groups/${groupId}`" class="btn mt-4">
+        <i class="las la-arrow-left text-xl"></i>
+        Back to group
+      </NuxtLink>
+    </div>
+  </div>
+  <MemberHome v-else activeTab="gifts">
     <div class="grow overflow-y-scroll">
       <div class="flex flex-col gap-4 px-5 py-3 md:py-7">
         <div v-if="shouldAddBudget" class="alert alert-warning">
@@ -99,24 +112,22 @@ const editGift = (gift: MemberGift) => {
           </p>
         </div>
 
-        <div class="flex">
-          <form @submit="submitBudget" class="w-full flex flex-col sm:flex-row gap-2 justify-center">
-            <label class="text-lg form-control flex flex-col sm:flex-row gap-2 sm:gap-6">
-              <div class="label">My budget for {{ member.name }}</div>
-              <label class="input input-bordered flex items-center gap-4">
-                <input class="w-full" type="number" v-model="myBudget" placeholder="15" />
-                <span>€</span>
-              </label>
+        <form @submit="submitBudget" class="w-full flex flex-col sm:flex-row sm:gap-2 justify-center">
+          <span class="label">My budget for {{ member.name }}</span>
+          <label class="form-control flex flex-row gap-2">
+            <label class="w-full input input-bordered flex items-center gap-4">
+              <input class="w-full" type="number" v-model="myBudget" placeholder="15" />
+              <span>€</span>
             </label>
             <button class="btn btn-primary">Save</button>
-          </form>
-        </div>
+          </label>
+        </form>
 
         <hr class="border-neutral/30" />
 
-        <div class="flex flex-col gap-6 mb-4">
-          <h1 class="text-2xl">{{ member.name }}'s Wishlist</h1>
-          <div v-if="member.gifts.length == 0" class="text-center text-lg text-primary-content">
+        <div class="flex flex-col mb-4">
+          <h1 class="text-2xl mt-3">{{ member.name }}'s Wishlist</h1>
+          <div v-if="sortedWishes.length == 0" class="text-center text-lg text-neutral">
             No wishes yet. Tell {{ member.name }} to add some!
           </div>
           <div class="flex flex-col gap-2">
@@ -138,16 +149,19 @@ const editGift = (gift: MemberGift) => {
 
         <hr class="border-neutral/30" />
 
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col">
           <div class="flex items-baseline">
-            <h1 class="text-2xl">
-              Gifts
-            </h1>
-            <span class="ml-auto pl-8">Total budget: {{ member.totalBudget }} €</span>
+            <h1 class="text-2xl mt-3">Gifts</h1>
+            <span class="ml-auto pl-8 text-sm text-neutral">Total budget: {{ member.totalBudget }} €</span>
           </div>
 
-          <div v-if="member.gifts.length == 0" class="text-center text-lg text-primary-content">
+          <div v-if="member.gifts.length == 0" class="text-center text-lg text-neutral">
             No gifts yet
+          </div>
+
+          <div v-if="member.totalBudget - giftPricesSum < 0" class="alert alert-warning mx-auto max-w-xl">
+            <i class="las la-exclamation-triangle text-2xl"></i>
+            Overspent by: {{ giftPricesSum - member.totalBudget }} €
           </div>
 
           <div class="flex flex-col">
@@ -179,10 +193,8 @@ const editGift = (gift: MemberGift) => {
 
           <div class="ml-auto text-end">
             <p>Sum: {{ giftPricesSum }} €</p>
-            <p>
-              <span v-if="member.totalBudget - giftPricesSum > 0">Remaining:</span>
-              <span v-else>Overspent by:</span>
-              {{ member.totalBudget - giftPricesSum }} €
+            <p v-if="member.totalBudget - giftPricesSum > 0">
+              Remaining: {{ giftPricesSum - member.totalBudget }} €
             </p>
           </div>
 

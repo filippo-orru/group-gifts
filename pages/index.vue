@@ -7,7 +7,7 @@
       <!-- TODO: You can add menu here -->
     </div>
     <div class="navbar-end">
-      <NuxtLink class="btn btn-secondary">
+      <NuxtLink class="btn btn-secondary" to="/groups">
         → Login
       </NuxtLink>
     </div>

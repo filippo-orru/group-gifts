@@ -1,7 +1,7 @@
 export const useMyAppStore = defineStore({
   id: 'myAppStore',
   state: () => ({
-    myId: '1',
+    myId: 'mem-0',
     groups: [] as GroupInfo[],
   }),
   actions: {

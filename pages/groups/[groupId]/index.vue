@@ -27,6 +27,7 @@ const getLastMessage = (member: GroupMember): ChatMessage | null => {
 
 const sortedMembers: ComputedRef<MemberInOverview[]> = computed(() =>
   (group?.members ?? [])
+    .filter(member => member.id !== store.myId)
     .map((member) => ({
       member: member,
       lastMessage: getLastMessage(member),
@@ -78,17 +79,18 @@ const formatMessageTime = (date: number) => {
           class="hover:bg-base-200">
           <div class="flex gap-4 items-center px-6 py-4">
             <div
-              class="rounded-full border border-primary bg-secondary/30 w-8 h-8 flex items-center justify-center flex-shrink-0">
+              class="rounded-full border border-secondary bg-secondary/30 w-8 h-8 flex items-center justify-center flex-shrink-0">
               <i class="las la-user text-xl"></i>
             </div>
             <div class="flex-1 w-0 flex flex-col">
-              <div v-if="memberInGroup.lastMessage" class="flex items-center justify-between">
+              <div class="flex items-center justify-between">
                 <span>Gift for {{ memberInGroup.member.name }}</span>
-                <span class="text-sm" :class="{'opacity-70': memberInGroup.unreadMessages == 0, 'text-primary font-bold': memberInGroup.unreadMessages > 0}">
+                <span v-if="memberInGroup.lastMessage" class="text-sm"
+                  :class="{ 'opacity-70': memberInGroup.unreadMessages == 0, 'text-primary font-bold': memberInGroup.unreadMessages > 0 }">
                   {{ formatMessageTime(memberInGroup.lastMessage.date) }}
                 </span>
               </div>
-              <div v-if="memberInGroup.lastMessage" class="text-sm opacity-70 flex items-center gap-1">
+              <div v-if="memberInGroup.lastMessage" class="text-sm text-neutral flex items-center gap-1">
                 <i class="las la-comment-dots"></i>
                 <b>
                   {{ memberInGroup.lastMessage.authorId == store.myId ?

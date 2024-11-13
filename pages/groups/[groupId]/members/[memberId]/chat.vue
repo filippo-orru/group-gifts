@@ -22,7 +22,7 @@ const formatTime = (date: number) => {
 
 const messagesByDayByAuthor = computed(() => {
   const messages = member.chat.messages.sort((a, b) => a.date - b.date);
-  console.log("messages", messages);
+  // console.log("messages", messages);
   const messagesByDayByAuthor: ChatMessage[][][] = [];
 
   let day: ChatMessage[][] = [];
@@ -38,8 +38,6 @@ const messagesByDayByAuthor = computed(() => {
         messageDate.getTime() - lastMessageDate.getTime() < 1000 * 60 * 60) { // Less than an hour apart
 
         if (lastMessage.authorId === message.authorId) {
-          console.log("same author");
-
           messagesByAuthor.push(message);
         } else {
           day.push(messagesByAuthor);
@@ -126,19 +124,22 @@ const sendMessage = (event: Event) => {
       ref="scrollViewport">
       <div class="px-1 py-3">
         <div v-for="day in messagesByDayByAuthor" class="flex flex-col">
-          <span class="text-sm mx-auto bg-base-300/60 rounded-md p-2 opacity-70">
+          <span class="text-sm mx-auto bg-base-300/60 rounded-md mt-3 p-2 opacity-70">
             {{ formatMessageDay(day[0][0].date) }}
           </span>
           <div v-for="messagesBySameAuthor in day" class="chat"
             :class="{ 'chat-start': messagesBySameAuthor[0].authorId !== myId, 'chat-end': messagesBySameAuthor[0].authorId === myId }">
             <div class="chat-header">
-              {{ messagesBySameAuthor[0].authorId === myId ? 'You' : member.name }}
+              {{ messagesBySameAuthor[0].authorId === myId ? 'You' :
+                group.members.find(m => m.id == messagesBySameAuthor[0].authorId)!.name }}
+                {{ messagesBySameAuthor[0].authorId }}
               <time class="text-xs opacity-50">{{ formatTime(messagesBySameAuthor[0].date) }}</time>
             </div>
 
             <div v-for="(message, index) in messagesBySameAuthor" class="chat-bubble"
               :class="{ 'chat-bubble-primary': message.authorId === myId, 'mb-1': index < messagesBySameAuthor.length - 1 }">
               {{ message.content }}
+              {{ message.id }}
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
-import type { GroupInfo } from "~/utils/common-types"
+import type { GroupInfo, GroupMember } from "~/utils/common-types"
 
 const names = [
-  'Martina', 'Lupi', 'Filippo', 'Miriam', 'Luigi', 'Giulia', 'Nici', 'Harald', 'Anne', 'Jan',
+  'Martina', 'Lupi', 'Miriam', 'Luigi', 'Giulia', 'Nici', 'Harald', 'Anne', 'Jan',
   'Peter', 'Paul', 'Mary', 'John', 'Alice', 'Bob', 'Eve', 'Charlie', 'David', 'Frank',
 ]
 
@@ -38,17 +38,42 @@ function getRandomDate() {
 }
 
 export default defineEventHandler(async (event) => {
-  const myId = '1';
+  const me: GroupMember = {
+    id: 'mem-0',
+    name: "Filippo",
+    myBudget: null,
+    wishlist: [
+      {
+        id: "wishlist-0",
+        name: "Macbook",
+        bought: false, // hidden for me
+      }, {
+        id: "wishlist-1",
+        name: "iPhone",
+        bought: false,
+      }
+    ],
+    gifts: [], // hidden for me
+    totalBudget: 0,
+    chat: {
+      messages: [] // hidden for me
+    }
+  }
 
-  const groups: GroupInfo[] = Array.from({ length: 10 }, (_, i) => {
-    const memberNames = randomPickDistinct(names, Math.floor(Math.random() * 5) + 2);
-    const members = memberNames.map((name, i) => {
+  const groups: GroupInfo[] = Array.from({ length: 10 }, (_, groupIndex) => {
+    const memberNames = randomPickDistinct(names, Math.floor(Math.random() * 6) + 3);
+    const members = memberNames.map((name, memberIndex) => {
+      const otherMemberIds: number[] = memberNames.map((_, j) => j + 1).filter(j => j !== memberIndex + 1);
+      if (groupIndex == 0 && memberIndex == 3) {
+        console.log(`Other members: `, otherMemberIds);
+      }
+
       return {
-        id: i.toString(),
+        id: `mem-${memberIndex + 1}`,
         name: name,
         myBudget: Math.random() > 0.4 ? Math.floor(Math.random() * 100) : null,
         totalBudget: Math.floor(Math.random() * 10) * 5 + 50,
-        wishlist: randomPickDistinct(giftNames, 5).map((gift, i) => (
+        wishlist: Math.random() > 0.9 ? [] : randomPickDistinct(giftNames, 5).map((gift, i) => (
           {
             id: i.toString(),
             name: gift,
@@ -60,7 +85,7 @@ export default defineEventHandler(async (event) => {
             id: i.toString(),
             name: giftNames[Math.floor(Math.random() * giftNames.length)],
             date: getRandomDate().getTime(),
-            buyerId: Math.floor(Math.random() * memberNames.length).toString(),
+            buyerId: "mem-" + otherMemberIds[Math.floor(Math.random() * otherMemberIds.length)].toString(),
             price: Math.floor(Math.random() * 10) * 5 + 5
           }
         )),
@@ -69,7 +94,7 @@ export default defineEventHandler(async (event) => {
             const date = getRandomDate().getTime();
             return {
               id: i.toString(),
-              authorId: Math.floor(Math.random() * memberNames.length).toString(),
+              authorId: "mem-" + otherMemberIds[Math.floor(Math.random() * otherMemberIds.length)].toString(),
               content: chatMessages[Math.floor(Math.random() * chatMessages.length)],
               date: date,
               isRead: date < Date.now() - 24 * 60 * 60 * 1000,
@@ -79,10 +104,10 @@ export default defineEventHandler(async (event) => {
       };
     });
     return {
-      id: i.toString(),
-      name: `Christmas 202${i}`,
+      id: `group-${groupIndex}`,
+      name: `Christmas 202${groupIndex}`,
       description: 'Group Description',
-      members,
+      members: [me, ...members],
       myWishlist: randomPickDistinct(giftNames, 5),
       newMessages: members.reduce((acc, member) => acc + member.chat.messages.filter(m => !m.isRead).length, 0)
     }

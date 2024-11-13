@@ -34,17 +34,21 @@ const tabs = {
 </script>
 
 <template>
-  <NavBar :title="member.name" :back="{ 'href': `/groups/${groupId}` }" />
-  <GenericPanel class="flex flex-col gap-4 mb-12">
-    <div role="tablist" class="tabs tabs-boxed">
-      <NuxtLink role="tab" class="tab" :class="{ 'tab-active': props.activeTab === 'gifts' }" :to="tabs.gifts.href">
-        {{ tabs.gifts.title }}
-      </NuxtLink>
-      <NuxtLink role="tab" class="tab" :class="{ 'tab-active': props.activeTab === 'chat' }" :to="tabs.chat.href">
-        {{ tabs.chat.title }}
-      </NuxtLink>
-    </div>
-    
-    <slot />
-  </GenericPanel>
+  <div class="relative h-screen w-full flex flex-col items-stretch">
+    <NavBar :title="'Gift for ' + member.name" :back="{ 'href': `/groups/${groupId}` }" />
+    <GenericPanel>
+      <div role="tablist" class="tabs tabs-boxed">
+        <NuxtLink role="tab" class="tab" :class="{ 'bg-primary text-primary-content': props.activeTab === 'gifts' }" :to="tabs.gifts.href">
+          {{ tabs.gifts.title }}
+        </NuxtLink>
+        <NuxtLink role="tab" class="tab" :class="{ 'bg-primary text-primary-content': props.activeTab === 'chat' }" :to="tabs.chat.href">
+          {{ tabs.chat.title }}
+        </NuxtLink>
+      </div>
+    </GenericPanel>
+
+    <GenericPanel :disable-padding="true" class="overflow-hidden flex flex-col h-full">
+      <slot />
+    </GenericPanel>
+  </div>
 </template>

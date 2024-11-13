@@ -18,7 +18,7 @@ const classes: ClassesType = {
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto" :class="classes">
+  <div class="max-w-4xl mx-auto w-full" :class="classes">
     <slot />
   </div>
 </template>

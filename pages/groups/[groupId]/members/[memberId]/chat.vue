@@ -13,61 +13,144 @@ const member = group.members.find(m => m.id === memberId)!;
 
 const myId = store.myId;
 
-const formatTime = (date: string) => {
+const formatTime = (date: number) => {
   const givenDate = new Date(date);
   const hours = givenDate.getHours().toString().padStart(2, '0');
   const minutes = givenDate.getMinutes().toString().padStart(2, '0');
   return `${hours}:${minutes}`;
 };
 
-const messagesByDay = computed(() => {
-  const messages = member.chat.messages.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  const messagesByDay: ChatMessage[][] = [];
+const messagesByDayByAuthor = computed(() => {
+  const messages = member.chat.messages.sort((a, b) => a.date - b.date);
+  console.log("messages", messages);
+  const messagesByDayByAuthor: ChatMessage[][][] = [];
 
-  let day: ChatMessage[] = []
+  let day: ChatMessage[][] = [];
+  let messagesByAuthor: ChatMessage[] = [];
   for (const message of messages) {
-    if (day.length === 0 || new Date(day[0].date).getDate() === new Date(message.date).getDate()) {
-      day.push(message);
+    if (messagesByAuthor.length === 0) {
+      messagesByAuthor.push(message);
     } else {
-      messagesByDay.push(day);
-      day = [message];
+      const messageDate = new Date(message.date);
+      const lastMessage = messagesByAuthor[messagesByAuthor.length - 1];
+      const lastMessageDate = new Date(lastMessage.date);
+      if (lastMessageDate.toDateString() === messageDate.toDateString() && // Same day
+        messageDate.getTime() - lastMessageDate.getTime() < 1000 * 60 * 60) { // Less than an hour apart
+
+        if (lastMessage.authorId === message.authorId) {
+          console.log("same author");
+
+          messagesByAuthor.push(message);
+        } else {
+          day.push(messagesByAuthor);
+          messagesByAuthor = [message];
+        }
+      } else {
+        day.push(messagesByAuthor);
+        messagesByDayByAuthor.push(day);
+        day = [];
+
+        messagesByAuthor = [message];
+      }
     }
   }
-  return messagesByDay;
+  if (messagesByAuthor.length > 0) {
+    day.push(messagesByAuthor);
+  }
+  if (day.length > 0) {
+    messagesByDayByAuthor.push(day);
+  }
+  return messagesByDayByAuthor;
 });
 
-const formatMessageDay = (date: string) => {
+const formatMessageDay = (date: number) => {
   const givenDate = new Date(date);
   const now = new Date();
   if (givenDate.getDate() === now.getDate()) {
     return 'Today';
-  } else if (givenDate.getDate() === now.getDate() - 1) {
+  } else if (new Date(now.setDate(now.getDate() - 1)).toDateString() === givenDate.toDateString()) {
     return 'Yesterday';
   } else {
     return givenDate.toLocaleDateString();
   }
 };
 
+const scrollViewport: Ref<HTMLElement | null> = useState('scrollViewport', () => null);
+const viewportReady = useState('viewportReady', () => false);
+
+const scrollToBottom = () => {
+  nextTick(() => {
+    const element = scrollViewport.value;
+    if (element) {
+      element.scrollTop = element.scrollHeight;
+      viewportReady.value = true;
+    } else {
+      console.error('scrollViewport is not ready');
+    }
+  });
+}
+
+onMounted(() => {
+  scrollToBottom();
+});
+
+onActivated(() => {
+  scrollToBottom();
+});
+
+const messageInput = useState('messageInput', () => '');
+
+const sendMessage = (event: Event) => {
+  if (event) event.preventDefault();
+
+  if (messageInput.value.trim() === '') return;
+
+  const message: ChatMessage = {
+    id: 'placeholder',
+    authorId: myId,
+    content: messageInput.value,
+    date: new Date().getTime(),
+    isRead: true,
+  };
+
+  member.chat.messages.push(message); // TODO send to websocket
+  messageInput.value = '';
+  scrollToBottom();
+};
+
 </script>
 
 <template>
   <MemberHome activeTab="chat">
-    <div class="flex flex-col gap-6">
-      <div v-for="day in messagesByDay" class="flex flex-col gap-4">
-        <span class="text-sm mx-auto bg-base-300/60 rounded-md p-2 opacity-70">
-          {{ formatMessageDay(day[0].date) }}
-        </span>
-        <div v-for="message in day" class="chat"
-          :class="{ 'chat-start': message.authorId !== myId, 'chat-end': message.authorId === myId }">
-          <div class="chat-header">
-            {{ message.authorId === myId ? 'You' : member.name }}
-            <time class="text-xs opacity-50">{{ formatTime(message.date) }}</time>
-          </div>
-          <div class="chat-bubble" :class="{ 'chat-bubble-primary': message.authorId === myId }">
-            {{ message.content }}
+    <div class="flex-1 flex flex-col gap-6 h-full overflow-y-scroll" :class="{ 'invisible': !viewportReady }"
+      ref="scrollViewport">
+      <div class="px-1 py-3">
+        <div v-for="day in messagesByDayByAuthor" class="flex flex-col">
+          <span class="text-sm mx-auto bg-base-300/60 rounded-md p-2 opacity-70">
+            {{ formatMessageDay(day[0][0].date) }}
+          </span>
+          <div v-for="messagesBySameAuthor in day" class="chat"
+            :class="{ 'chat-start': messagesBySameAuthor[0].authorId !== myId, 'chat-end': messagesBySameAuthor[0].authorId === myId }">
+            <div class="chat-header">
+              {{ messagesBySameAuthor[0].authorId === myId ? 'You' : member.name }}
+              <time class="text-xs opacity-50">{{ formatTime(messagesBySameAuthor[0].date) }}</time>
+            </div>
+
+            <div v-for="(message, index) in messagesBySameAuthor" class="chat-bubble"
+              :class="{ 'chat-bubble-primary': message.authorId === myId, 'mb-1': index < messagesBySameAuthor.length - 1 }">
+              {{ message.content }}
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <form @submit="sendMessage">
+      <div class="flex gap-4 px-2 pt-2 pb-4">
+        <input class="input input-bordered flex-grow" placeholder="Type a message..." v-model="messageInput" />
+        <button class="btn btn-primary" @click="sendMessage">
+          <i class="las la-paper-plane text-xl"></i>
+        </button>
+      </div>
+    </form>
   </MemberHome>
 </template>

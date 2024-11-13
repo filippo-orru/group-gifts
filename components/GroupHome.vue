@@ -14,26 +14,26 @@ const group = store.groups.find(g => g.id === groupId)!;
 </script>
 
 <template>
-  <NavBar :title="group.name" :back="{ href: '/groups', useLogo: true }" />
-  <div>
+  <div class="h-screen w-full flex flex-col">
+    <NavBar :title="group.name" :back="{ href: '/groups', useLogo: true }" />
+    <div class="grow overflow-y-scroll">
       <slot />
-  </div>
+    </div>
 
-  <div class="btm-nav mx-auto max-w-4xl">
-    <NuxtLink :to="`/groups/${groupId}`" class="" :class="{
-      'active border-primary bg-primary/40 text-primary-content': tab == 'home',
-      'text-primary-content': tab != 'home'
-    }">
-      <SvgoHome class="text-xl" />
-      <span class="btm-nav-label">Home</span>
-    </NuxtLink>
-    <NuxtLink :to="`/groups/${groupId}/wishlist`" :class="{
-      'active border-secondary bg-secondary/40 text-secondary-content': tab == 'wishlist',
-      'text-secondary-content': tab != 'wishlist'
-    }">
-      <SvgoWishlist class="text-xl" />
-      <span class="btm-nav-label">My Wishlist</span>
-    </NuxtLink>
+    <GenericPanel class="">
+      <div role="tablist" class="tabs tabs-boxed">
+        <NuxtLink role="tab" class="tab" :class="{ 'bg-primary text-primary-content': tab == 'home' }"
+          :to="`/groups/${groupId}`">
+          <i class="las la-home text-lg mr-2"></i>
+          Home
+        </NuxtLink>
+        <NuxtLink role="tab" class="tab" :class="{ 'bg-primary text-primary-content': tab == 'wishlist' }"
+          :to="`/groups/${groupId}/wishlist`">
+          <i class="las la-gift text-lg mr-2"></i>
+          My Wishlist
+        </NuxtLink>
+      </div>
+    </GenericPanel>
   </div>
 </template>
 

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { vShowModal } from '~/utils/frontend';
+
 const props = defineProps<{
   inviteLink: string;
   onClose: () => void;
@@ -10,12 +12,6 @@ const copyLink = () => {
 };
 
 const hasCopiedLink = useState('hasCopiedLink', () => false);
-
-const vShowModal = {
-  mounted(el: HTMLDialogElement, binding: { value: any }) {
-    el.showModal();
-  },
-}
 
 
 const onLinkFocus = (event: FocusEvent) => {

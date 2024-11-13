@@ -31,7 +31,7 @@ export type MemberWishlistItem = {
 export type MemberGift = {
     id: string;
     name: string;
-    date: string;
+    date: number;
     buyerId: string;
     price: number;
 }
@@ -44,5 +44,6 @@ export type ChatMessage = {
     id: string;
     authorId: string;
     content: string;
-    date: string;
+    date: number;
+    isRead: boolean;
 }

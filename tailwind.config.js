@@ -14,7 +14,8 @@ module.exports = {
   daisyui: {
     styled: true,
     themes: [
-      'cupcake'
+      // 'cupcake'
+      'autumn'
     ],
 
   },

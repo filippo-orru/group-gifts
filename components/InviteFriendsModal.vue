@@ -21,7 +21,7 @@ const onLinkFocus = (event: FocusEvent) => {
 </script>
 
 <template>
-  <dialog class="modal" v-show-modal>
+  <dialog class="modal" v-show-modal="true" @close="onClose">
     <div class="modal-box">
       <h3 class="text-lg font-bold">Invite your friends!</h3>
       <p class="py-4">Your group has been created. Copy this link and send it to your friends, so they can join

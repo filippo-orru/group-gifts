@@ -8,11 +8,12 @@
 export default defineNuxtConfig({
   preset: 'node-server',
 
+  ssr: false,
   devServer: {
     port: 2425,
   },
 
-  modules: ['@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-gtag', '@nuxtjs/i18n', 'nuxt-svgo', '@pinia/nuxt'],
+  modules: ['@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-gtag', '@nuxtjs/i18n', 'nuxt-svgo', '@pinia/nuxt', 'nuxt-mongoose'],
 
   gtag: {
     id: '', // TODO: Add your google analytics 4 tag here
@@ -58,7 +59,7 @@ export default defineNuxtConfig({
   },
 
   build: {
-    extend (config, ctx) {
+    extend(config, ctx) {
       config.resolve.symlinks = false;
     },
   },
@@ -79,6 +80,9 @@ export default defineNuxtConfig({
 
   devtools: {
     enabled: true,
+  },
+  mongoose: {
+    uri: 'mongodb://localhost:27017/group-gifts',
   },
 
   compatibilityDate: '2024-11-08',

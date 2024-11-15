@@ -34,6 +34,7 @@
     "nuxt": "^3.14.159",
     "nuxt-gtag": "^3.0.1",
     "nuxt-headlessui": "^1.2.0",
+    "nuxt-mongoose": "^1.0.6",
     "nuxt-svgo": "^4.0.8",
     "rimraf": "^6.0.1"
   },

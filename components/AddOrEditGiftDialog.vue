@@ -37,7 +37,7 @@ const defaultFields = computed<EditMemberGift>(() => {
     return {
       name: '',
       date: new Date().toISOString().substring(0, 10),
-      buyerId: store.myId,
+      buyerId: group.me.id,
       price: 0
     }
   }
@@ -58,7 +58,7 @@ const addGift = () => {
 </script>
 
 <template>
-  <dialog class="modal" v-show-modal="mode.mode" @close="onClose()">
+  <dialog class="modal" v-show-modal="mode.mode" @close="onClose">
     <div class="modal-box">
       <div class="flex">
         <h3 class="text-lg font-bold">{{ title }}</h3>

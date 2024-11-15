@@ -1,14 +1,16 @@
 <script lang="ts" setup>
+const router = useRouter();
+const groupId = router.currentRoute.value.params.groupId;
 
-import GroupHome from '~/components/GroupHome.vue';
+const store = useMyAppStore()
+await useAsyncData('groups', () => store.fetch().then(() => true))
 
+const groups: Group[] = store.groups;
+const group = groups.find(g => g.id === groupId);
 
 </script>
 
 <template>
-  <GroupHome tab="wishlist">
-    wishlist
-    </GroupHome>
+  <GroupHomeNotFound v-if="!group" />
+  <GroupHomeWishlist v-else :group="group" />
 </template>
-
-<style></style>

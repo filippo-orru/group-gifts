@@ -22,9 +22,9 @@ const groups = store.groups;
     </NuxtLink>
   </GenericPanel>
   <GenericPanel class="fixed left-0 right-0 bottom-0">
-    <button class="btn btn-secondary btn-circle absolute bottom-4 right-4">
+    <NuxtLink to="/groups/new" class="btn btn-secondary btn-circle absolute bottom-4 right-4">
       <i class="las la-plus text-xl"></i>
-    </button>
+    </NuxtLink>
   </GenericPanel>
 </template>
 

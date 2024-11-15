@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import AppFooter from '~/components/AppFooter.vue';
 import InviteFriendsModal from '~/components/InviteFriendsModal.vue';
+import type { CreateGroup } from '~/utils/types';
 
-const groupName = useState('groupName', () => '');
+const groupName = useState('groupName', () => 'Chrismes');
 
 // Default date: this christmas
 const date = useState('date', () => new Date(new Date().getFullYear(), 11, 28).toISOString().split('T')[0]);
-const memberNames = ref<string[]>([""]);
+const memberNames = useState('memberNames', () => ["Filippo", "Second guy"]); // TODO reset
 
 const addMember = () => {
     memberNames.value.push("");
@@ -30,17 +31,29 @@ const vFocus = {
 };
 
 
-const submit = (event: SubmitEvent) => {
+const submit = async (event: SubmitEvent) => {
     event.preventDefault();
 
     submitState.value = { state: "loading" };
-    setTimeout(() => {
+    const createGroupBody: CreateGroup = {
+        name: groupName.value,
+        date: new Date(date.value).getTime(),
+        memberNames: memberNames.value,
+    };
+    try {
+        const group = await $fetch("/api/groups", {
+            method: "POST",
+            body: JSON.stringify(createGroupBody)
+        })
+
         submitState.value = {
             state: "success",
-            groupId: "1234",
-            inviteLink: "https://example.com/invite/1234"
+            groupId: group.id,
         };
-    }, 2000);
+    } catch (e) {
+        submitState.value = { state: "error" };
+    }
+
 };
 
 type SubmitState =
@@ -50,10 +63,9 @@ type SubmitState =
     | {
         state: "success";
         groupId: string;
-        inviteLink: string;
     };
 
-const submitState = ref<SubmitState>({ state: "initial" });
+const submitState = useState<SubmitState>('submitState', () => ({ state: "initial" }));
 
 const router = useRouter();
 
@@ -61,10 +73,13 @@ const onCloseModal = (groupId: string) => () => {
     router.push(`/groups/${groupId}`);
 };
 
+const inviteBase = location.origin + "/invite/";
+
 </script>
 
 <template>
-    <InviteFriendsModal v-if="submitState.state === 'success'" :inviteLink="submitState.inviteLink"
+    {{ submitState.state }}
+    <InviteFriendsModal v-if="submitState.state === 'success'" :inviteLink="inviteBase + submitState.groupId"
         :onClose="onCloseModal(submitState.groupId)" />
 
     <!--Loading overlay-->
@@ -98,9 +113,10 @@ const onCloseModal = (groupId: string) => () => {
                         <div class="flex gap-2" v-for="(member, index) in memberNames" :key="index">
                             <label class="input input-bordered flex items-center gap-2 grow"
                                 v-focus="index == memberNames.length - 1">
-                                <input class="grow" :placeholder="index == 0 ? 'You' : 'Name'" />
+                                <input class="grow" :placeholder="index == 0 ? 'You' : 'Name'"
+                                    v-model="memberNames[index]" />
                             </label>
-                            <button v-if="index != 0" class="rounded-full border border- w-[48px]"
+                            <button v-if="index > 0" class="rounded-full border border- w-[48px]"
                                 @click="removeMember(index)">
                                 -
                             </button>
@@ -118,9 +134,13 @@ const onCloseModal = (groupId: string) => () => {
         <div class="pt-24"></div>
 
         <AppFooter>
-            <button class="btn btn-primary ml-auto" type="submit">
-                → Next
-            </button>
+            <div class="ml-auto flex items-center gap-4">
+                <span v-if="submitState.state === 'error'" class="text-error">Error creating group</span>
+
+                <button class="btn btn-primary" type="submit">
+                    → Next
+                </button>
+            </div>
         </AppFooter>
     </form>
 </template>

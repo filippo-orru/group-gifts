@@ -1,6 +1,6 @@
 <script lang="ts" setup>
+import type { ChatMessage } from '~/utils/types';
 
-import type { ChatMessage } from '~/utils/common-types';
 const router = useRouter();
 const groupId = router.currentRoute.value.params.groupId;
 const memberId = router.currentRoute.value.params.memberId;
@@ -21,7 +21,9 @@ const formatTime = (date: number) => {
 };
 
 const messagesByDayByAuthor = computed(() => {
-  const messages = member.chat.messages.sort((a, b) => a.date - b.date);
+  const chatMessages: ChatMessage[] = []; // TODO
+
+  const messages = chatMessages.sort((a, b) => a.date - b.date);
   // console.log("messages", messages);
   const messagesByDayByAuthor: ChatMessage[][][] = [];
 
@@ -111,7 +113,7 @@ const sendMessage = (event: Event) => {
     isRead: true,
   };
 
-  member.chat.messages.push(message); // TODO send to websocket
+  // member.chat.messages.push(message); // TODO send to websocket
   messageInput.value = '';
   scrollToBottom();
 };
@@ -132,7 +134,7 @@ const sendMessage = (event: Event) => {
             <div class="chat-header">
               {{ messagesBySameAuthor[0].authorId === myId ? 'You' :
                 group.members.find(m => m.id == messagesBySameAuthor[0].authorId)!.name }}
-                {{ messagesBySameAuthor[0].authorId }}
+              {{ messagesBySameAuthor[0].authorId }}
               <time class="text-xs opacity-50">{{ formatTime(messagesBySameAuthor[0].date) }}</time>
             </div>
 

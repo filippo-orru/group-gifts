@@ -1,12 +1,29 @@
-export type GroupTab = "home" | "wishlist";
+// MARK: - Api payloads
 
-export type GroupInfo = {
+export type CreateGroup = {
+    name: string;
+    date: number;
+    memberNames: string[];
+}
+
+export type PutBudget = {
+    budget: number;
+}
+
+// MARK: - Types
+
+export type Group = {
     id: string;
     name: string;
-    description: string;
+    date: number;
+    me: GroupMemberMe;
     members: GroupMember[];
-    myWishlist: string[];
-    newMessages: number;
+}
+
+export type GroupMemberMe = {
+    id: string;
+    name: string;
+    wishlist: MemberWishlistItem[];
 }
 
 export type GroupMember = {
@@ -16,7 +33,6 @@ export type GroupMember = {
     wishlist: MemberWishlistItem[];
     gifts: MemberGift[];
     totalBudget: number;
-    chat: MemberChat;
 }
 
 export type MemberWishlistItem = {
@@ -36,14 +52,26 @@ export type MemberGift = {
     price: number;
 }
 
-export type MemberChat = {
-    messages: ChatMessage[];
-}
-
 export type ChatMessage = {
     id: string;
     authorId: string;
     content: string;
     date: number;
     isRead: boolean;
+}
+
+// Messages sent by the client
+export type WsMessageC = {
+    id: 'sendMessage';
+    groupId: string;
+    memberId: string;
+    content: string;
+}
+
+// Messages sent by the server
+export type WsMessageS = {
+    id: 'newMessage';
+    groupId: string;
+    memberId: string;
+    message: ChatMessage;
 }

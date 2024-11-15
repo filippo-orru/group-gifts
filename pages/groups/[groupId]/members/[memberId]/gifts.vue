@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { AddOrEditGiftMode } from '~/components/AddOrEditGiftDialog.vue';
-import type { MemberGift, MemberWishlistItem } from '~/utils/common-types';
+import type { MemberGift, MemberWishlistItem } from '~/utils/types';
+
 const router = useRouter();
 const groupId = router.currentRoute.value.params.groupId;
 const memberId = router.currentRoute.value.params.memberId;

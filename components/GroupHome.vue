@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+export type GroupTab = "home" | "wishlist";
+
 const props = defineProps<{
   tab: GroupTab;
 }>();

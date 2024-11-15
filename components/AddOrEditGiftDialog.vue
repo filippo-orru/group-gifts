@@ -9,7 +9,8 @@ export type AddOrEditGiftMode =
 const props = defineProps<{
   mode: AddOrEditGiftMode;
   member: GroupMember;
-  onClose: (gift?: MemberGift) => void;
+  save: (gift?: MemberGift) => void;
+  cancel: () => void;
 }>();
 
 const router = useRouter();
@@ -21,10 +22,10 @@ const group = store.groups.find(g => g.id === groupId)!;
 const title = computed(() => props.mode.mode === 'add' ? 'Add Gift' : 'Edit Gift');
 
 type EditMemberGift = {
-    name: string;
-    date: string;
-    buyerId: string;
-    price: number;
+  name: string;
+  date: string;
+  buyerId: string;
+  price: number;
 }
 
 const defaultFields = computed<EditMemberGift>(() => {
@@ -44,8 +45,8 @@ const defaultFields = computed<EditMemberGift>(() => {
 });
 const fields = useState('fields', () => defaultFields);
 
-const addGift = () => {
-  props.onClose({
+const saveGift = () => {
+  props.save({
     id: 'placeholder',
     name: fields.value.name,
     date: new Date(fields.value.date).getTime(),
@@ -58,11 +59,11 @@ const addGift = () => {
 </script>
 
 <template>
-  <dialog class="modal" v-show-modal="mode.mode" @close="onClose">
+  <dialog class="modal" v-show-modal="mode.mode" @close="cancel">
     <div class="modal-box">
       <div class="flex">
         <h3 class="text-lg font-bold">{{ title }}</h3>
-        <form method="dialog" @submit="onClose()" class="ml-auto">
+        <form method="dialog" @submit="cancel" class="ml-auto">
           <button class="btn btn-sm btn-circle btn-ghost">✕</button>
         </form>
       </div>
@@ -88,6 +89,9 @@ const addGift = () => {
         <label class="form-control w-full">
           <div class="label">Bought by</div>
           <select class="select select-bordered">
+            <option :value="group.me.id" :selected="group.me.id === fields.buyerId">
+              You
+            </option>
             <option v-for="member in group.members" :value="member.id" :selected="member.id === fields.buyerId">
               {{ member.name }}
             </option>
@@ -95,14 +99,14 @@ const addGift = () => {
         </label>
       </div>
       <div class="modal-action">
-        <form method="dialog" @submit="addGift">
+        <form method="dialog" @submit="saveGift">
           <button class="btn btn-primary" type="submit">
             Add Gift
           </button>
         </form>
       </div>
     </div>
-    <form method="dialog" class="modal-backdrop" @submit="onClose()">
+    <form method="dialog" class="modal-backdrop" @submit="cancel">
       <button>close</button>
     </form>
   </dialog>

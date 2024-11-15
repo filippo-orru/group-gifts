@@ -1,7 +1,7 @@
 import { readBody } from 'h3';
 import type { DbGroup } from '~/server/models/groups.schema';
 import type { UserInGroup } from '~/server/models/userGroups.schema';
-import { generateId } from '~/server/utils/utils';
+import { generateId } from '~/utils/utils';
 import type { CreateGroup } from '~/utils/types';
 
 

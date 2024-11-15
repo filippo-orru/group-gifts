@@ -10,8 +10,7 @@ await useAsyncData('groups', () => store.fetch().then(() => true));
 
 const group = store.groups.find(g => g.id === groupId)!;
 const member = group.members.find(m => m.id === memberId)!;
-
-const myId = store.myId;
+const myId = group.me.id;
 
 const formatTime = (date: number) => {
   const givenDate = new Date(date);
@@ -62,18 +61,6 @@ const messagesByDayByAuthor = computed(() => {
   }
   return messagesByDayByAuthor;
 });
-
-const formatMessageDay = (date: number) => {
-  const givenDate = new Date(date);
-  const now = new Date();
-  if (givenDate.getDate() === now.getDate()) {
-    return 'Today';
-  } else if (new Date(now.setDate(now.getDate() - 1)).toDateString() === givenDate.toDateString()) {
-    return 'Yesterday';
-  } else {
-    return givenDate.toLocaleDateString();
-  }
-};
 
 const scrollViewport: Ref<HTMLElement | null> = useState('scrollViewport', () => null);
 const viewportReady = useState('viewportReady', () => false);

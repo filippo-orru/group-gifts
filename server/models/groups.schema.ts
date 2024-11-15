@@ -137,7 +137,6 @@ export const toClientGroup = (id: Types.ObjectId, group: DbGroup, memberId: stri
             wishlist: me.wishlist.map((item) => ({
                 id: item.id,
                 name: item.name,
-                bought: item.bought,
             })),
         },
         members: group.members

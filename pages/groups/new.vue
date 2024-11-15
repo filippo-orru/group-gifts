@@ -2,6 +2,7 @@
 import AppFooter from '~/components/AppFooter.vue';
 import InviteFriendsModal from '~/components/InviteFriendsModal.vue';
 import type { CreateGroup } from '~/utils/types';
+import { vFocus } from '~/utils/frontend';
 
 const groupName = useState('groupName', () => 'Chrismes');
 
@@ -15,19 +16,6 @@ const addMember = () => {
 
 const removeMember = (index: number) => {
     memberNames.value.splice(index, 1);
-};
-
-const vFocus = {
-    mounted(el: HTMLElement, binding: { value: any }) {
-        if (binding.value) {
-            el.focus();
-        }
-    },
-    updated(el: HTMLElement, binding: { value: any, oldValue: any }) {
-        if (binding.value && !binding.oldValue) {
-            el.focus();
-        }
-    },
 };
 
 

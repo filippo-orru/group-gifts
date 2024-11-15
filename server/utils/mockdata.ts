@@ -91,8 +91,15 @@ function getMockGroups(): Group[] {
             id: `group-${groupIndex}`,
             name: `Christmas 202${groupIndex}`,
             date: getRandomDate().getTime(),
-            members: [me, ...members],
-            myWishlist: randomPickDistinct(giftNames, 5),
+            members: members,
+            me: {
+                id: me.id,
+                name: me.name,
+                wishlist: randomPickDistinct(giftNames, 5).map((gift, i) => ({
+                    id: i.toString(),
+                    name: gift,
+                })),
+            },
             newMessages: Math.floor(Math.random() * 10),
             // members.reduce((acc, member) => acc + member.chat.messages.filter(m => !m.isRead).length, 0)
         }

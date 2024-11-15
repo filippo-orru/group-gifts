@@ -7,7 +7,15 @@ export type CreateGroup = {
 }
 
 export type PutBudget = {
-    budget: number;
+    budget: number | null;
+}
+
+export type PutGifts = {
+    gifts: MemberGift[];
+}
+
+export type PutMyWishlist = {
+    items: MemberWishlistItem[];
 }
 
 // MARK: - Types
@@ -30,18 +38,21 @@ export type GroupMember = {
     id: string;
     name: string;
     myBudget: number | null;
-    wishlist: MemberWishlistItem[];
+    wishlist: OtherMemberWishlistItem[];
     gifts: MemberGift[];
     totalBudget: number;
 }
 
-export type MemberWishlistItem = {
+export interface MemberWishlistItem {
     id: string;
     name: string;
-    bought: boolean;
     // description: string;
     // link: string | null;
     // price: number | null;
+}
+
+export interface OtherMemberWishlistItem extends MemberWishlistItem {
+    bought: boolean;
 }
 
 export type MemberGift = {

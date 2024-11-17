@@ -166,7 +166,7 @@ export const toClientGroup = async (id: Types.ObjectId, group: DbGroup, memberId
                 })),
                 joined: usersForGroup.some((u) => u.memberId === member.id),
                 myBudget: member.budget.find((b) => b.userId === memberIdMe)?.amount ?? null,
-                totalBudget: member.budget.reduce((acc, b) => acc + b.amount, 0),
+                otherBudgetSum: member.budget.filter((m) => m.userId !== memberIdMe).reduce((acc, b) => acc + b.amount, 0),
                 responsibleMemberId: member.responsibleMemberId,
                 gifts: member.gifts.map((gift) => ({
                     id: gift.id,

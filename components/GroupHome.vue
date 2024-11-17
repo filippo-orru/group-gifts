@@ -52,13 +52,13 @@ const confirmDeleteGroup = async () => {
   <div class="h-screen w-full flex flex-col">
     <NavBar :title="group.name" :back="{ href: '/groups', useLogo: true }">
       <template v-slot:actions>
+        <slot name="actions" />
         <li>
           <button @click="setShowConfirmDeleteDialog(true)">
             <i class="las la-trash text-xl"></i>
             Delete Group
           </button>
         </li>
-        <slot name="actions" />
       </template>
     </NavBar>
     <div class="grow overflow-y-scroll">
@@ -75,7 +75,7 @@ const confirmDeleteGroup = async () => {
         <NuxtLink role="tab" class="tab" :class="{ 'bg-primary text-primary-content': tab == 'wishlist' }"
           :to="`/groups/${groupId}/wishlist`">
           <i class="las la-gift text-lg mr-2"></i>
-          My Wishlist
+          Your Wishlist
         </NuxtLink>
       </div>
     </GenericPanel>

@@ -105,7 +105,7 @@ const hideInviteDialog = () => {
                 </span>
                 <span v-if="memberInGroup.member.responsibleMemberId == group.me.id" class="ml-2 badge badge-accent">
                   <i class="las la-gift"></i>&nbsp;
-                  You
+                  You're responsible
                 </span>
                 <span v-if="memberInGroup.lastMessage" class="ml-auto text-sm"
                   :class="{ 'opacity-70': memberInGroup.unreadMessages == 0, 'text-primary font-bold': memberInGroup.unreadMessages > 0 }">

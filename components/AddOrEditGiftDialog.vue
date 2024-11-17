@@ -57,6 +57,9 @@ const saveGift = () => {
   fields.value = defaultFields.value;
 };
 
+const deleteGift = () => {
+  props.save();
+};
 </script>
 
 <template>
@@ -68,41 +71,51 @@ const saveGift = () => {
           <button class="btn btn-sm btn-circle btn-ghost">✕</button>
         </form>
       </div>
-      <p v-if="mode.mode == 'add'" class="py-4">
+      <p v-if="mode.mode == 'add'" class="py-4 text-neutral">
         If you bought a gift for {{ member.name }}, add it here.
       </p>
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-4">
         <label class="form-control w-full">
-          <div class="label">Gift Name</div>
+          <div class="label">What's the gift?</div>
           <input class="input input-bordered" v-model="fields.name" placeholder="Gift name" />
         </label>
         <label class="form-control w-full">
-          <div class="label">Price</div>
+          <div class="label">How much was it?</div>
           <label class="input input-bordered flex items-center gap-4">
             <input class="w-full" type="number" v-model="fields.price" placeholder="15" />
             <span>€</span>
           </label>
         </label>
-        <label class="form-control w-full">
-          <div class="label">Date</div>
-          <input class="input input-bordered" type="date" v-model="fields.date" />
-        </label>
-        <label class="form-control w-full">
-          <div class="label">Bought by</div>
-          <select class="select select-bordered">
-            <option :value="group.me.id" :selected="group.me.id === fields.buyerId">
-              You
-            </option>
-            <option v-for="member in group.members" :value="member.id" :selected="member.id === fields.buyerId">
-              {{ member.name }}
-            </option>
-          </select>
-        </label>
+        <div class="flex flex-col gap-4 sm:flex-row">
+          <label class="form-control w-full">
+            <div class="label">Who bought it?</div>
+            <select class="select select-bordered">
+              <option :value="group.me.id" :selected="group.me.id === fields.buyerId">
+                You
+              </option>
+              <option v-for="member in group.members" :value="member.id" :selected="member.id === fields.buyerId">
+                {{ member.name }}
+              </option>
+            </select>
+          </label>
+
+          <label class="form-control w-full">
+            <div class="label">When?</div>
+            <input class="input input-bordered" type="date" v-model="fields.date" />
+          </label>
+        </div>
       </div>
       <div class="modal-action">
+        <form v-if="mode.mode === 'edit'" method="dialog" class="mr-auto" @submit="deleteGift">
+          <button class="btn btn" type="submit">
+            <i class="las la-trash text-xl"></i>
+            Delete
+          </button>
+        </form>
+
         <form method="dialog" @submit="saveGift">
           <button class="btn btn-primary" type="submit">
-            Add Gift
+            {{ mode.mode === 'add' ? 'Add Gift' : 'Save' }}
           </button>
         </form>
       </div>

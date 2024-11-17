@@ -52,7 +52,7 @@ const me: GroupMember = {
         }
     ],
     gifts: [], // hidden for me
-    totalBudget: 0,
+    otherBudgetSum: 0,
 }
 
 function getMockGroups(): Group[] {

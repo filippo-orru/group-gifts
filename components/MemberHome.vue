@@ -36,12 +36,17 @@ const tabs = {
 <template>
   <div class="relative h-screen w-full flex flex-col items-stretch">
     <NavBar :title="'Gift for ' + member.name" :back="{ 'href': `/groups/${groupId}` }" />
+
     <GenericPanel>
       <div role="tablist" class="tabs tabs-boxed">
-        <NuxtLink role="tab" class="tab" :class="{ 'bg-primary text-primary-content': props.activeTab === 'gifts' }" :to="tabs.gifts.href">
+        <NuxtLink role="tab" class="tab flex items-center gap-2"
+          :class="{ 'bg-primary text-primary-content': props.activeTab === 'gifts' }" :to="tabs.gifts.href">
+          <i class="las la-gift text-xl"></i>
           {{ tabs.gifts.title }}
         </NuxtLink>
-        <NuxtLink role="tab" class="tab" :class="{ 'bg-primary text-primary-content': props.activeTab === 'chat' }" :to="tabs.chat.href">
+        <NuxtLink role="tab" class="tab flex items-center gap-2"
+          :class="{ 'bg-primary text-primary-content': props.activeTab === 'chat' }" :to="tabs.chat.href">
+          <i class="las la-comments text-xl"></i>
           {{ tabs.chat.title }}
         </NuxtLink>
       </div>
@@ -50,5 +55,6 @@ const tabs = {
     <GenericPanel :disable-padding="true" class="overflow-hidden flex flex-col h-full">
       <slot />
     </GenericPanel>
+
   </div>
 </template>

@@ -42,6 +42,8 @@ export default defineNuxtConfig({
       ],
     },
   },
+  
+  css: ['~/assets/css/transitions.css'],
 
   tailwindcss: {
     cssPath: ["~/assets/css/tailwind.css", { injectPosition: "first" }],

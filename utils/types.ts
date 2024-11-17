@@ -18,6 +18,8 @@ export type PutMyWishlist = {
     items: MemberWishlistItem[];
 }
 
+export type PutOtherWishlist = { id: string; bought: boolean; }[];
+
 export interface AcceptInviteBody {
     memberId: string; // Selected 'me' member id
 }
@@ -45,7 +47,7 @@ export interface GroupMember {
     wishlist: OtherMemberWishlistItem[];
     joined: boolean;
     myBudget: number | null;
-    totalBudget: number;
+    otherBudgetSum: number;
     responsibleMemberId: string;
     gifts: MemberGift[];
 }

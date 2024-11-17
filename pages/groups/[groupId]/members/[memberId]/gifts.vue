@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { AddOrEditGiftMode } from '~/components/AddOrEditGiftDialog.vue';
-import type { MemberGift, MemberWishlistItem, OtherMemberWishlistItem, PutBudget } from '~/utils/types';
+import type { MemberGift, MemberWishlistItem, OtherMemberWishlistItem, PutBudget, PutOtherWishlist } from '~/utils/types';
 
 const router = useRouter();
 const groupId = router.currentRoute.value.params.groupId;
@@ -37,13 +37,31 @@ const submitBudget = (event: SubmitEvent) => {
 };
 
 const toggleBought = (wish: OtherMemberWishlistItem) => {
-  wish.bought = !wish.bought;
+  const newBought = !wish.bought;
+  try {
+    const body: PutOtherWishlist = member.wishlist.map((w) => {
+      return {
+        id: w.id,
+        bought: w.id === wish.id ? newBought : w.bought,
+      }
+    });
+    $fetch(`/api/groups/${groupId}/members/${memberId}/wishlist`, {
+      method: 'PUT',
+      body: body,
+    });
+
+    wish.bought = newBought;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 const sortedWishes: ComputedRef<OtherMemberWishlistItem[]> = computed(() => [
   ...member.wishlist.filter((wish) => !wish.bought),
   ...member.wishlist.filter((wish) => wish.bought)
 ]);
+
+const totalBudget = computed(() => member.otherBudgetSum + (member.myBudget ?? 0));
 
 const giftPricesSum = computed(() => member.gifts.reduce((sum, gift) => sum + gift.price, 0));
 
@@ -120,17 +138,19 @@ const editGift = (gift: MemberGift) => {
   <MemberHome v-else activeTab="gifts">
     <div class="grow overflow-y-scroll">
       <div class="flex flex-col gap-4 px-5 py-3 md:py-7">
-        <div v-if="shouldAddBudget" class="alert alert-warning">
-          <i class="las la-exclamation-triangle text-2xl"></i>
-          <p>
-            You haven't set a budget for <b>{{ member.name }}</b> yet.
-            <br />
-            Please set one to help others know how much you can spend.
-          </p>
-        </div>
+        <Transition name="slide-fade">
+          <div v-if="shouldAddBudget" class="alert alert-warning">
+            <i class="las la-exclamation-triangle text-2xl"></i>
+            <p>
+              You haven't set a budget for <b>{{ member.name }}</b> yet.
+              <br />
+              Please set one to help others know how much you can spend.
+            </p>
+          </div>
+        </Transition>
 
         <form @submit="submitBudget" class="w-full flex flex-col sm:flex-row sm:gap-2 justify-center">
-          <span class="label">My budget for {{ member.name }}</span>
+          <span class="label">Your budget for {{ member.name }}</span>
           <label class="form-control flex flex-row gap-2">
             <label class="w-full input input-bordered flex items-center gap-4">
               <input class="w-full" type="number" v-model="myBudget" placeholder="15" />
@@ -144,10 +164,14 @@ const editGift = (gift: MemberGift) => {
 
         <div class="flex flex-col mb-4">
           <h1 class="text-2xl mt-3">{{ member.name }}'s Wishlist</h1>
-          <div v-if="sortedWishes.length == 0" class="mt-6 text-center text-lg text-neutral">
-            No wishes yet. Tell {{ member.name }} to add some!
+          <div v-if="sortedWishes.length == 0" class="mt-6 text-center text-neutral">
+            <i class="las la-gift text-3xl"></i>
+            <br />
+            No wishes yet.
+            <br />
+            Tell <b>{{ member.name }}</b> to add some!
           </div>
-          <div class="flex flex-col gap-2">
+          <div class="flex flex-col gap-2 mt-3">
             <div v-for="(wish, index) in sortedWishes" :key="wish.id">
               <button @click="toggleBought(wish)" class="w-full p-4 rounded-lg flex align-center gap-6
                 hover:bg-neutral hover:text-neutral-content hover:shadow-lg group">
@@ -169,17 +193,23 @@ const editGift = (gift: MemberGift) => {
         <div class="flex flex-col">
           <div class="flex items-baseline">
             <h1 class="text-2xl mt-3">Gifts</h1>
-            <span class="ml-auto pl-8 text-sm text-neutral">Total budget: {{ member.totalBudget }} €</span>
+            <span class="ml-auto pl-8 text-sm text-neutral">Total budget: {{ totalBudget }} €</span>
           </div>
 
-          <div v-if="member.gifts.length == 0" class="mt-6 text-center text-lg text-neutral">
-            No gifts yet. Add one!
+          <div v-if="member.gifts.length == 0" class="mt-6 text-center text-neutral">
+            <i class="las la-shopping-bag text-3xl"></i>
+            <br />
+            No gifts yet.
+            <br />
+            If you bought a gift for <b>{{ member.name }}</b>, add it here!
           </div>
 
-          <div v-if="member.totalBudget - giftPricesSum < 0" class="alert alert-warning mx-auto max-w-xl">
-            <i class="las la-exclamation-triangle text-2xl"></i>
-            Overspent by: {{ giftPricesSum - member.totalBudget }} €
-          </div>
+          <Transition name="slide-fade">
+            <div v-if="totalBudget - giftPricesSum < 0" class="alert alert-warning mx-auto max-w-xl">
+              <i class="las la-exclamation-triangle text-2xl"></i>
+              Overspent by: {{ giftPricesSum - totalBudget }} €
+            </div>
+          </Transition>
 
           <div class="flex flex-col">
             <div v-for="(gift, index) in member.gifts" class="py-2">
@@ -209,10 +239,10 @@ const editGift = (gift: MemberGift) => {
             </div>
           </div>
 
-          <div v-if="member.gifts.length > 0 || member.totalBudget" class="ml-auto text-end">
+          <div v-if="member.gifts.length > 0 || totalBudget" class="ml-auto text-end">
             <p>Sum: {{ giftPricesSum }} €</p>
-            <p v-if="member.totalBudget - giftPricesSum > 0">
-              Remaining: {{ member.totalBudget - giftPricesSum }} €
+            <p v-if="totalBudget - giftPricesSum > 0">
+              Remaining: {{ totalBudget - giftPricesSum }} €
             </p>
           </div>
 
@@ -226,5 +256,10 @@ const editGift = (gift: MemberGift) => {
     </div>
   </MemberHome>
 
-  <AddOrEditGiftDialog :mode="addOrEditGiftMode" :member="member" :save="addOrEditGift" :cancel="cancelAddOrEditGift" />
+  <Transition>
+    <AddOrEditGiftDialog v-if="addOrEditGiftMode.mode" :mode="addOrEditGiftMode" :member="member" :save="addOrEditGift"
+      :cancel="cancelAddOrEditGift" />
+  </Transition>
 </template>
+<style>
+</style>

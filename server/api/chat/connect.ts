@@ -1,4 +1,7 @@
-import type { WsMessageC, WsMessageS } from "~/utils/types";
+import type { ChatMessage, WsMessageC, WsMessageS } from "~/utils/types";
+import cookie from "cookie";
+import { getTokenFromRequest } from "~/server/utils/auth";
+import { getGroupDataByTokenAndGroupId } from "~/server/utils/groups";
 
 type WsClient = {
     userId: string;
@@ -9,24 +12,33 @@ type WsPeer = { send: (message: string) => void };
 
 type WsErrorS = 'Unauthorized' | 'Bad token' | 'NotFound';
 
-const clients: {
-    [meetingId: string]:
-    { [peerId: string]: WsClient }
-} = {};
+interface ChatInfo {
+    members: WsClient[];
+}
 
-export function sendMeetingUpdate(meetingId: string, fromUserId: string, meeting: MeetingSerialized) {
-    let clientList = clients[meetingId];
-    if (clientList) {
-        for (let peerId of Object.keys(clientList)) {
-            let client = clientList[peerId];
-            if (client.userId !== fromUserId) {
-                // sendMessage(
-                //     client.peer,
-                //     {
-                //         id: "update",
-                //         data: meeting
-                //     }
-                // );
+const peers: { [peerId: string]: WsPeer } = {};
+const chats: { [chatId: string]: ChatInfo } = {};
+
+export function onNewChatMessage(
+    chatId: string, 
+    from: WsClient, 
+    groupId: string, 
+    memberId: string, 
+    message: ChatMessage
+) {
+    const chatInfo = chats[chatId];
+    if (chatInfo) {
+        for (const client of chatInfo.members) {
+            if (client !== from) {
+                sendMessage(
+                    client.peer,
+                    {
+                        id: "newMessage",
+                        groupId,
+                        memberId,
+                        message,
+                    }
+                );
             }
         }
     }
@@ -37,42 +49,29 @@ function sendMessage(peer: WsPeer, message: WsMessageS) {
 }
 
 function sendError(peer: WsPeer, message?: WsErrorS) {
-    sendMessage(peer,
-        {
-            type: "error",
-            message: message
-        }
-    );
+    console.log("error in websocket", message);
 }
-
 
 export default defineWebSocketHandler({
     async upgrade(request) {
-        // Get auth token from request
-        let token = request.headers.get("Authorization");
-        if (!token) {
-            return;
-        }
 
     },
+
     async open(peer) {
+        if (!peer.request?.headers) {
+            throw new Error("Missing headers");
+        }
+        const token = getTokenFromRequest(peer.request as { headers: Headers; });
+        console.log("token", token);
     },
 
     async message(peer, message) {
         // console.log("[ws] message", peer, message);
-        let msg = JSON.parse(message.text()) as WsMessageC;
+        const msg = JSON.parse(message.text()) as WsMessageC;
 
-        let user;
         switch (msg.id) {
             case 'sendMessage':
-                user = await getUserByToken(msg.userId, msg.token);
-                if (!user) {
-                    sendMessage(peer, { type: "authResponse", response: "unauthorized" });
-                } else {
-                    let clientList = clients[msg.meetingId] || (clients[msg.meetingId] = {});
-                    clientList[peer.id] = { userId: user.id, peer: peer };
-                    sendMessage(peer, { type: "authResponse", response: "ok" });
-                }
+                
                 break;
         }
     },

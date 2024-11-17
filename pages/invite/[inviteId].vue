@@ -4,8 +4,7 @@ const inviteId = router.currentRoute.value.params.inviteId;
 </script>
 
 <template>
-  <div>
-    invite {{ inviteId }}
+  <div class="bg-base-10">
   </div>    
 </template>
 

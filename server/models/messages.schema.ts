@@ -1,33 +1,33 @@
 import { defineMongooseModel } from '#nuxt/mongoose';
-import { Schema } from 'mongoose';
 
-const messageSchema = new Schema({
-    members: {
-        type: String,
-        required: true,
-    },
+export interface DbMessage {
+    groupId: string;
+    authorId: string;
+    content: string;
+    date: Date;
+}
 
-    authorId: {
-        type: String,
-        required: true,
-    },
-    content: {
-        type: String,
-        required: true,
-    },
-    date: {
-        type: Date,
-        required: true,
-    },
-    // isRead: {
-    //     type: 'boolean',
-    //     required: true,
-    // },
-}, { _id: false });
-
-export const MongoMessages = defineMongooseModel({
+export const MongoMessages = defineMongooseModel<DbMessage>({
     name: 'messages',
-    schema: messageSchema,
+    schema: {
+        groupId: {
+            type: 'string',
+            required: true,
+        },
+
+        authorId: {
+            type: 'string',
+            required: true,
+        },
+        content: {
+            type: 'string',
+            required: true,
+        },
+        date: {
+            type: 'date',
+            required: true,
+        },
+    },
     options: {
 
     },

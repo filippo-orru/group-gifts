@@ -43,7 +43,8 @@ const defaultFields = computed<EditMemberGift>(() => {
     }
   }
 });
-const fields = useState('fields', () => defaultFields);
+
+const fields = ref(defaultFields.value);
 
 const saveGift = () => {
   props.save({

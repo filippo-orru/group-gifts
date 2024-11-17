@@ -41,7 +41,6 @@ export default defineNuxtConfig({
         },
       ],
     },
-    keepalive: true,
   },
 
   tailwindcss: {

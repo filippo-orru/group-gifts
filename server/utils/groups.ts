@@ -2,11 +2,17 @@ import { H3Event } from 'h3';
 import type { DbGroup, DbGroupMember } from '../models/groups.schema';
 import type { Document, Types } from 'mongoose';
 
-export async function getGroupData(event: H3Event): Promise<{ group: DbGroup & Document<Types.ObjectId>; member: DbGroupMember; }> {
-  const groupId = getRouterParams(event).groupId;
+export type GroupData =
+  Promise<{ group: DbGroup & Document<Types.ObjectId>; member: DbGroupMember; }>;
 
+export const getGroupData = async (event: H3Event): GroupData => {
+  const groupId = getRouterParams(event).groupId;
   const token = getToken(event);
 
+  return getGroupDataByTokenAndGroupId(token, groupId);
+}
+
+export const getGroupDataByTokenAndGroupId = async (token: string, groupId: string): GroupData => {
   const userGroups = await MongoUserGroups.find({ token: token }).exec();
   const userInGroup = userGroups.find((g) => g.groupId.toHexString() === groupId);
   if (!userInGroup) {

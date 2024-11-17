@@ -1,6 +1,6 @@
 import { defineMongooseModel } from '#nuxt/mongoose'
 import { Schema, Types } from 'mongoose';
-import type { Group } from '~/utils/types';
+import type { Group, GroupMember, OtherMemberWishlistItem } from '~/utils/types';
 
 interface WishlistItem {
     id: string;
@@ -24,9 +24,10 @@ interface BudgetForMember {
 export interface DbGroupMember {
     id: string;
     name: string;
+    responsibleMemberId: string;
     wishlist: WishlistItem[];
-    gifts: GiftItem[];
     budget: BudgetForMember[];
+    gifts: GiftItem[];
 }
 
 export interface DbGroup {
@@ -93,9 +94,13 @@ const groupMemberSchema = new Schema<DbGroupMember>({
         type: 'string',
         required: true,
     },
+    responsibleMemberId: {
+        type: 'string',
+        required: true,
+    },
     wishlist: [wishlistSchema],
+    budget: [budgetForMemberSchema],
     gifts: [giftSchema],
-    budget: [budgetForMemberSchema]
 }, { _id: false });
 
 
@@ -120,35 +125,42 @@ export const MongoGroups = defineMongooseModel<DbGroup>({
     },
 })
 
-export const toClientGroup = (id: Types.ObjectId, group: DbGroup, memberId: string): Group => {
-    const me = group.members.find((m) => m.id === memberId);
+export const toClientGroup = async (id: Types.ObjectId, group: DbGroup, memberIdMe: string): Promise<Group> => {
+    const usersForGroup: UserInGroup[] = await MongoUserGroups.find({ groupId: id }).exec();
+
+    const me = group.members.find((m) => m.id === memberIdMe);
     if (!me) {
-        console.error("Member not found in group. This should not happen", memberId, group.members);
+        console.error("Member not found in group. This should not happen", memberIdMe, group.members);
         throw new Error("Member not found in group");
     }
 
-    return ({
+    const groupMemberMe = {
+        id: me.id,
+        name: me.name,
+        wishlist: me.wishlist.map((item) => ({
+            id: item.id,
+            name: item.name,
+        })),
+    };
+    const clientGroup: Group = {
         id: id.toHexString(),
         name: group.name,
         date: group.date.getTime(),
-        me: {
-            id: me.id,
-            name: me.name,
-            wishlist: me.wishlist.map((item) => ({
-                id: item.id,
-                name: item.name,
-            })),
-        },
+        me: groupMemberMe,
         members: group.members
-            .filter((member) => member.id !== memberId)
-            .map((member) => ({
+            .filter((member) => member.id !== memberIdMe)
+            .map((member): GroupMember => ({
                 id: member.id,
                 name: member.name,
-                wishlist: member.wishlist.map((item) => ({
+                wishlist: member.wishlist.map((item): OtherMemberWishlistItem => ({
                     id: item.id,
                     name: item.name,
                     bought: item.bought,
                 })),
+                joined: usersForGroup.some((u) => u.memberId === member.id),
+                myBudget: member.budget.find((b) => b.userId === memberIdMe)?.amount ?? null,
+                totalBudget: member.budget.reduce((acc, b) => acc + b.amount, 0),
+                responsibleMemberId: member.responsibleMemberId,
                 gifts: member.gifts.map((gift) => ({
                     id: gift.id,
                     name: gift.name,
@@ -156,9 +168,8 @@ export const toClientGroup = (id: Types.ObjectId, group: DbGroup, memberId: stri
                     buyerId: gift.buyerId,
                     price: gift.price,
                 })),
-
-                myBudget: member.budget.find((b) => b.userId === memberId)?.amount ?? null,
-                totalBudget: member.budget.reduce((acc, b) => acc + b.amount, 0),
             })),
-    });
+    };
+
+    return clientGroup;
 };

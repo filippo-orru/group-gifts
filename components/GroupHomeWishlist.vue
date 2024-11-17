@@ -7,8 +7,9 @@ const props = defineProps<{
   group: Group;
 }>();
 
-const wishlistItems = useState<MemberWishlistItem[]>('wishlistItems', () =>
-  props.group.me.wishlist ? [...props.group.me.wishlist] : [{ id: '0', name: '' }]);
+const wishlistItems = ref<MemberWishlistItem[]>(
+  props.group.me.wishlist ? [...props.group.me.wishlist] : [{ id: '0', name: '' }]
+);
 
 const addItem = () => {
   if (wishlistItems.value.length === 0 || wishlistItems.value[wishlistItems.value.length - 1].name !== '') {
@@ -41,10 +42,9 @@ const onChange = () => {
     <GenericPanel :disable-padding="false" class="flex flex-col gap-4">
       <h1 class="text-xl">Your Wishlist</h1>
       <p>
-        Here you can add items you wish for. Your friends can see this list and get you something you really want.
+        Help your friends know what to get you by adding all your wishes to this list! 
+        Your friends can see this list.
       </p>
-      <span v-if="group.me.wishlist.length === 0" class="text-sm text-neutral">Add items you wish for, so your friends
-        know what to get you.</span>
       <div class="flex flex-col gap-3">
         <div v-for="(item, index) in wishlistItems" :key="item.id" class="flex items-center">
           <span class="rounded-full h-4 w-4 mx-4 border-2 border-neutral"></span>
@@ -55,7 +55,7 @@ const onChange = () => {
         </div>
 
         <div key="add" class="flex items-center">
-          <span class="invisible h-4 w-4 mx-4 border-2"></span>
+          <span class="rounded-full h-4 w-4 mx-4 border-2 border-neutral/60"></span>
           <label class="input input-bordered grow flex flex-row gap-2 border-dashed">
             <input type="text" class="" @focus="addItem" placeholder="Add a wish" />
           </label>

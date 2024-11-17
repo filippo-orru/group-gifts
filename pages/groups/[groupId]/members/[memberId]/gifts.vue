@@ -12,7 +12,7 @@ await useAsyncData('groups', () => store.fetch().then(() => true))
 const group = store.groups.find(g => g.id === groupId)!;
 const member = group.members.find(m => m.id === memberId)!;
 
-const myBudget = useState<string>('myBudget', () => member.myBudget?.toString() ?? '');
+const myBudget = useState<string>(`myBudget-${groupId}-${memberId}`, () => member.myBudget?.toString() ?? '');
 
 const shouldAddBudget = computed(() => member.myBudget === null);
 
@@ -51,7 +51,7 @@ const pluralize = (count: number) => {
   return count === 1 ? '' : 's';
 };
 
-const addOrEditGiftMode: Ref<AddOrEditGiftMode> = useState('showAddGiftDialog', () => ({ mode: null }));
+const addOrEditGiftMode: Ref<AddOrEditGiftMode> = ref({ mode: null });
 
 const cancelAddOrEditGift = () => {
   addOrEditGiftMode.value = { mode: null };

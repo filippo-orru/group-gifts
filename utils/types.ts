@@ -28,19 +28,21 @@ export type Group = {
     members: GroupMember[];
 }
 
-export type GroupMemberMe = {
+export interface GroupMemberMe {
     id: string;
     name: string;
     wishlist: MemberWishlistItem[];
 }
 
-export type GroupMember = {
+export interface GroupMember {
     id: string;
     name: string;
-    myBudget: number | null;
     wishlist: OtherMemberWishlistItem[];
-    gifts: MemberGift[];
+    joined: boolean;
+    myBudget: number | null;
     totalBudget: number;
+    responsibleMemberId: string;
+    gifts: MemberGift[];
 }
 
 export interface MemberWishlistItem {
@@ -55,7 +57,7 @@ export interface OtherMemberWishlistItem extends MemberWishlistItem {
     bought: boolean;
 }
 
-export type MemberGift = {
+export interface MemberGift {
     id: string;
     name: string;
     date: number;

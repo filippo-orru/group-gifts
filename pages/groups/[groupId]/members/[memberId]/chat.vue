@@ -62,8 +62,8 @@ const messagesByDayByAuthor = computed(() => {
   return messagesByDayByAuthor;
 });
 
-const scrollViewport: Ref<HTMLElement | null> = useState('scrollViewport', () => null);
-const viewportReady = useState('viewportReady', () => false);
+const scrollViewport: Ref<HTMLElement | null> = ref(null);
+const viewportReady = ref(false);
 
 const scrollToBottom = () => {
   nextTick(() => {
@@ -85,7 +85,7 @@ onActivated(() => {
   scrollToBottom();
 });
 
-const messageInput = useState('messageInput', () => '');
+const messageInput = useState(`messageInput-${groupId}-${memberId}`, () => '');
 
 const sendMessage = (event: Event) => {
   if (event) event.preventDefault();

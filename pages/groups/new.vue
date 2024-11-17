@@ -1,16 +1,21 @@
 <script setup lang="ts">
-import AppFooter from '~/components/AppFooter.vue';
-import InviteFriendsModal from '~/components/InviteFriendsModal.vue';
 import type { CreateGroup } from '~/utils/types';
 import { vFocus } from '~/utils/frontend';
 
-const groupName = useState('groupName', () => 'Chrismes');
+const router = useRouter();
 
+const store = useMyAppStore();
+
+// Fields
+const groupName = ref('Chrismes');
 // Default date: this christmas
-const date = useState('date', () => new Date(new Date().getFullYear(), 11, 28).toISOString().split('T')[0]);
-const memberNames = useState('memberNames', () => ["Filippo", "Second guy"]); // TODO reset
+const date = ref(new Date(new Date().getFullYear(), 11, 28).toISOString().split('T')[0]);
+const memberNames = ref(["Filippo", "Second guy"]); // TODO reset
 
 const addMember = () => {
+    if (memberNames.value[memberNames.value.length - 1] === "") {
+        return;
+    }
     memberNames.value.push("");
 };
 
@@ -21,23 +26,21 @@ const removeMember = (index: number) => {
 
 const submit = async (event: SubmitEvent) => {
     event.preventDefault();
-
+    
     submitState.value = { state: "loading" };
-    const createGroupBody: CreateGroup = {
-        name: groupName.value,
-        date: new Date(date.value).getTime(),
-        memberNames: memberNames.value,
-    };
-    try {
-        const group = await $fetch("/api/groups", {
-            method: "POST",
-            body: JSON.stringify(createGroupBody)
-        })
 
-        submitState.value = {
-            state: "success",
-            groupId: group.id,
+    // Wait for a bit to show the loading screen
+    await new Promise((resolve) => setTimeout(resolve, 2200));
+
+    try {
+        const createGroupBody: CreateGroup = {
+            name: groupName.value,
+            date: new Date(date.value).getTime(),
+            memberNames: memberNames.value,
         };
+        const group = await store.createGroup(createGroupBody);
+
+        router.push(`/groups/${group.id}?invite=true`);
     } catch (e) {
         submitState.value = { state: "error" };
     }
@@ -47,29 +50,24 @@ const submit = async (event: SubmitEvent) => {
 type SubmitState =
     { state: "initial" }
     | { state: "loading" }
-    | { state: "error" }
-    | {
-        state: "success";
-        groupId: string;
-    };
+    | { state: "error" };
 
-const submitState = useState<SubmitState>('submitState', () => ({ state: "initial" }));
+const submitState = ref<SubmitState>({ state: "initial" });
 
-const router = useRouter();
-
-const onCloseModal = (groupId: string) => () => {
-    router.push(`/groups/${groupId}`);
+const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        addMember();
+    } else if (event.key === "Backspace" &&
+        memberNames.value.length > 1 && memberNames.value[memberNames.value.length - 1] === "") {
+        event.preventDefault();
+        removeMember(memberNames.value.length - 1);
+    }
 };
-
-const inviteBase = location.origin + "/invite/";
 
 </script>
 
 <template>
-    {{ submitState.state }}
-    <InviteFriendsModal v-if="submitState.state === 'success'" :inviteLink="inviteBase + submitState.groupId"
-        :onClose="onCloseModal(submitState.groupId)" />
-
     <!--Loading overlay-->
     <div class="fixed inset-0 z-10 flex items-center justify-center
     bg-base-300 bg-opacity-70 transition-opacity duration-300" :class="{
@@ -83,52 +81,54 @@ const inviteBase = location.origin + "/invite/";
     </div>
 
     <NavBar title="Create Group" :back="{ href: '/' }" />
-    <form @submit="submit">
-        <GenericPanel class="mb-4">
-            <div class="flex flex-col gap-6">
-                <label class="form-control w-full">
-                    <div class="label">Group Name</div>
-                    <input class="input input-bordered" v-model="groupName"
-                        :placeholder="'Christmas ' + new Date().getFullYear()" />
-                </label>
-                <label class="form-control w-full">
-                    <div class="label">Date</div>
-                    <input class="input input-bordered" type="date" v-model="date" />
-                </label>
-                <div>
-                    <div class="label">Members</div>
-                    <div class="flex flex-col gap-4">
-                        <div class="flex gap-2" v-for="(member, index) in memberNames" :key="index">
-                            <label class="input input-bordered flex items-center gap-2 grow"
-                                v-focus="index == memberNames.length - 1">
-                                <input class="grow" :placeholder="index == 0 ? 'You' : 'Name'"
-                                    v-model="memberNames[index]" />
-                            </label>
-                            <button v-if="index > 0" class="rounded-full border border- w-[48px]"
-                                @click="removeMember(index)">
-                                -
-                            </button>
-                        </div>
+    <GenericPanel class="mb-4">
+        <div class="flex flex-col gap-6">
+            <label class="form-control w-full">
+                <div class="label">Group Name</div>
+                <input class="input input-bordered" v-model="groupName"
+                    :placeholder="'Christmas ' + new Date().getFullYear()" />
+            </label>
+            <label class="form-control w-full">
+                <div class="label">Date</div>
+                <input class="input input-bordered" type="date" v-model="date" />
+            </label>
+            <div>
+                <div class="label">Members</div>
+                <div class="flex flex-col gap-4">
+                    <div class="flex gap-2" v-for="(member, index) in memberNames" :key="index">
+                        <label class="input input-bordered flex items-center gap-2 grow group"
+                            v-focus="index == memberNames.length - 1">
+                            <input class="grow peer" :placeholder="index == 0 ? 'You' : 'Name'"
+                                v-model="memberNames[index]"
+                                @keydown="(e: KeyboardEvent) => onMemberInputKeydown(e, index)" />
 
-                        <label class="input input-bordered border-dashed flex items-center gap-2">
-                            <span class="opacity-50">+</span>
-                            <input class="grow" placeholder="Add member" @focus="addMember" />
+                            <div v-if="index > 0" class="p-1 h-full transition-all opacity-0 
+                                    group-hover:opacity-100 peer-focus:opacity-100 focus-within:opacity-100">
+                                <button v-if="index > 0" type="button" class="h-full aspect-square btn btn-ghost min-h-0 p-0
+                                        border border-base-300" @click="removeMember(index)"> - </button>
+                            </div>
                         </label>
                     </div>
+
+                    <label class="input input-bordered border-dashed flex items-center gap-2">
+                        <span class="opacity-50">+</span>
+                        <input class="grow" readonly placeholder="Add member" @focus="addMember" />
+                    </label>
                 </div>
             </div>
-        </GenericPanel>
+        </div>
+    </GenericPanel>
 
-        <div class="pt-24"></div>
+    <div class="pt-24"></div>
 
-        <AppFooter>
-            <div class="ml-auto flex items-center gap-4">
-                <span v-if="submitState.state === 'error'" class="text-error">Error creating group</span>
-
+    <AppFooter>
+        <div class="ml-auto flex items-center gap-4">
+            <span v-if="submitState.state === 'error'" class="text-error">Error creating group</span>
+            <form @submit="submit">
                 <button class="btn btn-primary" type="submit">
                     → Next
                 </button>
-            </div>
-        </AppFooter>
-    </form>
+            </form>
+        </div>
+    </AppFooter>
 </template>

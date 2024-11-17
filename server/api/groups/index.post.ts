@@ -1,5 +1,5 @@
 import { readBody } from 'h3';
-import type { DbGroup } from '~/server/models/groups.schema';
+import type { DbGroup, DbGroupMember } from '~/server/models/groups.schema';
 import type { UserInGroup } from '~/server/models/userGroups.schema';
 import { generateId } from '~/utils/utils';
 import type { CreateGroup } from '~/utils/types';
@@ -17,17 +17,21 @@ export default defineEventHandler(async (event) => {
     throw new Error("Invalid request");
   }
 
+  const members = body.memberNames.map((name): DbGroupMember => ({
+    id: generateId(),
+    name,
+    wishlist: [],
+    gifts: [],
+    budget: [],
+    responsibleMemberId: ''
+  }));
+  members.forEach((member, index) => {
+    member.responsibleMemberId = members[(index + 1) % members.length].id;
+  });
+
   const group: DbGroup = {
     name: body.name,
-    members: body.memberNames.map((name) => {
-      return ({
-        id: generateId(),
-        name,
-        wishlist: [],
-        gifts: [],
-        budget: []
-      });
-    }),
+    members: members,
     date: new Date(body.date),
   };
 

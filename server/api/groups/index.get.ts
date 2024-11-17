@@ -11,14 +11,15 @@ export default defineEventHandler(async (event): Promise<Group[]> => {
     }
   }).exec();
 
-  return groups.map((dbGroup) => {
+  const clientGroups = await Promise.all(groups.map(async (dbGroup) => {
     const userInGroup = userGroups.find((g) => g.groupId.toHexString() === dbGroup._id.toHexString());
     if (!userInGroup) {
       console.error("User not found in group. This should not happen, I think?", userGroups, dbGroup);
       throw new Error("User not found in group");
     }
 
-    return toClientGroup(dbGroup._id, dbGroup, userInGroup.memberId);
-  }
-  );
+    return await toClientGroup(dbGroup._id, dbGroup, userInGroup.memberId);
+  }));
+
+  return clientGroups;
 })

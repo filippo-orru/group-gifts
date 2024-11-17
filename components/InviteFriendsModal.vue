@@ -2,12 +2,12 @@
 import { vShowModal } from '~/utils/frontend';
 
 const props = defineProps<{
-  groupId: string;
+  inviteId: string;
   onClose: () => void;
 }>();
 
 const inviteBase = location.origin + "/invite/";
-const inviteLink = inviteBase + props.groupId;
+const inviteLink = inviteBase + props.inviteId;
 
 const copyLink = () => {
   navigator.clipboard.writeText(inviteLink);

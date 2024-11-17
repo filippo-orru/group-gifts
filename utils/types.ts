@@ -18,6 +18,10 @@ export type PutMyWishlist = {
     items: MemberWishlistItem[];
 }
 
+export interface AcceptInviteBody {
+    memberId: string; // Selected 'me' member id
+}
+
 // MARK: - Types
 
 export type Group = {
@@ -26,6 +30,7 @@ export type Group = {
     date: number;
     me: GroupMemberMe;
     members: GroupMember[];
+    inviteId: string;
 }
 
 export interface GroupMemberMe {
@@ -72,6 +77,23 @@ export type ChatMessage = {
     date: number;
     isRead: boolean;
 }
+
+export type GroupForInvite
+    = {
+        state: 'can-join';
+        group: {
+            id: string;
+            name: string;
+            date: number;
+            members: { id: string; name: string; }[];
+        };
+    }
+    | {
+        state: 'already-joined',
+        groupId: string;
+    };
+
+// MARK: - Websocket messages
 
 // Messages sent by the client
 export type WsMessageC = {

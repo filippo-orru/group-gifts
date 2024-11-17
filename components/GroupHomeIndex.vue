@@ -74,7 +74,7 @@ const hideInviteDialog = () => {
 </script>
 
 <template>
-  <InviteFriendsModal v-if="showInviteDialog" :groupId="groupId" :onClose="hideInviteDialog" />
+  <InviteFriendsModal v-if="showInviteDialog" :invite-id="group.inviteId" :onClose="hideInviteDialog" />
 
   <GroupHome tab="home">
     <template v-slot:actions>
@@ -98,12 +98,16 @@ const hideInviteDialog = () => {
               </div>
             </div>
             <div class="flex-1 w-0 flex flex-col">
-              <div class="flex items-center justify-between">
+              <div class="flex items-center">
                 <span>
                   Gift for
                   <b>{{ memberInGroup.member.name }}</b>
                 </span>
-                <span v-if="memberInGroup.lastMessage" class="text-sm"
+                <span v-if="memberInGroup.member.responsibleMemberId == group.me.id" class="ml-2 badge badge-accent">
+                  <i class="las la-gift"></i>&nbsp;
+                  You
+                </span>
+                <span v-if="memberInGroup.lastMessage" class="ml-auto text-sm"
                   :class="{ 'opacity-70': memberInGroup.unreadMessages == 0, 'text-primary font-bold': memberInGroup.unreadMessages > 0 }">
                   {{ formatMessageTime(memberInGroup.lastMessage.date) }}
                 </span>
@@ -126,7 +130,7 @@ const hideInviteDialog = () => {
                   <div class="flex-1 overflow-hidden whitespace-nowrap text-ellipsis">
                     {{ memberInGroup.lastMessage.content }}
                   </div>
-                  <div v-if="memberInGroup.unreadMessages > 0" class="ml-auto badge badge-secondary">
+                  <div v-if="memberInGroup.unreadMessages > 0" class="ml-auto badge badge-accent">
                     {{ memberInGroup.unreadMessages }}
                   </div>
                 </div>

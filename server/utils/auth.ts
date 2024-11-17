@@ -14,6 +14,11 @@ export const setTokenIfNeeded = (event: H3Event)  => {
   }
 }
 
+// "One token per device"
+// User can join multiple groups with this token
+// User can join the same group multiple times with separate devices (= separate tokens). E.g. phone and laptop.
+//  but user has to accept the invite separately for every device.
+
 export const getToken = (event: H3Event): string => {
   let token = getCookie(event, cookieName);
 

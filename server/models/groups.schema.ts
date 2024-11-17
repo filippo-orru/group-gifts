@@ -32,6 +32,7 @@ export interface DbGroupMember {
 
 export interface DbGroup {
     name: string;
+    inviteId: string;
     date: Date;
     members: DbGroupMember[];
 }
@@ -45,6 +46,7 @@ const wishlistSchema = new Schema<WishlistItem>({
         type: 'string',
         required: true,
     },
+
     bought: {
         type: 'boolean',
         required: true,
@@ -111,6 +113,10 @@ export const MongoGroups = defineMongooseModel<DbGroup>({
             type: 'string',
             required: true,
         },
+        inviteId: {
+            type: 'string',
+            required: true,
+        },
         date: {
             type: 'date',
             required: true,
@@ -144,6 +150,7 @@ export const toClientGroup = async (id: Types.ObjectId, group: DbGroup, memberId
     };
     const clientGroup: Group = {
         id: id.toHexString(),
+        inviteId: group.inviteId,
         name: group.name,
         date: group.date.getTime(),
         me: groupMemberMe,

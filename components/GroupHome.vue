@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { vShowModal } from '~/utils/frontend';
-
 export type GroupTab = "home" | "wishlist";
 
 const props = defineProps<{

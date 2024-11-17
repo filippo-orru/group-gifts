@@ -31,6 +31,7 @@ export default defineEventHandler(async (event) => {
 
   const group: DbGroup = {
     name: body.name,
+    inviteId: generateId(),
     members: members,
     date: new Date(body.date),
   };

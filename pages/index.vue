@@ -53,6 +53,9 @@
 </template>
 
 <script setup>
+const store = useMyAppStore();
+await store.init();
+
 useHead({
   title: 'Nuxtwind Daisy 🟢💨🌼',
   description: 'Nuxtwind Daisy is a starter template for Nuxt.js 3 + Tailwind CSS + Daisy UI with additional installed setup for custom font, icons, animation, and more.',

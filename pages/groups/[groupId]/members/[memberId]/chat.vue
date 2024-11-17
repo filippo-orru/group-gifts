@@ -2,14 +2,15 @@
 import type { ChatMessage } from '~/utils/types';
 
 const router = useRouter();
-const groupId = router.currentRoute.value.params.groupId;
-const memberId = router.currentRoute.value.params.memberId;
+const groupId = router.currentRoute.value.params.groupId as string;
+const memberId = router.currentRoute.value.params.memberId as string;
 
 const store = useMyAppStore();
 await useAsyncData('groups', () => store.fetch().then(() => true));
 
+await store.init();
+
 const group = store.groups.find(g => g.id === groupId)!;
-const member = group.members.find(m => m.id === memberId)!;
 const myId = group.me.id;
 
 const formatTime = (date: number) => {
@@ -20,7 +21,7 @@ const formatTime = (date: number) => {
 };
 
 const messagesByDayByAuthor = computed(() => {
-  const chatMessages: ChatMessage[] = []; // TODO
+  const chatMessages: ChatMessage[] = store.chatMessages.filter(m => m.groupId === groupId && m.memberId === memberId);
 
   const messages = chatMessages.sort((a, b) => a.date - b.date);
   // console.log("messages", messages);
@@ -94,13 +95,15 @@ const sendMessage = (event: Event) => {
 
   const message: ChatMessage = {
     id: 'placeholder',
+    groupId: groupId,
+    memberId: memberId,
     authorId: myId,
     content: messageInput.value,
     date: new Date().getTime(),
     isRead: true,
   };
 
-  // member.chat.messages.push(message); // TODO send to websocket
+  store.sendChatMessage(message);
   messageInput.value = '';
   scrollToBottom();
 };
@@ -121,14 +124,12 @@ const sendMessage = (event: Event) => {
             <div class="chat-header">
               {{ messagesBySameAuthor[0].authorId === myId ? 'You' :
                 group.members.find(m => m.id == messagesBySameAuthor[0].authorId)!.name }}
-              {{ messagesBySameAuthor[0].authorId }}
               <time class="text-xs opacity-50">{{ formatTime(messagesBySameAuthor[0].date) }}</time>
             </div>
 
             <div v-for="(message, index) in messagesBySameAuthor" class="chat-bubble"
               :class="{ 'chat-bubble-primary': message.authorId === myId, 'mb-1': index < messagesBySameAuthor.length - 1 }">
               {{ message.content }}
-              {{ message.id }}
             </div>
           </div>
         </div>

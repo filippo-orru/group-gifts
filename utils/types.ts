@@ -72,9 +72,12 @@ export interface MemberGift {
     price: number;
 }
 
-export type ChatMessage = {
+export interface ChatMessage {
     id: string;
+    groupId: string;
+    memberId: string;
     authorId: string;
+
     content: string;
     date: number;
     isRead: boolean;
@@ -99,16 +102,12 @@ export type GroupForInvite
 
 // Messages sent by the client
 export type WsMessageC = {
-    id: 'sendMessage';
-    groupId: string;
-    memberId: string;
-    content: string;
+    id: 'sendChatMessage';
+    message: ChatMessage;
 }
 
 // Messages sent by the server
 export type WsMessageS = {
-    id: 'newMessage';
-    groupId: string;
-    memberId: string;
+    id: 'newChatMessage';
     message: ChatMessage;
 }

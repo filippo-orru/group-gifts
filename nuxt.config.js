@@ -42,7 +42,7 @@ export default defineNuxtConfig({
       ],
     },
   },
-  
+
   css: ['~/assets/css/transitions.css'],
 
   tailwindcss: {
@@ -84,6 +84,12 @@ export default defineNuxtConfig({
   },
   mongoose: {
     uri: 'mongodb://localhost:27017/group-gifts',
+  },
+
+  nitro: {
+    experimental: {
+      websocket: true
+    },
   },
 
   compatibilityDate: '2024-11-08',

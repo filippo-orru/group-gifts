@@ -1,9 +1,16 @@
+import { wsSend } from "~/utils/websocket-client";
+
 export const useMyAppStore = defineStore({
   id: 'myAppStore',
   state: () => ({
     groups: [] as Group[],
+    chatMessages: [] as ChatMessage[],
   }),
   actions: {
+    async init() {
+      // TODO reconnect on fail
+      await wsConnect({force: false});
+    },
     async fetch({ force = false }: { force?: boolean } = {}) {
       if (!force && this.groups.length > 0) { 
         return
@@ -25,5 +32,11 @@ export const useMyAppStore = defineStore({
       });
       this.groups = this.groups.filter((g) => g.id !== id);
     },
+    receivedChatMessage(message: ChatMessage) {
+      this.chatMessages.push(message);
+    },
+    sendChatMessage(message: ChatMessage) { 
+      wsSend({ id: 'sendChatMessage', message });
+    }
   }
 })

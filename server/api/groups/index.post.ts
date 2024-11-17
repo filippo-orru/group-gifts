@@ -1,6 +1,6 @@
 import { readBody } from 'h3';
 import type { DbGroup, DbGroupMember } from '~/server/models/groups.schema';
-import type { UserInGroup } from '~/server/models/userGroups.schema';
+import type { DbUserInGroup } from '~/server/models/userGroups.schema';
 import { generateId } from '~/utils/utils';
 import type { CreateGroup } from '~/utils/types';
 
@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
 
   const dbGroup = await MongoGroups.create(group);
 
-  const userGroupAssociation: UserInGroup = {
+  const userGroupAssociation: DbUserInGroup = {
     token: token,
     groupId: dbGroup._id,
     memberId: group.members[0].id,

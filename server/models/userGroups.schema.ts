@@ -1,13 +1,13 @@
 import { defineMongooseModel } from "#nuxt/mongoose";
 import { Schema, Types } from "mongoose";
 
-export interface UserInGroup {
+export interface DbUserInGroup {
     token: string;
     groupId: Types.ObjectId;
     memberId: string;
 }
 
-export const MongoUserGroups = defineMongooseModel<UserInGroup>({
+export const MongoUserGroups = defineMongooseModel<DbUserInGroup>({
     name: 'auth',
     schema: {
         token: {

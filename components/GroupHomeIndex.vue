@@ -74,7 +74,9 @@ const hideInviteDialog = () => {
 </script>
 
 <template>
-  <InviteFriendsModal v-if="showInviteDialog" :invite-id="group.inviteId" :onClose="hideInviteDialog" />
+  <Transition>
+    <InviteFriendsModal v-if="showInviteDialog" :invite-id="group.inviteId" :onClose="hideInviteDialog" />
+  </Transition>
 
   <GroupHome tab="home">
     <template v-slot:actions>
@@ -98,7 +100,7 @@ const hideInviteDialog = () => {
               </div>
             </div>
             <div class="flex-1 w-0 flex flex-col">
-              <div class="flex items-center">
+              <div class="flex flex-wrap items-start items-center">
                 <span>
                   Gift for
                   <b>{{ memberInGroup.member.name }}</b>

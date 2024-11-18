@@ -10,6 +10,8 @@ export const useChatStore = defineStore({
     state: () => ({
         ws: null as WebSocket | null,
         connectionState: 'CLOSED' as WebsocketState,
+        retryCount: 0,
+
         chatMessages: {} as { [messageId: string]: ChatMessage },
     }),
     actions: {
@@ -37,6 +39,16 @@ export const useChatStore = defineStore({
                 // console.log("ws", "State updated to", this.connectionState);
             }
 
+            const retryConnection = () => {
+                setTimeout(
+                    async () => {
+                        this.retryCount += 1;
+                        await this.connect();
+                    },
+                    1000
+                );
+            }
+
             if (this.ws) {
                 if (this.connectionState === 'OPEN') {
                     console.log("ws", "Already connected, skipping...");
@@ -50,8 +62,7 @@ export const useChatStore = defineStore({
             const isSecure = location.protocol === "https:";
             const url = (isSecure ? "wss://" : "ws://") + location.host + "/api/chat/connect";
 
-            // tODO remove
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            // await new Promise((resolve) => setTimeout(resolve, 1000));
 
             console.log("ws", "Connecting...");
             this.ws = new WebSocket(url);
@@ -61,21 +72,29 @@ export const useChatStore = defineStore({
             this.ws.addEventListener("open", () => {
                 console.log("ws", "Opened");
                 onWebsocketUpdate();
+                this.retryCount = 0;
             });
             this.ws.addEventListener("close", () => {
                 console.log("ws", "Closed");
                 onWebsocketUpdate();
-                setTimeout(
-                    async () => await this.connect(),
-                    1000
-                );
+                retryConnection();
             });
             this.ws.addEventListener("error", () => {
                 console.log("ws", "Error");
                 onWebsocketUpdate();
             });
 
-            await new Promise((resolve) => this.ws!.addEventListener("open", resolve));
+            try {
+                await Promise.race([
+                    new Promise((resolve) => this.ws!.addEventListener("open", resolve)),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error("Connection timeout")), 5000))
+                ]);
+            } catch (e) {
+                console.error("ws", "Timeout while connecting");
+                this.ws.close();
+                retryConnection();
+            }
+
             connectInProgress = false;
         },
         async getChatMessages(groupId: string, memberId: string): Promise<ComputedRef<ChatMessage[]>> {

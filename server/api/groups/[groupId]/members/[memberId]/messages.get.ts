@@ -5,8 +5,7 @@ import { toClientMessage, type DbChatMessage } from "~/server/models/messages.sc
 export default defineEventHandler(async (event) => {
   const token = getToken(event);
 
-  // TODO remove simulated delay
-  await new Promise((resolve) => setTimeout(resolve, 600));
+  // await new Promise((resolve) => setTimeout(resolve, 600));
 
   const groupId = getRouterParams(event).groupId;
   const memberId = getRouterParams(event).memberId;

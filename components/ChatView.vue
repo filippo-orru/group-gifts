@@ -5,46 +5,54 @@ const props = defineProps<{
 }>();
 
 const chatStore = useChatStore();
-chatStore.connect();
 
 const messagesByDayByAuthor = computed(() => {
   const messages = props.chatMessages.sort((a, b) => a.date - b.date);
   // console.log("messages", messages);
   const messagesByDayByAuthor: ChatMessage[][][] = [];
 
-  let day: ChatMessage[][] = [];
-  let messagesByAuthor: ChatMessage[] = [];
+  let messageClusters: ChatMessage[][] = [];
+  let messageGroupSingleAuthor: ChatMessage[] = [];
   for (const message of messages) {
-    if (messagesByAuthor.length === 0) {
-      messagesByAuthor.push(message);
+    if (messageGroupSingleAuthor.length === 0) {
+      messageGroupSingleAuthor.push(message);
     } else {
       const messageDate = new Date(message.date);
-      const lastMessage = messagesByAuthor[messagesByAuthor.length - 1];
-      const lastMessageDate = new Date(lastMessage.date);
-      if (lastMessageDate.toDateString() === messageDate.toDateString() && // Same day
-        messageDate.getTime() - lastMessageDate.getTime() < 1000 * 60 * 60) { // Less than an hour apart
 
-        if (lastMessage.authorId === message.authorId) {
-          messagesByAuthor.push(message);
+      const firstMessage = messageGroupSingleAuthor[0];
+      const firstMessageDate = new Date(firstMessage.date);
+
+      if (firstMessageDate.toDateString() !== messageDate.toDateString()) {
+        // Different day
+        messageClusters.push(messageGroupSingleAuthor);
+        messagesByDayByAuthor.push(messageClusters);
+        messageClusters = [];
+
+        messageGroupSingleAuthor = [message];
+      } else if (firstMessage.authorId === message.authorId) {
+        // Same author
+        if (messageDate.getTime() - firstMessageDate.getTime() < 1000 * 60 * 10) {
+          // Only group messages that were sent within 10 minutes
+          messageGroupSingleAuthor.push(message);
         } else {
-          day.push(messagesByAuthor);
-          messagesByAuthor = [message];
+          messageClusters.push(messageGroupSingleAuthor);
+          messageGroupSingleAuthor = [message];
         }
       } else {
-        day.push(messagesByAuthor);
-        messagesByDayByAuthor.push(day);
-        day = [];
-
-        messagesByAuthor = [message];
+        messageClusters.push(messageGroupSingleAuthor);
+        messageGroupSingleAuthor = [message];
       }
     }
   }
-  if (messagesByAuthor.length > 0) {
-    day.push(messagesByAuthor);
+
+  if (messageGroupSingleAuthor.length > 0) {
+    messageClusters.push(messageGroupSingleAuthor);
   }
-  if (day.length > 0) {
-    messagesByDayByAuthor.push(day);
+  if (messageClusters.length > 0) {
+    messagesByDayByAuthor.push(messageClusters);
   }
+
+  // console.log("messagesByDayByAuthor", messagesByDayByAuthor);
   return messagesByDayByAuthor;
 });
 
@@ -84,8 +92,8 @@ onUpdated(() => {
 </script>
 
 <template>
-  <div>
-    <div class="flex-1 flex flex-col gap-6 h-full overflow-y-scroll" :class="{ 'invisible': !viewportReady }"
+  <div class="flex-1 overflow-hidden">
+    <div class="flex flex-col gap-6 h-full overflow-y-scroll" :class="{ 'invisible': !viewportReady }"
       ref="scrollViewport">
       <div class="px-1 py-3">
         <div v-for="day in messagesByDayByAuthor" class="flex flex-col">
@@ -93,7 +101,7 @@ onUpdated(() => {
             {{ formatMessageDay(day[0][0].date) }}
           </span>
           <div v-for="messagesBySameAuthor in day" class="chat"
-            :class="{ 'chat-start': !isMe(messagesBySameAuthor[0].authorId), 'chat-end': isMe(messagesBySameAuthor[0].authorId) }">
+            :class="isMe(messagesBySameAuthor[0].authorId) ? 'chat-end': 'chat-start'">
             <div class="chat-header">
               {{
                 isMe(messagesBySameAuthor[0].authorId)
@@ -103,8 +111,16 @@ onUpdated(() => {
               <time class="text-xs opacity-50">{{ formatTime(messagesBySameAuthor[0].date) }}</time>
             </div>
 
-            <div v-for="(message, index) in messagesBySameAuthor" class="chat-bubble"
-              :class="{ 'chat-bubble-primary': isMe(message.authorId), 'mb-1': index < messagesBySameAuthor.length - 1 }">
+            <div v-for="(message, index) in messagesBySameAuthor" class="chat-bubble" :class="{
+              'chat-bubble-primary': isMe(message.authorId),
+              'before:hidden mb-1': index < messagesBySameAuthor.length - 1,
+              
+              '!rounded-se-md': isMe(message.authorId) && messagesBySameAuthor.length > 1 && index > 0, // Top right (me)
+              '!rounded-ee-md': isMe(message.authorId) && messagesBySameAuthor.length > 1 && index < messagesBySameAuthor.length - 1, // Bottom right (me)
+
+              '!rounded-ss-md': !isMe(message.authorId) && messagesBySameAuthor.length > 1 && index > 0, // Top left (other)
+              '!rounded-es-md': !isMe(message.authorId) && messagesBySameAuthor.length > 1 && index < messagesBySameAuthor.length - 1, // Bottom left (other)
+            }">
               {{ message.content }}
             </div>
           </div>
@@ -113,7 +129,8 @@ onUpdated(() => {
     </div>
 
     <Transition name="fade">
-      <div v-if="chatStore.connectionState !== 'OPEN'" class="absolute top-0 left-0 right-0 flex justify-center">
+      <div v-if="chatStore.connectionState !== 'OPEN' && chatStore.retryCount > 1"
+        class="absolute top-0 left-0 right-0 flex justify-center">
         <div class="rounded-full bg-accent text-accent-content shadow-lg px-4 py-2 text-center">
           <i class="las la-exclamation-triangle text-lg"></i>
           <span class="ml-2">No connection. Retrying...</span>

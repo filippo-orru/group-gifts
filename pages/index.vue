@@ -1,19 +1,4 @@
 <script setup>
-useHead({
-  title: 'Group Gifts',
-  description: 'Christmas Gift Giving, made easy',
-  link: [
-    { rel: 'icon', type: 'image/png', href: '/favicon.png' },
-  ],
-  meta: [
-    // {
-    //   hid: 'og:image',
-    //   name: 'og:image',
-    //   property: 'og:image',
-    //   content: ogBanner,
-    // },
-  ],
-});
 </script>
 
 <template>

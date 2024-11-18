@@ -7,7 +7,6 @@
 // eslint-disable-next-line no-undef
 export default defineNuxtConfig({
   preset: 'node-server',
-  ssr: false,
   devServer: {
     port: 2425,
   },
@@ -28,6 +27,12 @@ export default defineNuxtConfig({
       mode: 'client',
     },
   ],
+
+  routeRules: {
+    // Homepage pre-rendered at build time, all other routes rendered on the client
+    '/': { prerender: true },
+    '**': { ssr: false }
+  },
 
   app: {
     head: {

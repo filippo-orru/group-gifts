@@ -13,8 +13,8 @@ export const getToken = (event: H3Event): string => {
   let token = getCookie(event, cookieName);
 
   if (!token) {
+    console.log('Missing token in request', event.path);
     token = Buffer.from(randomBytes(32)).toString('base64url')
-    console.log('Creating new token', token);
     setCookie(event, cookieName, token, { path: "/", httpOnly: true, sameSite: 'strict' });
   }
 

@@ -119,7 +119,7 @@ const hideInviteDialog = () => {
                   <i class="las la-clock text-xl"></i>
                   <span><b>{{ memberInGroup.member.name }}</b> has not joined the group yet</span>
                 </div>
-                <div v-else-if="!memberInGroup.member.myBudget" class="">
+                <div v-else-if="memberInGroup.member.myBudget === null" class="">
                   <i class="las la-exclamation-circle text-xl"></i>
                   <span>You need to set your budget for <b>{{ memberInGroup.member.name }}</b></span>
                 </div>

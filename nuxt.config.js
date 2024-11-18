@@ -20,9 +20,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    public: {
-      yourEnv: process.env.YOUR_ENV,
-    },
+    mongoose: { uri: 'mongodb://localhost:27017/group-gifts' },
   },
 
   plugins: [
@@ -81,9 +79,6 @@ export default defineNuxtConfig({
 
   devtools: {
     enabled: true,
-  },
-  mongoose: {
-    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/group-gifts',
   },
 
   nitro: {

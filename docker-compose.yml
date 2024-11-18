@@ -8,7 +8,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - MONGODB_URI=mongodb://mongodb:27017/
+      - NUXT_MONGOOSE_URI=mongodb://mongodb:27017/
     labels:
       traefik.enable: "true"
       traefik.http.routers.meetme.rule: "Host(`gifts.filippo-orru.com`)"
@@ -20,8 +20,6 @@ services:
       - traefik
   mongodb:
     image: mongo:8.0.3
-    ports:
-      - "27017:27017"
     volumes:
       - ./volumes/mongodb:/data/db
     restart: unless-stopped

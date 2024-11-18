@@ -18,7 +18,7 @@ const groups = computed(() => groupsStore.groups);
       <div class="bg-accent h-16 relative overflow-hidden">
         <div class="relative -left-4 -top-4  *:text-xl *:text-neutral/50"
           style="height: calc(100% + 2rem); width: calc(100% + 2rem)">
-          <i v-for="i in 150" class="las" :class="{
+          <i v-for="i in 550" class="las" :class="{
             'la-gift': i % 3 == 0, 'la-candy-cane': i % 3 == 1, 'la-holly-berry': i % 3 == 2,
             'translate-y-3': i % 2 == 0
           }"></i>

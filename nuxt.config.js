@@ -7,7 +7,6 @@
 // eslint-disable-next-line no-undef
 export default defineNuxtConfig({
   preset: 'node-server',
-
   ssr: false,
   devServer: {
     port: 2425,
@@ -32,12 +31,28 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      title: 'Group Gifts',
+      description: 'Christmas Gift Giving, made easy',
       link: [
         {
           rel: 'stylesheet',
           href: 'https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css',
         },
+        { rel: 'icon', type: 'image/png', href: '/favicon.png' },
+        { rel: 'icon', type: 'image/png', href: '/favicon/favicon-96x96.png', sizes: '96x96' },
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon/favicon.svg' },
+        { rel: 'shortcut icon', href: '/favicon/favicon.ico' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicon/apple-touch-icon.png' },
+        { name: 'apple-mobile-web-app-title', content: 'Group Gifts' },
+        { rel: 'manifest', href: '/favicon/site.webmanifest' },
       ],
+      meta: [
+        { name: 'og:title', content: 'Group Gifts' },
+        { name: 'og:description', content: 'Christmas Gift Giving, made easy' },
+        { name: 'og:type', content: 'website' },
+        { name: 'og:site_name', content: 'gifts.filippo-orru.com' },
+        { name: "og:image", content: "/assets/images/social.png" },
+      ]
     },
   },
 

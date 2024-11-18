@@ -1,17 +1,39 @@
+<script setup>
+useHead({
+  title: 'Group Gifts',
+  description: 'Christmas Gift Giving, made easy',
+  link: [
+    { rel: 'icon', type: 'image/png', href: '/favicon.png' },
+  ],
+  meta: [
+    // {
+    //   hid: 'og:image',
+    //   name: 'og:image',
+    //   property: 'og:image',
+    //   content: ogBanner,
+    // },
+  ],
+});
+</script>
+
 <template>
-  <div class="navbar fixed bg-base-100 z-40 shadow-sm">
-    <div class="navbar-start pl-4">
-      <NuxtLink class="font-bold" href="/">Group Gifts</NuxtLink>
-    </div>
-    <div class="navbar-center hidden lg:flex">
-      <!-- TODO: You can add menu here -->
-    </div>
-    <div class="navbar-end">
-      <NuxtLink class="btn btn-secondary" to="/groups">
-        → Login
-      </NuxtLink>
-    </div>
+  <div class="fixed bg-[#ead8ca]/95 z-40 shadow-sm w-full">
+    <GenericPanel :disable-padding="true" class="navbar">
+      <div class="navbar-start pl-4">
+        <NuxtLink class="font-bold" href="/">Group Gifts</NuxtLink>
+      </div>
+      <div class="navbar-center hidden lg:flex">
+        <!-- TODO: You can add menu here -->
+      </div>
+      <div class="navbar-end">
+        <NuxtLink class="btn btn-accent" to="/groups">
+          → Login
+        </NuxtLink>
+      </div>
+    </GenericPanel>
   </div>
+
+  <div class="absolute z-0 w-full h-full bg-gradient-to-b from-accent"></div>
 
   <div class="hero min-h-[80vh]">
     <div class="hero-content text-center max-w-2xl mx-auto">
@@ -51,21 +73,3 @@
     </div>
   </footer>
 </template>
-
-<script setup>
-useHead({
-  title: 'Nuxtwind Daisy 🟢💨🌼',
-  description: 'Nuxtwind Daisy is a starter template for Nuxt.js 3 + Tailwind CSS + Daisy UI with additional installed setup for custom font, icons, animation, and more.',
-  link: [
-    { rel: 'icon', type: 'image/png', href: '/favicon.png' },
-  ],
-  meta: [
-    // {
-    //   hid: 'og:image',
-    //   name: 'og:image',
-    //   property: 'og:image',
-    //   content: ogBanner,
-    // },
-  ],
-});
-</script>

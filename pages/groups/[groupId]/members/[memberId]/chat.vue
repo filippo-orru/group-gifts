@@ -7,12 +7,13 @@ const memberId = router.currentRoute.value.params.memberId as string;
 
 const groupsStore = useGroupsStore();
 await useAsyncData('groups', () => groupsStore.getGroups().then(() => true)); // TODO test if we need useAsyncData herei
-
 const chatStore = useChatStore();
 chatStore.connect();
 
 const group = groupsStore.groups.find(g => g.id === groupId)!;
 const myId = group.me.id;
+
+const member = group.members.find(m => m.id === memberId)!;
 
 const { data: chatMessages, error } = await useAsyncData(
   `chatMessages-${groupId}-${memberId}`,
@@ -56,6 +57,9 @@ const sendMessage = (event: Event) => {
         <span v-else class="loading loading-spinner loading-lg text-neutral"></span>
       </div>
     </Transition>
+    <div class="mx-5 p-1 rounded-lg bg-base-200 text-center">
+      Don't worry, <b>{{ member.name }}</b> can't see this chat.
+    </div>
     <form @submit="sendMessage">
       <div class="flex gap-4 px-2 pt-2 pb-4">
         <input class="input input-bordered flex-grow" placeholder="Type a message..." v-model="messageInput" />

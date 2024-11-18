@@ -40,11 +40,13 @@ const onChange = () => {
 <template>
   <GroupHome tab="wishlist">
     <GenericPanel :disable-padding="false" class="flex flex-col gap-4">
-      <h1 class="text-xl">Your Wishlist</h1>
-      <p>
-        Help your friends know what to get you by adding all your wishes to this list! 
-        Your friends can see this list.
-      </p>
+      <div class="p-2">
+        <h1 class="text-2xl font-bold">Your Wishlist</h1>
+        <p>
+          Help your friends know what to get you by adding all your wishes to this list!
+          Your friends can see this list.
+        </p>
+      </div>
       <div class="flex flex-col gap-3">
         <div v-for="(item, index) in wishlistItems" :key="item.id" class="flex items-center">
           <span class="rounded-full h-4 w-4 mx-4 border-2 border-neutral"></span>

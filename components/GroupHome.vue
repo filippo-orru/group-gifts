@@ -22,6 +22,10 @@ const confirmDeleteGroup = async () => {
   await groupsStore.deleteGroup(group.id);
   router.push('/groups');
 };
+
+const goToBalance = () => {
+  router.push(`/groups/${groupId}/balance`);
+};
 </script>
 
 <template>
@@ -49,10 +53,16 @@ const confirmDeleteGroup = async () => {
     </form>
   </dialog>
 
-  <div class="h-screen w-full flex flex-col">
+  <div class="h-dvh w-full flex flex-col">
     <NavBar :title="group.name" :back="{ href: '/groups', useLogo: true }">
       <template v-slot:actions>
         <slot name="actions" />
+        <li>
+          <button @click="goToBalance">
+            <i class="las la-coins text-xl"></i>
+            Balance
+          </button>
+        </li>
         <li>
           <button @click="setShowConfirmDeleteDialog(true)">
             <i class="las la-trash text-xl"></i>
@@ -61,6 +71,7 @@ const confirmDeleteGroup = async () => {
         </li>
       </template>
     </NavBar>
+
     <div class="grow overflow-y-scroll">
       <slot />
     </div>

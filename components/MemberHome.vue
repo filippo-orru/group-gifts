@@ -34,7 +34,7 @@ const tabs = {
 </script>
 
 <template>
-  <div class="relative h-screen w-full flex flex-col items-stretch">
+  <div class="relative h-dvh w-full flex flex-col items-stretch">
     <NavBar :title="'Gift for ' + member.name" :back="{ 'href': `/groups/${groupId}` }" />
 
     <GenericPanel>

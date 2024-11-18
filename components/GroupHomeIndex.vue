@@ -101,11 +101,11 @@ const hideInviteDialog = () => {
             </div>
             <div class="flex-1 w-0 flex flex-col">
               <div class="flex flex-wrap items-start items-center">
-                <span>
+                <span class="mr-2">
                   Gift for
                   <b>{{ memberInGroup.member.name }}</b>
                 </span>
-                <span v-if="memberInGroup.member.responsibleMemberId == group.me.id" class="ml-2 badge badge-accent">
+                <span v-if="memberInGroup.member.responsibleMemberId == group.me.id" class="badge badge-accent overflow-hidden whitespace-nowrap flex justify-start">
                   <i class="las la-gift"></i>&nbsp;
                   You're responsible
                 </span>

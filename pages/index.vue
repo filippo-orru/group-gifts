@@ -27,7 +27,7 @@ useHead({
       </div>
       <div class="navbar-end">
         <NuxtLink class="btn btn-accent" to="/groups">
-          → Login
+          → My Groups
         </NuxtLink>
       </div>
     </GenericPanel>

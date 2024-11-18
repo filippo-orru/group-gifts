@@ -1,10 +1,4 @@
 # TO-DO
-- accounts
-    - register
-    - login
-- create group
-    - settings: name, members
-    - get link
 - join group
     - open link to join
     - select "who am i"

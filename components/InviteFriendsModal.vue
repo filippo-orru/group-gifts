@@ -35,7 +35,7 @@ const onLinkFocus = (event: FocusEvent) => {
       <p class="py-4">Your group has been created. Copy this link and send it to your friends, so they can join
         the group.</p>
       <div class="flex gap-2">
-        <input class="input input-bordered grow" readonly :value="inviteLink" @focus="onLinkFocus" />
+        <input class="input input-bordered grow min-w-0" dir="rtl" readonly :value="inviteLink" @focus="onLinkFocus" />
         <button class="btn" :class="{ 'btn-primary': !hasCopiedLink }" @click="copyLink">
           <template v-if="hasCopiedLink">Copied!</template>
           <template v-else>Copy Link</template>

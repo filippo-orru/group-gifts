@@ -7,10 +7,10 @@ const router = useRouter();
 const groupsStore = useGroupsStore();
 
 // Fields
-const groupName = ref('Chrismes');
+const groupName = ref('');
 // Default date: this christmas
 const date = ref(new Date(new Date().getFullYear(), 11, 28).toISOString().split('T')[0]);
-const memberNames = ref(["Filippo", "Second guy"]); // TODO reset
+const memberNames = ref(["", ""]);
 
 const addMember = () => {
     if (memberNames.value[memberNames.value.length - 1] === "") {
@@ -26,7 +26,7 @@ const removeMember = (index: number) => {
 
 const submit = async (event: SubmitEvent) => {
     event.preventDefault();
-    
+
     submitState.value = { state: "loading" };
 
     // Wait for a bit to show the loading screen
@@ -68,18 +68,6 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
 </script>
 
 <template>
-    <!--Loading overlay-->
-    <div class="fixed inset-0 z-10 flex items-center justify-center
-    bg-base-300 bg-opacity-70 transition-opacity duration-300" :class="{
-        'opacity-100 pointer-events-auto': submitState.state === 'loading',
-        'opacity-0 pointer-events-none': submitState.state !== 'loading'
-    }">
-        <span class="text-lg font-bold flex flex-col gap-4 items-center">
-            <span class="loading loading-spinner loading-lg"></span>
-            Creating group...
-        </span>
-    </div>
-
     <NavBar title="Create Group" :back="{ href: '/' }" />
     <GenericPanel class="mb-4">
         <div class="flex flex-col gap-6">
@@ -131,4 +119,14 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
             </form>
         </div>
     </AppFooter>
+
+    <Transition name="fade">
+        <div v-if="submitState.state === 'loading'"
+            class="fixed inset-0 flex items-center justify-center bg-base-300 bg-opacity-70 pointer-events-auto">
+            <span class="text-lg font-bold flex flex-col gap-4 items-center">
+                <span class="loading loading-spinner loading-lg"></span>
+                Creating group...
+            </span>
+        </div>
+    </Transition>
 </template>

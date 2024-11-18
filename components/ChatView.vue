@@ -101,7 +101,7 @@ onUpdated(() => {
             {{ formatMessageDay(day[0][0].date) }}
           </span>
           <div v-for="messagesBySameAuthor in day" class="chat"
-            :class="isMe(messagesBySameAuthor[0].authorId) ? 'chat-end': 'chat-start'">
+            :class="isMe(messagesBySameAuthor[0].authorId) ? 'chat-end' : 'chat-start'">
             <div class="chat-header">
               {{
                 isMe(messagesBySameAuthor[0].authorId)
@@ -114,7 +114,7 @@ onUpdated(() => {
             <div v-for="(message, index) in messagesBySameAuthor" class="chat-bubble" :class="{
               'chat-bubble-primary': isMe(message.authorId),
               'before:hidden mb-1': index < messagesBySameAuthor.length - 1,
-              
+
               '!rounded-se-md': isMe(message.authorId) && messagesBySameAuthor.length > 1 && index > 0, // Top right (me)
               '!rounded-ee-md': isMe(message.authorId) && messagesBySameAuthor.length > 1 && index < messagesBySameAuthor.length - 1, // Bottom right (me)
 

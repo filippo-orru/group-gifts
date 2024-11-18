@@ -30,7 +30,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     // Homepage pre-rendered at build time, all other routes rendered on the client
-    '/': { prerender: true },
+    '/': { ssr: true },
     '**': { ssr: false }
   },
 

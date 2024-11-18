@@ -4,7 +4,7 @@ import { vFocus } from '~/utils/frontend';
 
 const router = useRouter();
 
-const store = useMyAppStore();
+const groupsStore = useGroupsStore();
 
 // Fields
 const groupName = ref('Chrismes');
@@ -38,7 +38,7 @@ const submit = async (event: SubmitEvent) => {
             date: new Date(date.value).getTime(),
             memberNames: memberNames.value,
         };
-        const group = await store.createGroup(createGroupBody);
+        const group = await groupsStore.createGroup(createGroupBody);
 
         router.push(`/groups/${group.id}?invite=true`);
     } catch (e) {

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-const store = useMyAppStore()
-await useAsyncData('groups', () => store.fetch({ force: true }).then(() => true))
-const groups = computed(() => store.groups);
+const groupsStore = useGroupsStore()
+await useAsyncData('groups', () => groupsStore.getGroups({ force: true }).then(() => true))
+const groups = computed(() => groupsStore.groups);
 </script>
 
 <template>

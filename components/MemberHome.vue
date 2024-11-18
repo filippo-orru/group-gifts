@@ -8,10 +8,10 @@ const router = useRouter();
 const groupId = router.currentRoute.value.params.groupId;
 const memberId = router.currentRoute.value.params.memberId;
 
-const store = useMyAppStore()
-await useAsyncData('groups', () => store.fetch().then(() => true))
+const groupsStore = useGroupsStore()
+await useAsyncData('groups', () => groupsStore.getGroups().then(() => true))
 
-const group = store.groups.find(g => g.id === groupId)!;
+const group = groupsStore.groups.find(g => g.id === groupId)!;
 const member = group.members.find(m => m.id === memberId)!;
 
 type MemberTabs = 'gifts' | 'chat';
@@ -52,7 +52,7 @@ const tabs = {
       </div>
     </GenericPanel>
 
-    <GenericPanel :disable-padding="true" class="overflow-hidden flex flex-col h-full">
+    <GenericPanel :disable-padding="true" class="overflow-hidden flex flex-col h-full relative">
       <slot />
     </GenericPanel>
 

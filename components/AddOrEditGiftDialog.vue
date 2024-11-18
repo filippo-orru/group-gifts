@@ -16,12 +16,13 @@ const props = defineProps<{
 const router = useRouter();
 const groupId = router.currentRoute.value.params.groupId;
 
-const store = useMyAppStore();
-const group = store.groups.find(g => g.id === groupId)!;
+const groupsStore = useGroupsStore();
+const group = groupsStore.groups.find(g => g.id === groupId)!;
 
 const title = computed(() => props.mode.mode === 'add' ? 'Add Gift' : 'Edit Gift');
 
 type EditMemberGift = {
+  id: string;
   name: string;
   date: string;
   buyerId: string;
@@ -36,6 +37,7 @@ const defaultFields = computed<EditMemberGift>(() => {
     };
   } else {
     return {
+      id: generateId(), // TODO test if this changes if i add multiple gifts
       name: '',
       date: new Date().toISOString().substring(0, 10),
       buyerId: group.me.id,
@@ -48,7 +50,7 @@ const fields = ref(defaultFields.value);
 
 const saveGift = () => {
   props.save({
-    id: 'placeholder',
+    id: fields.value.id,
     name: fields.value.name,
     date: new Date(fields.value.date).getTime(),
     buyerId: fields.value.buyerId,

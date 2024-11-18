@@ -9,18 +9,19 @@ const { data, error } = await useFetch(`/api/invites/${inviteId}`);
 const members = computed(() => data.value?.state === 'can-join' ? data.value.group.members : null);
 const selectedMember = ref<string | null>(members.value ? members.value[0].id : null);
 
-const store = useMyAppStore();
+const groupsStore = useGroupsStore();
 
 const joinGroup = async (groupId: string) => {
   const body: AcceptInviteBody = {
     memberId: selectedMember.value!
   };
 
+  // TODO move api call to group store
   await $fetch(`/api/invites/${inviteId}/accept`, {
     method: 'POST',
     body: body
   });
-  await store.fetch({force: true});
+  await groupsStore.getGroups({force: true});
   router.push(`/groups/${groupId}`);
 };
 

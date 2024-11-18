@@ -6,10 +6,10 @@ const router = useRouter();
 const groupId = router.currentRoute.value.params.groupId;
 const memberId = router.currentRoute.value.params.memberId;
 
-const store = useMyAppStore()
-await useAsyncData('groups', () => store.fetch().then(() => true))
+const groupsStore = useGroupsStore()
+await useAsyncData('groups', () => groupsStore.getGroups().then(() => true))
 
-const group = store.groups.find(g => g.id === groupId)!;
+const group = groupsStore.groups.find(g => g.id === groupId)!;
 const member = group.members.find(m => m.id === memberId)!;
 
 const myBudget = useState<string>(`myBudget-${groupId}-${memberId}`, () => member.myBudget?.toString() ?? '');
@@ -205,7 +205,7 @@ const editGift = (gift: MemberGift) => {
           </div>
 
           <Transition name="slide-fade">
-            <div v-if="totalBudget - giftPricesSum < 0" class="alert alert-warning mx-auto max-w-xl">
+            <div v-if="totalBudget - giftPricesSum < 0" class="mt-3 alert alert-warning mx-auto max-w-xl">
               <i class="las la-exclamation-triangle text-2xl"></i>
               Overspent by: {{ giftPricesSum - totalBudget }} €
             </div>

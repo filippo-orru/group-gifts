@@ -9,17 +9,17 @@ const props = defineProps<{
 const router = useRouter();
 const groupId = router.currentRoute.value.params.groupId;
 
-const store = useMyAppStore()
-await useAsyncData('groups', () => store.fetch().then(() => true))
+const groupsStore = useGroupsStore()
+await useAsyncData('groups', () => groupsStore.getGroups().then(() => true))
 
-const group = store.groups.find(g => g.id === groupId)!;
+const group = groupsStore.groups.find(g => g.id === groupId)!;
 
 const showConfirmDeleteDialog = ref(false);
 const setShowConfirmDeleteDialog = (show: boolean) => {
   showConfirmDeleteDialog.value = show;
 };
 const confirmDeleteGroup = async () => {
-  await store.deleteGroup(group.id);
+  await groupsStore.deleteGroup(group.id);
   router.push('/groups');
 };
 </script>

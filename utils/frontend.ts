@@ -10,6 +10,13 @@ export const formatMessageDay = (date: number) => {
     }
 };
 
+export const formatTime = (date: number) => {
+    const givenDate = new Date(date);
+    const hours = givenDate.getHours().toString().padStart(2, '0');
+    const minutes = givenDate.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+};
+
 export const vShowModal = {
     mounted(el: HTMLDialogElement, binding: { value: any }) {
         if (binding.value) {

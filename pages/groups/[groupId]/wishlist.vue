@@ -2,10 +2,10 @@
 const router = useRouter();
 const groupId = router.currentRoute.value.params.groupId;
 
-const store = useMyAppStore()
-await useAsyncData('groups', () => store.fetch().then(() => true))
+const groupsStore = useGroupsStore()
+await useAsyncData('groups', () => groupsStore.getGroups().then(() => true))
 
-const groups: Group[] = store.groups;
+const groups: Group[] = groupsStore.groups;
 const group = groups.find(g => g.id === groupId);
 
 </script>

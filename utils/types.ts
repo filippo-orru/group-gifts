@@ -33,6 +33,7 @@ export type Group = {
     me: GroupMemberMe;
     members: GroupMember[];
     inviteId: string;
+    chatMessages: ChatMessage[];
 }
 
 export interface GroupMemberMe {

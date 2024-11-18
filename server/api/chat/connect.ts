@@ -1,8 +1,8 @@
 import type { ChatMessage, WsMessageC, WsMessageS } from "~/utils/types";
-import cookie from "cookie";
 import { getTokenFromRequest } from "~/server/utils/auth";
-import { getGroupDataByTokenAndGroupId } from "~/server/utils/groups";
 import type { DbUserInGroup } from "~/server/models/userGroups.schema";
+import type { DbChatMessage } from "~/server/models/messages.schema";
+import { toClientMessage } from "~/server/models/messages.schema";
 
 type WsClient = {
     token: string;
@@ -21,6 +21,17 @@ export async function onNewChatMessage(
     from: WsClient,
     message: ChatMessage
 ) {
+    // Store in db
+    const createDbMessage: DbChatMessage = {
+        groupId: message.groupId,
+        memberId: message.memberId,
+        authorId: message.authorId,
+        content: message.content,
+        date: new Date(message.date),
+    };
+    const dbMessage = await MongoMessages.create(createDbMessage);
+
+    // Send to active clients
     const usersInGroup: DbUserInGroup[] = await MongoUserGroups.find({
         groupId: message.groupId,
     }).exec();
@@ -37,7 +48,7 @@ export async function onNewChatMessage(
                 client.peer,
                 {
                     id: "newChatMessage",
-                    message,
+                    message: toClientMessage(dbMessage),
                 }
             );
         }
@@ -51,8 +62,8 @@ function sendMessage(peer: WsPeer, message: WsMessageS) {
 export default defineWebSocketHandler({
     async upgrade(request) {
         // console.log("[ws] upgrade", request.url);
+        // throw new Error("test");
     },
-
     async open(peer) {
         // console.log("[ws] open", peer);
 

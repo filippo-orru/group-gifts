@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
     const { group, member } = await getGroupData(event);
 
     const body: PutGifts = await readBody(event);
-    body.gifts = body.gifts.filter((g) => g.id && g.name && g.date && g.buyerId && g.price);
+    body.gifts = body.gifts.filter((g) => g.id && g.name && g.date && g.buyerId);
 
     const targetMemberId = getRouterParams(event).memberId;
     const targetMember = group.members.find((m) => m.id === targetMemberId)

@@ -83,7 +83,7 @@ export default defineNuxtConfig({
     enabled: true,
   },
   mongoose: {
-    uri: 'mongodb://localhost:27017/group-gifts',
+    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/group-gifts',
   },
 
   nitro: {

@@ -1,14 +1,12 @@
 {
-  "name": "nuxtwind-daisy",
+  "name": "group-gifts",
   "version": "1.0.0",
-  "main": ".eslintrc.js",
-  "description": "Nuxtwind Daisy is a starter template for Nuxt.js 3 + Tailwind CSS + Daisy UI with additional installed setup for custom font, icons, animation, and more.",
-  "productName": "Nuxtwind Daisy 🟢💨🌼",
-  "author": "Joff Tiquez <jofftiquez@gmail.com>",
+  "main": "index.mjs",
+  "description": "",
+  "productName": "Group Gifts",
+  "author": "Filippo Orru",
   "scripts": {
-    "lint": "eslint --ext .js,.vue ./ --fix",
     "build": "nuxt build",
-    "postbuild": "cd .output/server && rimraf node_modules && yarn && cd .. && yarn rename-server",
     "rename-server": "node scripts/rename-server.js",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
@@ -18,27 +16,20 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.25.9",
-    "@nuxt/devtools": "^1.6.0",
+    "@nuxt/devtools": "^1.6.0"
+  },
+  "dependencies": {
     "@nuxtjs/i18n": "^9.0.0",
     "@nuxtjs/tailwindcss": "^6.12.2",
     "@pinia/nuxt": "^0.7.0",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/forms": "^0.5.9",
-    "eslint": "^9.14.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-n": "^17.13.1",
-    "eslint-plugin-promise": "^7.1.0",
-    "eslint-plugin-vue": "^9.30.0",
-    "eslint-webpack-plugin": "^4.2.0",
     "nuxt": "^3.14.159",
     "nuxt-gtag": "^3.0.1",
     "nuxt-headlessui": "^1.2.0",
     "nuxt-mongoose": "^1.0.6",
     "nuxt-svgo": "^4.0.8",
-    "rimraf": "^6.0.1"
-  },
-  "dependencies": {
+    "rimraf": "^6.0.1",
     "@tailwindcss/typography": "^0.5.15",
     "aos": "3.0.0-beta.6",
     "axios": "^1.7.7",
@@ -46,14 +37,9 @@
     "daisyui": "^4.12.14",
     "postcss-custom-properties": "^14.0.4"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ossphilippines/nuxtwind-daisy.git"
-  },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ossphilippines/nuxtwind-daisy/issues"
+    "url": "https://filippo-orru.com"
   },
-  "homepage": "https://github.com/ossphilippines/nuxtwind-daisy#readme",
-  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee"
+  "homepage": "https://filippo-orru.com"
 }

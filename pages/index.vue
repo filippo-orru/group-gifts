@@ -51,7 +51,7 @@
     <footer class="footer footer-center mt-10 p-10 pt-5 border-t border-neutral/30">
       <div>
         <h1 class="text-2xl md:text-3xl font-bold">{{ $t('info.name') }}</h1>
-        <p class="font-bold mb-3">{{ $t('landing.footerSubtitle') }}</p>
+        <p class="font-bold mb-3">{{ $t('landing.tagline') }}</p>
 
         <p>{{ $t('landing.footerCopyright', { date: new Date().getFullYear() }) }}</p>
         <NuxtLinkLocale to="https://filippo-orru.com" class="font-bold text-neutral underline">filippo-orru.com</NuxtLinkLocale>

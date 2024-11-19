@@ -24,7 +24,7 @@ export default defineI18nConfig(() => ({
                 howItWorks2: 'Write your <b>wishlist</b> and set your <b>budget</b>',
                 howItWorks3: '<b>Chat</b> about other person\'s wishes',
                 howItWorks4: 'Everyone buys gifts for the person they were assigned to',
-                footerSubtitle: 'Christmas Gift Giving, made easy',
+                tagline: 'Christmas Gift Giving, made easy',
                 footerCopyright: 'Created by Filippo © {date}',
             },
             newGroup: {
@@ -175,7 +175,7 @@ export default defineI18nConfig(() => ({
                 howItWorks2: 'Schreibe deine <b>Wunschliste</b> und setze dein <b>Budget</b>',
                 howItWorks3: '<b>Chatte</b> um Geschenke zu besprechen',
                 howItWorks4: 'Jede*r kauft Geschenke für die Person, die er/sie zugelost bekommen hat',
-                footerSubtitle: 'Weihnachtsgeschenke, leicht gemacht',
+                tagline: 'Weihnachtsgeschenke, leicht gemacht',
                 footerCopyright: 'Filippo © {date}',
             },
             newGroup: {

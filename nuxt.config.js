@@ -26,7 +26,6 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: 'Group Gifts',
-      description: 'Christmas Gift Giving, made easy',
       link: [
         {
           rel: 'stylesheet',
@@ -41,11 +40,9 @@ export default defineNuxtConfig({
         { rel: 'manifest', href: '/favicon/site.webmanifest' },
       ],
       meta: [
-        { name: 'og:title', content: 'Group Gifts' },
-        { name: 'og:description', content: 'Christmas Gift Giving, made easy' },
         { name: 'og:type', content: 'website' },
         { name: 'og:site_name', content: 'gifts.filippo-orru.com' },
-        { name: "og:image", content: "/assets/images/social.png" },
+        { name: "og:image", content: "/images/social.png" },
       ]
     },
   },

@@ -2,5 +2,6 @@
   <slot />
 </template>
 
-<script>
+<script setup lang="ts">
+
 </script>

@@ -119,6 +119,16 @@ const editGift = (gift: MemberGift) => {
   addOrEditGiftMode.value = { mode: 'edit', gift: gift };
 }
 
+const iAmResponsible = member.responsibleMemberId == group.me.id;
+
+// ['You', 'are', 'know'] or ['John', 'is', 'knows']
+const responsibleString = {
+  'name': iAmResponsible
+    ? 'you' : group.members.find(m => m.id == member.responsibleMemberId)!.name,
+  'be': iAmResponsible ? 'are' : 'is',
+  'know': iAmResponsible ? 'know' : 'knows',
+}
+
 </script>
 
 <template>
@@ -135,9 +145,19 @@ const editGift = (gift: MemberGift) => {
       </NuxtLink>
     </div>
   </div>
+
   <MemberHome v-else activeTab="gifts">
     <div class="grow overflow-y-scroll">
-      <div class="flex flex-col gap-4 px-5 py-3 md:py-7">
+      <div class="flex flex-col gap-4 px-5">
+        <div class="mx-5 my-1 p-1 rounded-lg bg-base-200 flex items-center justify-center gap-2">
+          <i class="las la-info-circle text-2xl"></i>
+          <span>
+            <b>{{ responsibleString.name.capitalize() }}</b>
+            {{ responsibleString.be }}
+            responsible for buying gifts for
+            <b>{{ member.name }}</b>.
+          </span>
+        </div>
         <Transition name="slide-fade">
           <div v-if="shouldAddBudget" class="alert alert-warning">
             <i class="las la-exclamation-triangle text-2xl"></i>
@@ -149,21 +169,29 @@ const editGift = (gift: MemberGift) => {
           </div>
         </Transition>
 
-        <form @submit="submitBudget" class="w-full flex flex-col sm:flex-row sm:gap-2 justify-center">
-          <span class="label">Your budget for {{ member.name }}</span>
-          <label class="form-control flex flex-row gap-2">
-            <label class="w-full input input-bordered flex items-center gap-4">
-              <input class="w-full" type="number" v-model="myBudget" placeholder="15" />
-              <span>€</span>
+        <div class="flex flex-col mb-4">
+          <h1 class="text-2xl">Budget</h1>
+          <p class="text-neutral">
+            Enter your budget for <b>{{ member.name }}</b>,
+            so <b>{{ responsibleString.name }}</b> {{ responsibleString.know }} how much to spend.
+          </p>
+
+
+          <form @submit="submitBudget" class="mt-4 flex flex-col">
+            <label class="ml-auto form-control flex flex-row gap-2 justify-end">
+              <label class="w-full input input-bordered flex items-center gap-4">
+                <input class="w-full" type="number" v-model="myBudget" placeholder="10" />
+                <span>€</span>
+              </label>
+              <button class="btn btn-primary">Save</button>
             </label>
-            <button class="btn btn-primary">Save</button>
-          </label>
-        </form>
+          </form>
+        </div>
 
         <hr class="border-neutral/30" />
 
         <div class="flex flex-col mb-4">
-          <h1 class="text-2xl mt-3">{{ member.name }}'s Wishlist</h1>
+          <h1 class="text-2xl mt-3">{{ member.name.capitalize() }}'s Wishlist</h1>
           <div v-if="sortedWishes.length == 0" class="mt-6 text-center text-neutral">
             <i class="las la-gift text-3xl"></i>
             <br />
@@ -195,6 +223,9 @@ const editGift = (gift: MemberGift) => {
             <h1 class="text-2xl mt-3">Gifts</h1>
             <span class="ml-auto pl-8 text-sm text-neutral">Total budget: {{ totalBudget }} €</span>
           </div>
+          <span class="text-neutral">
+            <b>{{ responsibleString.name.capitalize() }}</b> can use the total budget to buy gifts for <b>{{ member.name }}</b>.
+          </span>
 
           <div v-if="member.gifts.length == 0" class="mt-6 text-center text-neutral">
             <i class="las la-shopping-bag text-3xl"></i>
@@ -261,5 +292,4 @@ const editGift = (gift: MemberGift) => {
       :cancel="cancelAddOrEditGift" />
   </Transition>
 </template>
-<style>
-</style>
+<style></style>

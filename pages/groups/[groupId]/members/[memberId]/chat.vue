@@ -57,8 +57,9 @@ const sendMessage = (event: Event) => {
         <span v-else class="loading loading-spinner loading-lg text-neutral"></span>
       </div>
     </Transition>
-    <div class="mx-5 p-1 rounded-lg bg-base-200 text-center">
-      Don't worry, <b>{{ member.name }}</b> can't see this chat.
+    <div class="mx-5 mt-1 p-1 rounded-lg bg-base-200 text-center">
+      <span class="hidden sm:block" >Don't worry, <b>{{ member.name }}</b> can't see this chat.</span>
+      <span class="block sm:hidden"><b>{{ member.name.capitalize() }}</b> can't see this chat.</span>
     </div>
     <form @submit="sendMessage">
       <div class="flex gap-4 px-2 pt-2 pb-4">

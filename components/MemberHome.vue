@@ -37,7 +37,7 @@ const tabs = {
   <div class="relative h-dvh w-full flex flex-col items-stretch">
     <NavBar :title="'Gift for ' + member.name" :back="{ 'href': `/groups/${groupId}` }" />
 
-    <GenericPanel>
+    <GenericPanel :disable-padding="true" class="px-5 py-3">
       <div role="tablist" class="tabs tabs-boxed">
         <NuxtLink role="tab" class="tab flex items-center gap-2"
           :class="{ 'bg-primary text-primary-content': props.activeTab === 'gifts' }" :to="tabs.gifts.href">

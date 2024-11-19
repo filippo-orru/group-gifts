@@ -93,9 +93,8 @@ onUpdated(() => {
 
 <template>
   <div class="flex-1 overflow-hidden">
-    <div class="flex flex-col gap-6 h-full overflow-y-scroll" :class="{ 'invisible': !viewportReady }"
-      ref="scrollViewport">
-      <div class="px-1 py-3">
+    <div class="flex flex-col h-full overflow-y-scroll" :class="{ 'invisible': !viewportReady }" ref="scrollViewport">
+      <div class="px-1 pb-3">
         <div v-for="day in messagesByDayByAuthor" class="flex flex-col">
           <span class="text-sm mx-auto bg-base-300/60 rounded-md mt-3 p-2 opacity-70">
             {{ formatMessageDay(day[0][0].date) }}

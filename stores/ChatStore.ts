@@ -29,7 +29,7 @@ export const useChatStore = defineStore({
 
                 switch (message.id) {
                     case 'newChatMessage':
-                        this.chatMessages[message.id] = message.message;
+                        this.chatMessages[message.message.id] = message.message;
                         break;
                 }
             }

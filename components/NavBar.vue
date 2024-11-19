@@ -8,7 +8,7 @@ const props = defineProps<{
 }>()
 </script>
 <template>
-    <div class="bg-base-100 shadow-md">
+    <div class="bg-[#ead8ca]/95 shadow-md">
         <div class="max-w-4xl h-16 px-5 mx-auto flex flex-row items-center gap-4">
             <NuxtLink v-if="back && !back.useLogo" :to="back.href" class="btn btn-accent">
                 <i class="las la-arrow-left text-xl"></i>

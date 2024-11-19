@@ -1,10 +1,13 @@
+
 export const formatMessageDay = (date: number) => {
+    const i18n = useI18n();
+    
     const givenDate = new Date(date);
     const now = new Date();
     if (givenDate.getDate() === now.getDate()) {
-        return 'Today';
+        return i18n.t('general.today');
     } else if (new Date(now.setDate(now.getDate() - 1)).toDateString() === givenDate.toDateString()) {
-        return 'Yesterday';
+        return i18n.t('general.yesterday');
     } else {
         return givenDate.toLocaleDateString();
     }

@@ -95,6 +95,14 @@ onUpdated(() => {
   <div class="flex-1 overflow-hidden">
     <div class="flex flex-col h-full overflow-y-scroll" :class="{ 'invisible': !viewportReady }" ref="scrollViewport">
       <div class="px-1 pb-3">
+        <span v-if="messagesByDayByAuthor.length == 0"
+          class="min-h-[60vh] flex flex-col items-center justify-center text-center text-neutral">
+          <i class="las la-comment text-4xl"></i>
+          <i18n-t keypath="chat.noMessagesYet">
+            <br />
+          </i18n-t>
+        </span>
+
         <div v-for="day in messagesByDayByAuthor" class="flex flex-col">
           <span class="text-sm mx-auto bg-base-300/60 rounded-md mt-3 p-2 opacity-70">
             {{ formatMessageDay(day[0][0].date) }}
@@ -104,7 +112,7 @@ onUpdated(() => {
             <div class="chat-header">
               {{
                 isMe(messagesBySameAuthor[0].authorId)
-                  ? 'You'
+                  ? $t('general.you')
                   : group.members.find(m => m.id == messagesBySameAuthor[0].authorId)!.name
               }}
               <time class="text-xs opacity-50">{{ formatTime(messagesBySameAuthor[0].date) }}</time>
@@ -132,7 +140,7 @@ onUpdated(() => {
         class="absolute top-0 left-0 right-0 flex justify-center">
         <div class="rounded-full bg-accent text-accent-content shadow-lg px-4 py-2 text-center">
           <i class="las la-exclamation-triangle text-lg"></i>
-          <span class="ml-2">No connection. Retrying...</span>
+          <span class="ml-2">{{ $t('chat.noConnection') }}</span>
         </div>
       </div>
     </Transition>

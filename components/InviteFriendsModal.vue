@@ -27,23 +27,22 @@ const onLinkFocus = (event: FocusEvent) => {
   <dialog class="modal" v-show-modal="true" @close="onClose">
     <div class="modal-box">
       <div class="flex">
-        <h3 class="text-lg font-bold">Invite your friends!</h3>
+        <h3 class="text-lg font-bold">{{ $t('invite.title') }}</h3>
         <form method="dialog" @submit="onClose" class="ml-auto">
           <button class="btn btn-sm btn-circle btn-ghost">✕</button>
         </form>
       </div>
-      <p class="py-4">Your group has been created. Copy this link and send it to your friends, so they can join
-        the group.</p>
+      <p class="py-4">{{ $t('invite.description') }}</p>
       <div class="flex gap-2">
         <input class="input input-bordered grow min-w-0" dir="rtl" readonly :value="inviteLink" @focus="onLinkFocus" />
         <button class="btn" :class="{ 'btn-primary': !hasCopiedLink }" @click="copyLink">
-          <template v-if="hasCopiedLink">Copied!</template>
-          <template v-else>Copy Link</template>
+          <template v-if="hasCopiedLink">{{ $t('invite.copied') }}</template>
+          <template v-else>{{ $t('invite.copy') }}</template>
         </button>
       </div>
       <div class="modal-action">
         <form method="dialog" @submit="onClose">
-          <button class="btn" :class="{ 'btn-primary': hasCopiedLink }">Done</button>
+          <button class="btn" :class="{ 'btn-primary': hasCopiedLink }">{{ $t('invite.done') }}</button>
         </form>
       </div>
     </div>

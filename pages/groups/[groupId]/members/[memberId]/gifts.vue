@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { AddOrEditGiftMode } from '~/components/AddOrEditGiftDialog.vue';
 import type { MemberGift, MemberWishlistItem, OtherMemberWishlistItem, PutBudget, PutOtherWishlist } from '~/utils/types';
+import '~/utils/extensions';
 
 const router = useRouter();
 const groupId = router.currentRoute.value.params.groupId;
@@ -65,10 +66,6 @@ const totalBudget = computed(() => member.otherBudgetSum + (member.myBudget ?? 0
 
 const giftPricesSum = computed(() => member.gifts.reduce((sum, gift) => sum + gift.price, 0));
 
-const pluralize = (count: number) => {
-  return count === 1 ? '' : 's';
-};
-
 const addOrEditGiftMode: Ref<AddOrEditGiftMode> = ref({ mode: null });
 
 const cancelAddOrEditGift = () => {
@@ -122,51 +119,35 @@ const editGift = (gift: MemberGift) => {
 const iAmResponsible = member.responsibleMemberId == group.me.id;
 
 // ['You', 'are', 'know'] or ['John', 'is', 'knows']
-const responsibleString = {
-  'name': iAmResponsible
-    ? 'you' : group.members.find(m => m.id == member.responsibleMemberId)!.name,
-  'be': iAmResponsible ? 'are' : 'is',
-  'know': iAmResponsible ? 'know' : 'knows',
-}
+const responsibleName = group.members.find(m => m.id == member.responsibleMemberId)?.name ?? null;
 
 const chatHref = `/groups/${groupId}/members/${memberId}/chat`;
 
+definePageMeta({
+  layout: 'member-required',
+})
 </script>
 
 <template>
-  <div v-if="member.id == group.me.id" class="p-4 h-screen flex items-center">
-    <div class="alert alert-warning">
-      <i class="las la-exclamation-triangle text-2xl"></i>
-      <p>
-        <b>No access.</b>
-        Sorry, you aren't allowed to view your own profile or gifts.
-      </p>
-      <NuxtLink :to="`/groups/${groupId}`" class="btn mt-4">
-        <i class="las la-arrow-left text-xl"></i>
-        Back to group
-      </NuxtLink>
-    </div>
-  </div>
-
-  <MemberHome v-else activeTab="gifts">
+  <MemberHome activeTab="gifts">
     <div class="grow overflow-y-scroll">
       <div class="flex flex-col gap-4 px-5">
         <div class="mx-5 my-1 p-1 rounded-lg bg-base-200 flex items-center justify-center gap-2">
           <i class="las la-info-circle text-2xl"></i>
-          <span>
-            <b>{{ responsibleString.name.capitalize() }}</b>
-            {{ responsibleString.be }}
-            responsible for buying gifts for
-            <b>{{ member.name }}</b>.
-          </span>
+          <i18n-t :keypath="'memberHome.whoIsResponsibleInfo.' + (iAmResponsible ? 'you' : 'someoneElse')" tag='span'>
+            <b>{{ responsibleName }}</b>
+            <b>{{ member.name }}</b>
+          </i18n-t>
         </div>
         <Transition name="slide-fade">
           <div v-if="shouldAddBudget" class="alert alert-warning">
             <i class="las la-exclamation-triangle text-2xl"></i>
             <p>
-              You haven't set a budget for <b>{{ member.name }}</b> yet.
+              <i18n-t :keypath="'memberHome.mustSetBudget.0'">
+                <b>{{ member.name }}</b>
+              </i18n-t>
               <br />
-              Please set one to help others know how much you can spend.
+              {{ $t('memberHome.mustSetBudget.1') }}
             </p>
           </div>
         </Transition>
@@ -174,8 +155,10 @@ const chatHref = `/groups/${groupId}/members/${memberId}/chat`;
         <div class="flex flex-col mb-4">
           <h1 class="text-2xl">Budget</h1>
           <p class="text-neutral">
-            Enter your budget for <b>{{ member.name }}</b>,
-            so <b>{{ responsibleString.name }}</b> {{ responsibleString.know }} how much to spend.
+            <i18n-t :keypath="'memberHome.budgetInfo.' + (iAmResponsible ? 'you' : 'someoneElse')" tag='span'>
+              <b>{{ member.name }}</b>
+              <b>{{ responsibleName }}</b>
+            </i18n-t>
           </p>
 
 
@@ -185,7 +168,7 @@ const chatHref = `/groups/${groupId}/members/${memberId}/chat`;
                 <input class="w-full" type="number" v-model="myBudget" placeholder="10" />
                 <span>€</span>
               </label>
-              <button class="btn btn-primary">Save</button>
+              <button class="btn btn-primary">{{ $t('memberHome.saveBudget') }}</button>
             </label>
           </form>
         </div>
@@ -193,13 +176,14 @@ const chatHref = `/groups/${groupId}/members/${memberId}/chat`;
         <hr class="border-neutral/30" />
 
         <div class="flex flex-col mb-4">
-          <h1 class="text-2xl mt-3">{{ member.name.capitalize() }}'s Wishlist</h1>
+          <h1 class="text-2xl mt-3">{{ $t('memberHome.wishlistTitle', [member.name.capitalize()]) }}</h1>
           <div v-if="sortedWishes.length == 0" class="mt-6 text-center text-neutral">
             <i class="las la-gift text-3xl"></i>
             <br />
-            No wishes yet.
-            <br />
-            Tell <b>{{ member.name }}</b> to add some!
+            <i18n-t :keypath="'memberHome.noWishesYet'">
+              <br />
+              <b>{{ member.name }}</b>
+            </i18n-t>
           </div>
           <div class="flex flex-col gap-2 mt-3">
             <div v-for="(wish, index) in sortedWishes" :key="wish.id">
@@ -222,29 +206,31 @@ const chatHref = `/groups/${groupId}/members/${memberId}/chat`;
 
         <div class="flex flex-col">
           <div class="flex items-baseline">
-            <h1 class="text-2xl mt-3">Gifts</h1>
-            <span class="ml-auto pl-8 pr-4 text-neutral">Total budget: {{ totalBudget }} €</span>
+            <h1 class="text-2xl mt-3">{{ $t('memberHome.giftsTitle') }}</h1>
+            <span class="ml-auto pl-8 pr-4 text-neutral">{{ $t('memberHome.totalBudget', [totalBudget]) }}</span>
           </div>
-          <span class="text-neutral md:mr-32">
-            You can buy gifts for up to the <b>total budget of {{ totalBudget }} €</b>.
-            Everyone can buy a gift, but don't forget that
-            <b>{{ responsibleString.name }}</b> {{ responsibleString.be }} responsible for <b>{{ member.name }}'s</b>
-            gifts.
-            You can use the <NuxtLink :to="chatHref" class="underline">chat</NuxtLink> to coordinate who buys what.
+          <span class="mt-4 mb-2 text-neutral md:mr-32">
+            <i18n-t :keypath="'memberHome.giftsInfo.' + (iAmResponsible ? 'you' : 'someoneElse')">
+              <b>{{ totalBudget }} €</b>
+              <b>{{ responsibleName }}</b>
+              <b>{{ member.name }}</b>
+              <NuxtLink :to="chatHref" class="underline">{{ $t('memberHome.giftsInfo.chat') }}</NuxtLink>
+            </i18n-t>
           </span>
 
           <div v-if="member.gifts.length == 0" class="mt-6 text-center text-neutral">
             <i class="las la-shopping-bag text-3xl"></i>
             <br />
-            No gifts yet.
-            <br />
-            If you bought a gift for <b>{{ member.name }}</b>, add it here!
+            <i18n-t :keypath="'memberHome.noGiftsYet'">
+              <br />
+              <b>{{ member.name }}</b>
+            </i18n-t>
           </div>
 
           <Transition name="slide-fade">
             <div v-if="totalBudget - giftPricesSum < 0" class="mt-3 alert alert-warning mx-auto max-w-xl">
               <i class="las la-exclamation-triangle text-2xl"></i>
-              Overspent by: {{ giftPricesSum - totalBudget }} €
+              {{ $t('memberHome.overspentBy', giftPricesSum - totalBudget) }}
             </div>
           </Transition>
 
@@ -260,8 +246,11 @@ const chatHref = `/groups/${groupId}/members/${memberId}/chat`;
                   <div class="flex gap-1 items-center text-sm">
                     <i class="las la-gift text-xl invisible"></i>
                     <i class="las la-user text-lg"></i>
-                    by {{ gift.buyerId == group.me.id ? "You" :
-                      group.members.find((member) => member.id == gift.buyerId)?.name ?? "unknown" }},
+                    {{ gift.buyerId == group.me.id ?
+                      $t('memberHome.giftBoughtBy.you') :
+                      $t('memberHome.giftBoughtBy.someoneElse',
+                        [group.members.find((member) => member.id == gift.buyerId)?.name ?? "unknown"])
+                    }},
                     <i class="las la-clock text-lg"></i>
                     {{ formatMessageDay(gift.date) }}
                   </div>
@@ -276,16 +265,16 @@ const chatHref = `/groups/${groupId}/members/${memberId}/chat`;
             </div>
           </div>
 
-          <div v-if="member.gifts.length > 0 || totalBudget" class="ml-auto text-end">
-            <p>Sum: {{ giftPricesSum }} €</p>
+          <div v-if="member.gifts.length > 0 || totalBudget" class="ml-auto pr-4 text-end">
+            <p>{{ $t('memberHome.expensesSum', giftPricesSum) }}</p>
             <p v-if="totalBudget - giftPricesSum > 0">
-              Remaining: {{ totalBudget - giftPricesSum }} €
+              {{ $t('memberHome.remainingBudget', totalBudget - giftPricesSum) }}
             </p>
           </div>
 
-          <button class="mt-2 btn btn-primary ml-auto" @click="addOrEditGiftMode = { mode: 'add' }">
+          <button class="mt-3 btn btn-primary ml-auto" @click="addOrEditGiftMode = { mode: 'add' }">
             <i class="las la-plus text-xl"></i>
-            Add Gift
+            {{ $t('memberHome.addGift') }}
           </button>
         </div>
         <div class=" mb-12"></div>

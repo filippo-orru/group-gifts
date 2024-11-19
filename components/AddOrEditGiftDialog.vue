@@ -19,8 +19,6 @@ const groupId = router.currentRoute.value.params.groupId;
 const groupsStore = useGroupsStore();
 const group = groupsStore.groups.find(g => g.id === groupId)!;
 
-const title = computed(() => props.mode.mode === 'add' ? 'Add Gift' : 'Edit Gift');
-
 type EditMemberGift = {
   id: string;
   name: string;
@@ -67,60 +65,64 @@ const deleteGift = () => {
 <template>
   <dialog class="modal" v-show-modal="mode.mode" @close="cancel">
     <div class="modal-box">
-      <div class="flex">
-        <h3 class="text-lg font-bold">{{ title }}</h3>
-        <form method="dialog" @submit="cancel" class="ml-auto">
-          <button class="btn btn-sm btn-circle btn-ghost">✕</button>
-        </form>
-      </div>
-      <p v-if="mode.mode == 'add'" class="py-4 text-neutral">
-        If you bought a gift for {{ member.name }}, add it here.
-      </p>
-      <div class="flex flex-col gap-4">
-        <label class="form-control w-full">
-          <div class="label">What's the gift?</div>
-          <input class="input input-bordered" v-model="fields.name" placeholder="Gift name" />
-        </label>
-        <label class="form-control w-full">
-          <div class="label">How much was it?</div>
-          <label class="input input-bordered flex items-center gap-4">
-            <input class="w-full" type="number" v-model="fields.price" placeholder="15" />
-            <span>€</span>
-          </label>
-        </label>
-        <div class="flex flex-col gap-4 sm:flex-row">
-          <label class="form-control w-full">
-            <div class="label">Who bought it?</div>
-            <select class="select select-bordered">
-              <option :value="group.me.id" :selected="group.me.id === fields.buyerId">
-                You
-              </option>
-              <option v-for="member in group.members" :value="member.id" :selected="member.id === fields.buyerId">
-                {{ member.name }}
-              </option>
-            </select>
-          </label>
-
-          <label class="form-control w-full">
-            <div class="label">When?</div>
-            <input class="input input-bordered" type="date" v-model="fields.date" />
-          </label>
+      <form @submit="saveGift">
+        <div class="flex">
+          <h3 class="text-lg font-bold">{{ $t('giftDialog.title.' + mode.mode) }}</h3>
+          <form method="dialog" @submit="cancel" class="ml-auto">
+            <button class="btn btn-sm btn-circle btn-ghost">✕</button>
+          </form>
         </div>
-      </div>
-      <div class="modal-action">
-        <form v-if="mode.mode === 'edit'" method="dialog" class="mr-auto" @submit="deleteGift">
-          <button class="btn btn" type="submit">
-            <i class="las la-trash text-xl"></i>
-            Delete
-          </button>
-        </form>
+        <p v-if="mode.mode == 'add'" class="py-4 text-neutral">
+          <i18n-t keypath="giftDialog.description">
+            <b>{{ member.name }}</b>
+          </i18n-t>
 
-        <form method="dialog" @submit="saveGift">
+        </p>
+        <div class="flex flex-col gap-4">
+          <label class="form-control w-full">
+            <div class="label">{{ $t('giftDialog.name') }}</div>
+            <input class="input input-bordered" v-model="fields.name" placeholder="Gift name" required />
+          </label>
+          <label class="form-control w-full">
+            <div class="label">{{ $t('giftDialog.price') }}</div>
+            <label class="input input-bordered flex items-center gap-4">
+              <input class="w-full" type="number" v-model="fields.price" placeholder="15" />
+              <span>€</span>
+            </label>
+          </label>
+          <div class="flex flex-col gap-4 sm:flex-row">
+            <label class="form-control w-full">
+              <div class="label">{{ $t('giftDialog.buyer') }}</div>
+              <select class="select select-bordered">
+                <option :value="group.me.id" :selected="group.me.id === fields.buyerId">
+                  {{ $t('general.you') }}
+                </option>
+                <option v-for="member in group.members" :value="member.id" :selected="member.id === fields.buyerId">
+                  {{ member.name }}
+                </option>
+              </select>
+            </label>
+
+            <label class="form-control w-full">
+              <div class="label">{{ $t('giftDialog.date') }}</div>
+              <input class="input input-bordered" type="date" v-model="fields.date" />
+            </label>
+          </div>
+        </div>
+        <div class="modal-action">
+          <form v-if="mode.mode === 'edit'" method="dialog" class="mr-auto" @submit="deleteGift">
+            <button class="btn btn" type="submit">
+              <i class="las la-trash text-xl"></i>
+              {{ $t('giftDialog.delete') }}
+            </button>
+          </form>
+
+
           <button class="btn btn-primary" type="submit">
-            {{ mode.mode === 'add' ? 'Add Gift' : 'Save' }}
+            {{ $t('giftDialog.title.' + mode.mode) }}
           </button>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
     <form method="dialog" class="modal-backdrop" @submit="cancel">
       <button>close</button>

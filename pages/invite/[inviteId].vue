@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-
+import '~/utils/extensions';
 import type { AcceptInviteBody } from '~/utils/types';
+
 const router = useRouter();
 const inviteId = router.currentRoute.value.params.inviteId;
 
@@ -21,7 +22,7 @@ const joinGroup = async (groupId: string) => {
     method: 'POST',
     body: body
   });
-  await groupsStore.getGroups({force: true});
+  await groupsStore.getGroups({ force: true });
   router.push(`/groups/${groupId}`);
 };
 
@@ -47,22 +48,19 @@ definePageMeta({
         <div v-if="!data || error" class="prose">
           <h1 class="text-lg font-bold">Sorry</h1>
           <p>
-            Something went wrong. Please open the invite link again, or ask the person who
-            invited you to send you a new invite link.
+            {{ $t('join.error') }}
           </p>
-          <button @click="onCancel" class="btn mt-4 ml-auto">Close</button>
+          <button @click="onCancel" class="btn mt-4 ml-auto">{{ $t('general.close') }}</button>
         </div>
 
         <div v-else-if="data.state == 'can-join'" class="flex flex-col gap-3">
-          <h1 class="text-lg font-bold">Join group</h1>
+          <h1 class="text-lg font-bold">{{ $t('join.title') }}</h1>
           <div class="prose">
-            <p>
-              You have been invited to join the group <b>{{ data.group.name }}</b>!
-            </p>
+            <i18n-t tag="p" keypath="join.description">
+              <b>{{ data.group.name }}</b>
+            </i18n-t>
             <ul>
-              <li>Write your wishlist</li>
-              <li>Easily keep track of gifts for your friends and family</li>
-              <li>You only buy gifts for one person with a pooled budget</li>
+              <li v-for="i in 3">{{ $t(`join.features.${i-1}`) }}</li>
             </ul>
           </div>
 
@@ -83,12 +81,14 @@ definePageMeta({
                 }"></span>
               </div>
               <span>
-                {{ member.name }}
+                {{ member.name.capitalize() }}
               </span>
             </label>
           </div>
 
-          <button @click="joinGroup(data.group.id)" class="mt-2 btn btn-primary" :disabled="!selectedMember">Join group</button>
+          <button @click="joinGroup(data.group.id)" class="mt-2 btn btn-primary" :disabled="!selectedMember">
+            {{ $t('join.join') }}
+          </button>
         </div>
       </div>
     </dialog>

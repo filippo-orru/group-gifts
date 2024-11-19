@@ -179,7 +179,6 @@ export const toClientGroup = async (id: Types.ObjectId, group: DbGroup, memberId
                     price: gift.price,
                 })),
             })),
-        chatMessages,
     };
 
     return clientGroup;

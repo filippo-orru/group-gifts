@@ -80,28 +80,30 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
 </script>
 
 <template>
-    <NavBar title="Create Group" :back="{ href: '/' }" />
-    
+    <NavBar :title="$t('newGroup.title')" :back="{ href: '/' }" />
+
     <form @submit="submit">
         <GenericPanel class="mb-4">
             <div class="flex flex-col gap-6">
                 <label class="form-control w-full">
-                    <div class="label">Group Name</div>
+                    <div class="label">{{ $t('newGroup.groupName') }}</div>
                     <input class="input input-bordered" v-model="groupName" required
-                        :placeholder="'Christmas ' + new Date().getFullYear()" />
+                        :placeholder="$t('newGroup.groupNamePlaceholder', { year: new Date().getFullYear() })" />
                 </label>
                 <label class="form-control w-full">
-                    <div class="label">Date</div>
+                    <div class="label">{{ $t('newGroup.date') }}</div>
                     <input class="input input-bordered" type="date" v-model="date" />
                 </label>
                 <div>
-                    <div class="label">Members</div>
-                    <p class="label pt-0 text-neutral">You need at least {{ minimumMembers }} members</p>
+                    <div class="label">{{ $t('newGroup.members') }}</div>
+                    <p class="label pt-0 text-neutral">{{ $t('newGroup.minimumMembers', { count: minimumMembers }) }}
+                    </p>
                     <div class="flex flex-col gap-4">
                         <div class="flex gap-2" v-for="(member, index) in memberNames" :key="index">
                             <label class="input input-bordered flex items-center gap-2 grow group"
                                 v-focus="index == memberNames.length - 1" aria-autocomplete="none">
-                                <input class="grow peer" :placeholder="index == 0 ? 'You' : 'Name'"
+                                <input class="grow peer"
+                                    :placeholder="index == 0 ? $t('general.you') : $t('general.name')"
                                     v-model="memberNames[index]" required autocomplete="off"
                                     @keydown="(e: KeyboardEvent) => onMemberInputKeydown(e, index)" />
 
@@ -115,7 +117,7 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
 
                         <label class="input input-bordered border-dashed flex items-center gap-2">
                             <span class="opacity-50">+</span>
-                            <input class="grow" readonly placeholder="Add member" @focus="addMember" />
+                            <input class="grow" readonly :placeholder="$t('newGroup.addMember')" @focus="addMember" />
                         </label>
                     </div>
                 </div>
@@ -126,9 +128,9 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
 
         <AppFooter>
             <div class="ml-auto flex items-center gap-4">
-                <span v-if="submitState.state === 'error'" class="text-error">Error creating group</span>
+                <span v-if="submitState.state === 'error'" class="text-error">{{ $t('newGroup.error') }}</span>
                 <button class="btn btn-primary" type="submit">
-                    → Next
+                    → {{ $t('newGroup.createGroup') }}
                 </button>
             </div>
         </AppFooter>
@@ -139,7 +141,7 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
             class="fixed inset-0 flex items-center justify-center bg-base-300 bg-opacity-70 pointer-events-auto">
             <span class="text-lg font-bold flex flex-col gap-4 items-center">
                 <span class="loading loading-spinner loading-lg"></span>
-                Creating group...
+                {{ $t('newGroup.creatingGroup') }}
             </span>
         </div>
     </Transition>

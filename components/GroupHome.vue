@@ -31,20 +31,20 @@ const goToBalance = () => {
 <template>
   <dialog class="modal" v-show-modal="showConfirmDeleteDialog" @close="setShowConfirmDeleteDialog(false)">
     <div class="modal-box">
-      <div class="flex">
-        <h3 class="text-lg font-bold">
-          Delete Group
-        </h3>
-        <form method="dialog" @submit="setShowConfirmDeleteDialog(false)" class="ml-auto">
-          <button class="btn btn-sm btn-circle btn-ghost">✕</button>
-        </form>
-      </div>
+      <h3 class="text-lg font-bold">
+        {{ $t('groupHome.delete.title') }}
+      </h3>
       <p class="py-4">
-        Are you sure you want to delete the group <b>'{{ group.name }}'</b>?
+        <i18n-t keypath="groupHome.delete.description">
+          <b>{{ group.name }}</b>
+        </i18n-t>
       </p>
       <div class="modal-action">
+        <form method="dialog" @submit="setShowConfirmDeleteDialog(false)" class="ml-auto">
+          <button class="btn" type="submit">{{ $t('groupHome.delete.cancel') }}</button>
+        </form>
         <form method="dialog" @submit="confirmDeleteGroup">
-          <button class="btn btn-primary" type="submit">Delete Group</button>
+          <button class="btn btn-primary" type="submit">{{ $t('groupHome.delete.confirm') }}</button>
         </form>
       </div>
     </div>
@@ -60,13 +60,13 @@ const goToBalance = () => {
         <li>
           <button @click="goToBalance">
             <i class="las la-coins text-xl"></i>
-            Balance
+            {{ $t('groupHome.actions.balance') }}
           </button>
         </li>
         <li>
           <button @click="setShowConfirmDeleteDialog(true)">
             <i class="las la-trash text-xl"></i>
-            Delete Group
+            {{ $t('groupHome.actions.delete') }}
           </button>
         </li>
       </template>
@@ -81,16 +81,14 @@ const goToBalance = () => {
         <NuxtLink role="tab" class="tab" :class="{ 'bg-primary text-primary-content': tab == 'home' }"
           :to="`/groups/${groupId}`">
           <i class="las la-home text-lg mr-2"></i>
-          Home
+          {{ $t('groupHome.tabs.home') }}
         </NuxtLink>
         <NuxtLink role="tab" class="tab" :class="{ 'bg-primary text-primary-content': tab == 'wishlist' }"
           :to="`/groups/${groupId}/wishlist`">
           <i class="las la-gift text-lg mr-2"></i>
-          Your Wishlist
+          {{ $t('groupHome.tabs.wishlist') }}
         </NuxtLink>
       </div>
     </GenericPanel>
   </div>
 </template>
-
-<style></style>

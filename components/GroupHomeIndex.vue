@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import '~/utils/extensions';
+
 const router = useRouter();
 const groupId = router.currentRoute.value.params.groupId as string;
 
@@ -8,6 +10,8 @@ const props = defineProps<{
   group: Group;
 }>();
 const group = props.group;
+
+const chatStore = useChatStore();
 
 const baseHref = `/groups/${groupId}`;
 
@@ -83,7 +87,7 @@ const hideInviteDialog = () => {
       <li>
         <NuxtLink to="?invite=true">
           <i class="las la-user-plus text-xl"></i>
-          Invite Friends
+          {{ $t('groupHome.actions.invite') }}
         </NuxtLink>
       </li>
     </template>
@@ -102,12 +106,14 @@ const hideInviteDialog = () => {
             <div class="flex-1 w-0 flex flex-col">
               <div class="flex flex-wrap items-start items-center">
                 <span class="mr-2">
-                  Gift for
-                  <b>{{ memberInGroup.member.name }}</b>
+                  <i18n-t keypath="groupHome.giftFor">
+                    <b>{{ memberInGroup.member.name }}</b>
+                  </i18n-t>
                 </span>
-                <span v-if="memberInGroup.member.responsibleMemberId == group.me.id" class="badge badge-accent overflow-hidden whitespace-nowrap flex justify-start">
+                <span v-if="memberInGroup.member.responsibleMemberId == group.me.id"
+                  class="badge badge-accent overflow-hidden whitespace-nowrap flex justify-start">
                   <i class="las la-gift"></i>&nbsp;
-                  You're responsible
+                  {{ $t('groupHome.youAreResponsible') }}
                 </span>
                 <span v-if="memberInGroup.lastMessage" class="ml-auto text-sm"
                   :class="{ 'opacity-70': memberInGroup.unreadMessages == 0, 'text-primary font-bold': memberInGroup.unreadMessages > 0 }">
@@ -117,17 +123,21 @@ const hideInviteDialog = () => {
               <div class="flex flex-col text-sm text-neutral *:flex *:items-center *:gap-1">
                 <div v-if="!memberInGroup.member.joined" class="">
                   <i class="las la-clock text-xl"></i>
-                  <span><b>{{ memberInGroup.member.name.capitalize() }}</b> has not joined the group yet</span>
+                  <i18n-t keypath="groupHome.memberNotJoined" tag="span">
+                    <b>{{ memberInGroup.member.name.capitalize() }}</b>
+                  </i18n-t>
                 </div>
                 <div v-else-if="memberInGroup.member.myBudget === null" class="">
                   <i class="las la-exclamation-circle text-xl"></i>
-                  <span>You need to set your budget for <b>{{ memberInGroup.member.name }}</b></span>
+                  <i18n-t keypath="groupHome.memberNoBudget" tag="span">
+                    <b>{{ memberInGroup.member.name.capitalize() }}</b>
+                  </i18n-t>
                 </div>
                 <div v-else-if="memberInGroup.lastMessage" class="">
                   <i class="las la-comment-dots text-lg"></i>
                   <b>
                     {{ memberInGroup.lastMessage.authorId == group.me.id ?
-                      'You' : group.members.find(m => m.id == memberInGroup.lastMessage!.authorId)!.name }}:
+                      $t('general.you') : group.members.find(m => m.id == memberInGroup.lastMessage!.authorId)!.name }}:
                   </b>
                   <div class="flex-1 overflow-hidden whitespace-nowrap text-ellipsis">
                     {{ memberInGroup.lastMessage.content }}

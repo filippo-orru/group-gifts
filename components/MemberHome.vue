@@ -18,14 +18,15 @@ type MemberTabs = 'gifts' | 'chat';
 
 const baseHref = `/groups/${groupId}/members/${memberId}/`;
 
+const i18n = useI18n();
 const tabs = {
   gifts:
   {
-    title: 'Gifts',
+    title: i18n.t('memberHome.tabs.gifts'),
     href: baseHref + 'gifts',
   },
   chat: {
-    title: 'Chat',
+    title: i18n.t('memberHome.tabs.chat'),
     href: baseHref + 'chat',
   }
 };
@@ -35,7 +36,7 @@ const tabs = {
 
 <template>
   <div class="relative h-dvh w-full flex flex-col items-stretch">
-    <NavBar :title="'Gift for ' + member.name" :back="{ 'href': `/groups/${groupId}` }" />
+    <NavBar :title="$t('memberHome.title', [member.name])" :back="{ 'href': `/groups/${groupId}` }" />
 
     <GenericPanel>
       <div role="tablist" class="tabs tabs-boxed">

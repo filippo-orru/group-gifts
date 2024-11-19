@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import '~/utils/extensions';
 import type { ChatMessage } from '~/utils/types';
 
 const router = useRouter();
@@ -48,22 +49,31 @@ const sendMessage = (event: Event) => {
 <template>
   <MemberHome activeTab="chat">
     <Transition name="fade" mode="out-in">
-      <ChatView v-if="chatMessages" :chatMessages="chatMessages.value" :group="group"/>
+      <ChatView v-if="chatMessages" :chatMessages="chatMessages.value" :group="group" />
       <div v-else class="flex-1 flex h-full items-center justify-center">
         <span v-if="error">
           <i class="las la-exclamation-triangle text-2xl"></i>
-          <span class="ml-2">Failed to load chat messages. Please try again.</span>
+          <span class="ml-2">{{ $t('chat.failedToLoad') }}</span>
         </span>
         <span v-else class="loading loading-spinner loading-lg text-neutral"></span>
       </div>
     </Transition>
     <div class="mx-5 mt-1 p-1 rounded-lg bg-base-200 text-center">
-      <span class="hidden sm:block" >Don't worry, <b>{{ member.name }}</b> can't see this chat.</span>
-      <span class="block sm:hidden"><b>{{ member.name.capitalize() }}</b> can't see this chat.</span>
+      <span class="hidden sm:block">
+        <i18n-t keypath="chat.memberCantSee" :member="member">
+          <b>{{ member.name }}</b>
+        </i18n-t>
+      </span>
+      <span class="block sm:hidden">
+        <i18n-t keypath="chat.memberCantSeeShort" :member="member">
+          <b>{{ member.name }}</b>
+        </i18n-t>
+      </span>
     </div>
     <form @submit="sendMessage">
       <div class="flex gap-4 px-2 pt-2 pb-4">
-        <input class="input input-bordered flex-grow" placeholder="Type a message..." v-model="messageInput" />
+        <input class="input input-bordered flex-grow" :placeholder="$t('chat.typeMessagePlaceholder')"
+          v-model="messageInput" />
         <button class="btn btn-primary" @click="sendMessage">
           <i class="las la-paper-plane text-xl"></i>
         </button>

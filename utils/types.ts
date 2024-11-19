@@ -26,14 +26,13 @@ export interface AcceptInviteBody {
 
 // MARK: - Types
 
-export type Group = {
+export interface Group {
     id: string;
     name: string;
     date: number;
     me: GroupMemberMe;
     members: GroupMember[];
     inviteId: string;
-    chatMessages: ChatMessage[];
 }
 
 export interface GroupMemberMe {

@@ -8,9 +8,18 @@ const groups = computed(() => groupsStore.groups);
   <NavBar title="Groups" href="/" :use-logo="true">
   </NavBar>
   <GenericPanel :disable-padding="true" class="flex flex-col gap-4 p-4">
-    <div v-if="groups.length === 0" class="mt-6 text-neutral">
-      <p>You are not in any groups yet. Create one now!</p>
-      <p>To view a group you joined on another device, you need to open the invite link again <i>on this device</i>.</p>
+    <div v-if="groups.length === 0"
+      class="min-h-[80vh] flex flex-col gap-2 items-center justify-center text-center text-neutral">
+      <i class="mt-24 las la-users text-6xl"></i>
+      <h2 class="text-lg">
+        {{ $t('groups.noGroupsYet.0') }}
+      </h2>
+      <h2 class="mt-8 text-lg">
+        {{ $t('groups.noGroupsYet.1.title') }}
+      </h2>
+      <p class="max-w-md">
+        {{ $t('groups.noGroupsYet.1.content') }}
+      </p>
     </div>
 
     <NuxtLink v-for="(group, index) in groups" :key="group.id" :to="`/groups/${group.id}`"

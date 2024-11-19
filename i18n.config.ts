@@ -46,6 +46,15 @@ export default defineI18nConfig(() => ({
                 copied: 'Copied!',
                 done: 'Done',
             },
+            groups: {
+                noGroupsYet: [
+                    'No Groups',
+                    {
+                        title: 'Did you already join a group?',
+                        content: 'To view a group you joined on another device, open the invite link again on this device.'
+                    }
+                ],
+            },
             groupHome: {
                 delete: {
                     title: 'Delete Group',
@@ -187,6 +196,15 @@ export default defineI18nConfig(() => ({
                 copy: 'Link kopieren',
                 copied: 'Kopiert!',
                 done: 'Fertig',
+            },
+            groups: {
+                noGroupsYet: [
+                    'Keine Gruppen',
+                    {
+                        title: 'Bist du bereits einer Gruppe beigetreten?',
+                        content: 'Um eine Gruppe, der du bereits beigetreten bist, auf einem anderen Gerät zu sehen, öffne den Einladungslink erneut auf diesem Gerät.'
+                    }
+                ],
             },
             groupHome: {
                 delete: {

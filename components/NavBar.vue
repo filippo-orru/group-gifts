@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const localePath = useLocalePath()
+
 const props = defineProps<{
     href?: string;
     useLogo?: boolean;
@@ -8,7 +10,7 @@ const props = defineProps<{
 const router = useRouter()
 const goBack = () => {
     if (props.href) {
-        router.replace(props.href);
+        router.replace(localePath(props.href));
     } else {
         router.back();
     }
@@ -20,7 +22,7 @@ const goBack = () => {
             <NuxtLink v-if="!useLogo" @click="goBack" class="btn btn-accent">
                 <i class="las la-arrow-left text-xl"></i>
             </NuxtLink>
-            <NuxtLink v-else :to="href ?? '/'"
+            <NuxtLink v-else :to="localePath(href ?? '/')"
                 class="btn btn-accent font-bold h-12 w-12 flex items-center justify-center">
                 GG
             </NuxtLink>

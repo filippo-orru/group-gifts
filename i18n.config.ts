@@ -83,7 +83,7 @@ export default defineI18nConfig(() => ({
                 features: [
                     'Write your wishlist',
                     'Easily keep track of gifts for your friends and family',
-                    'You only buy gifts for one person with a pooled budget'
+                    'You only need to buy gifts for one person, with a shared budget'
                 ],
                 join: 'Join Group',
             },
@@ -234,7 +234,7 @@ export default defineI18nConfig(() => ({
                 features: [
                     'Schreibe deine Wunschliste',
                     'Einfacher Überblick über Geschenke für deine Freunde und Familie',
-                    'Du kaufst nur Geschenke für eine Person mit einem gemeinsamen Budget'
+                    'Du musst nur Geschenke für eine Person kaufen, mit einem gemeinsamen Budget'
                 ],
                 join: 'Gruppe beitreten',
             },

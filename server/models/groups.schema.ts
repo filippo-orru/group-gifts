@@ -1,6 +1,6 @@
 import { defineMongooseModel } from '#nuxt/mongoose'
 import { Schema, Types } from 'mongoose';
-import type { Group, GroupMember, OtherMemberWishlistItem } from '~/utils/types';
+import type { BudgetTransaction, Group, GroupBudgeting, GroupMember, OtherMemberWishlistItem } from '~/utils/types';
 
 interface WishlistItem {
     id: string;
@@ -24,7 +24,8 @@ interface BudgetForMember {
 export interface DbGroupMember {
     id: string;
     name: string;
-    responsibleMemberId: string;
+    /** id of member who is responsible for this member */
+    responsibleMemberId: string; 
     wishlist: WishlistItem[];
     budget: BudgetForMember[];
     gifts: GiftItem[];
@@ -131,8 +132,10 @@ export const MongoGroups = defineMongooseModel<DbGroup>({
     },
 })
 
+
 export const toClientGroup = async (id: Types.ObjectId, group: DbGroup, memberIdMe: string): Promise<Group> => {
-    const usersForGroup: UserInGroup[] = await MongoUserGroups.find({ groupId: id }).exec();
+    const usersForGroup: DbUserInGroup[] = await MongoUserGroups.find({ groupId: id }).exec();
+    const chatMessages: ChatMessage[] = (await MongoMessages.find({ groupId: id }).exec()).map(m => toClientMessage(m));
 
     const me = group.members.find((m) => m.id === memberIdMe);
     if (!me) {
@@ -176,6 +179,7 @@ export const toClientGroup = async (id: Types.ObjectId, group: DbGroup, memberId
                     price: gift.price,
                 })),
             })),
+        chatMessages,
     };
 
     return clientGroup;

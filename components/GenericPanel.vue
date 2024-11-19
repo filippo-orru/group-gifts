@@ -12,7 +12,7 @@ type ClassesType = {
 
 const classes: ClassesType = {
   [propsClasses]: true,
-  'px-5 py-3 md:py-7': !props.disablePadding
+  'px-5 py-3': !props.disablePadding
 };
 
 </script>

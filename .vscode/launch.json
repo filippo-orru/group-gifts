@@ -1,0 +1,36 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "client: chrome",
+            "url": "http://localhost:2425",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "server: nuxt",
+            "outputCapture": "std",
+            "program": "${workspaceFolder}/node_modules/nuxi/bin/nuxi.mjs",
+            "env": {
+                "MONGODB_URI": "mongodb://localhost:27017/group-gifts",
+            },
+            "args": [
+                "dev"
+            ],
+        }
+    ],
+    "compounds": [
+        {
+            "name": "fullstack: nuxt",
+            "configurations": [
+                "server: nuxt",
+                "client: chrome"
+            ]
+        }
+    ]
+}

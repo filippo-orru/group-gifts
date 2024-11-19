@@ -129,6 +129,8 @@ const responsibleString = {
   'know': iAmResponsible ? 'know' : 'knows',
 }
 
+const chatHref = `/groups/${groupId}/members/${memberId}/chat`;
+
 </script>
 
 <template>
@@ -221,10 +223,14 @@ const responsibleString = {
         <div class="flex flex-col">
           <div class="flex items-baseline">
             <h1 class="text-2xl mt-3">Gifts</h1>
-            <span class="ml-auto pl-8 text-sm text-neutral">Total budget: {{ totalBudget }} €</span>
+            <span class="ml-auto pl-8 pr-4 text-neutral">Total budget: {{ totalBudget }} €</span>
           </div>
-          <span class="text-neutral">
-            <b>{{ responsibleString.name.capitalize() }}</b> can use the total budget to buy gifts for <b>{{ member.name }}</b>.
+          <span class="text-neutral md:mr-32">
+            You can buy gifts for up to the <b>total budget of {{ totalBudget }} €</b>.
+            Everyone can buy a gift, but don't forget that
+            <b>{{ responsibleString.name }}</b> {{ responsibleString.be }} responsible for <b>{{ member.name }}'s</b>
+            gifts.
+            You can use the <NuxtLink :to="chatHref" class="underline">chat</NuxtLink> to coordinate who buys what.
           </span>
 
           <div v-if="member.gifts.length == 0" class="mt-6 text-center text-neutral">

@@ -84,6 +84,28 @@ export interface ChatMessage {
     isRead: boolean;
 }
 
+/** Always from the perspective of a member ("me") */
+export interface GroupBudgeting {
+    budgetSum: number;
+    expensesSum: number;
+
+    /** If the group overspent for the member I'm responsible for, this overspend is covered by me by adjusting my budget. */
+    responsibleMemberOverspend: number;
+
+    /** 1 means the budget was consumed exactly. 0.5 means half of the budget was consumed. */
+    groupUnderspendFactor: number;
+
+    /** Transactions that need to be made FROM OR TO ME to balance the budget */
+    myTransactions: BudgetTransaction[];
+}
+
+export interface BudgetTransaction {
+    fromId: string;
+    toId: string;
+    amountCents: number;
+    completed: boolean;
+}
+
 export type GroupForInvite
     = {
         state: 'can-join';

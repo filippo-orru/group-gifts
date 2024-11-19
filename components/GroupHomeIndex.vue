@@ -117,7 +117,7 @@ const hideInviteDialog = () => {
               <div class="flex flex-col text-sm text-neutral *:flex *:items-center *:gap-1">
                 <div v-if="!memberInGroup.member.joined" class="">
                   <i class="las la-clock text-xl"></i>
-                  <span><b>{{ memberInGroup.member.name }}</b> has not joined the group yet</span>
+                  <span><b>{{ memberInGroup.member.name.capitalize() }}</b> has not joined the group yet</span>
                 </div>
                 <div v-else-if="memberInGroup.member.myBudget === null" class="">
                   <i class="las la-exclamation-circle text-xl"></i>

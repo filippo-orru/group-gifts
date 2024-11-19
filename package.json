@@ -16,7 +16,8 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.25.9",
-    "@nuxt/devtools": "^1.6.0"
+    "@nuxt/devtools": "^1.6.0",
+    "nuxi": "^3.15.0"
   },
   "dependencies": {
     "@nuxtjs/i18n": "^9.0.0",
@@ -24,18 +25,18 @@
     "@pinia/nuxt": "^0.7.0",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/forms": "^0.5.9",
-    "nuxt": "^3.14.159",
-    "nuxt-gtag": "^3.0.1",
-    "nuxt-headlessui": "^1.2.0",
-    "nuxt-mongoose": "^1.0.6",
-    "nuxt-svgo": "^4.0.8",
-    "rimraf": "^6.0.1",
     "@tailwindcss/typography": "^0.5.15",
     "aos": "3.0.0-beta.6",
     "axios": "^1.7.7",
     "cookie": "^1.0.1",
     "daisyui": "^4.12.14",
-    "postcss-custom-properties": "^14.0.4"
+    "nuxt": "^3.14.159",
+    "nuxt-gtag": "^3.0.1",
+    "nuxt-headlessui": "^1.2.0",
+    "nuxt-mongoose": "^1.0.6",
+    "nuxt-svgo": "^4.0.8",
+    "postcss-custom-properties": "^14.0.4",
+    "rimraf": "^6.0.1"
   },
   "license": "MIT",
   "bugs": {

@@ -6,11 +6,16 @@ const props = defineProps<{
     };
     title: string;
 }>()
+
+const router = useRouter()
+const goBack = () => {
+    router.back()
+}
 </script>
 <template>
     <div class="bg-[#ead8ca]/95 shadow-md">
         <div class="max-w-4xl h-16 px-5 mx-auto flex flex-row items-center gap-4">
-            <NuxtLink v-if="back && !back.useLogo" :to="back.href" class="btn btn-accent">
+            <NuxtLink v-if="back && !back.useLogo" @click="goBack" class="btn btn-accent">
                 <i class="las la-arrow-left text-xl"></i>
             </NuxtLink>
             <NuxtLink v-else :to="back?.href || '/'"

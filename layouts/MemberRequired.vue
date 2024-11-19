@@ -20,10 +20,10 @@ const member = group && group.members.find(m => m.id === memberId)!;
       <GenericPanel>
         <div class="h-[60vh] flex flex-col items-center justify-center gap-4">
           <div class="text-center">Member not found</div>
-          <NuxtLink :to="`/groups/${groupId}`" class="btn btn-primary">
+          <NuxtLinkLocale :to="`/groups/${groupId}`" class="btn btn-primary">
             <i class="las la-arrow-right"></i>
             Back to group
-          </NuxtLink>
+          </NuxtLinkLocale>
         </div>
       </GenericPanel>
     </div>

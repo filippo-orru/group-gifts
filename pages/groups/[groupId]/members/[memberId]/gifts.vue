@@ -214,7 +214,7 @@ definePageMeta({
               <b>{{ totalBudget }} €</b>
               <b>{{ responsibleName }}</b>
               <b>{{ member.name }}</b>
-              <NuxtLink :to="chatHref" class="underline">{{ $t('memberHome.giftsInfo.chat') }}</NuxtLink>
+              <NuxtLinkLocale :to="chatHref" class="underline">{{ $t('memberHome.giftsInfo.chat') }}</NuxtLinkLocale>
             </i18n-t>
           </span>
 

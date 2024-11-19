@@ -78,16 +78,16 @@ const goToBalance = () => {
 
     <GenericPanel class="">
       <div role="tablist" class="tabs tabs-boxed">
-        <NuxtLink role="tab" class="tab" :class="{ 'bg-primary text-primary-content': tab == 'home' }"
+        <NuxtLinkLocale role="tab" class="tab" :class="{ 'bg-primary text-primary-content': tab == 'home' }"
           :to="`/groups/${groupId}`">
           <i class="las la-home text-lg mr-2"></i>
           {{ $t('groupHome.tabs.home') }}
-        </NuxtLink>
-        <NuxtLink role="tab" class="tab" :class="{ 'bg-primary text-primary-content': tab == 'wishlist' }"
+        </NuxtLinkLocale>
+        <NuxtLinkLocale role="tab" class="tab" :class="{ 'bg-primary text-primary-content': tab == 'wishlist' }"
           :to="`/groups/${groupId}/wishlist`">
           <i class="las la-gift text-lg mr-2"></i>
           {{ $t('groupHome.tabs.wishlist') }}
-        </NuxtLink>
+        </NuxtLinkLocale>
       </div>
     </GenericPanel>
   </div>

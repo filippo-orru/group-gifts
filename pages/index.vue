@@ -5,15 +5,15 @@
   <div class="fixed bg-[#ead8ca]/95 z-40 shadow-sm w-full">
     <GenericPanel :disable-padding="true" class="navbar">
       <div class="navbar-start pl-4">
-        <NuxtLink class="font-bold" href="/">{{ $t('info.name') }}</NuxtLink>
+        <NuxtLinkLocale class="font-bold" href="/">{{ $t('info.name') }}</NuxtLinkLocale>
       </div>
       <div class="navbar-center hidden lg:flex">
         <!-- TODO: You can add menu here -->
       </div>
       <div class="navbar-end">
-        <NuxtLink class="btn btn-accent" to="/groups">
+        <NuxtLinkLocale class="btn btn-accent" to="/groups">
           → {{ $t('landing.myGroups') }}
-        </NuxtLink>
+        </NuxtLinkLocale>
       </div>
     </GenericPanel>
   </div>
@@ -28,9 +28,9 @@
         {{ $t('landing.subtitle') }}
       </p>
       <div class="flex justify-center space-x-5">
-        <NuxtLink class="btn btn-primary" to="/groups/new">
+        <NuxtLinkLocale class="btn btn-primary" to="/groups/new">
           → {{ $t('landing.createGroup') }}
-        </NuxtLink>
+        </NuxtLinkLocale>
       </div>
     </div>
   </div>
@@ -54,7 +54,7 @@
         <p class="font-bold mb-3">{{ $t('landing.footerSubtitle') }}</p>
 
         <p>{{ $t('landing.footerCopyright', { date: new Date().getFullYear() }) }}</p>
-        <NuxtLink to="https://filippo-orru.com" class="font-bold text-neutral underline">filippo-orru.com</NuxtLink>
+        <NuxtLinkLocale to="https://filippo-orru.com" class="font-bold text-neutral underline">filippo-orru.com</NuxtLinkLocale>
       </div>
     </footer>
   </GenericPanel>

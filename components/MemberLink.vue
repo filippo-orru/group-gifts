@@ -11,5 +11,5 @@ const href = `/groups/${groupId}/members/${props.memberId}`;
 </script>
 
 <template>
-  <NuxtLink class="underline font-bold text-neutral" :to="href">{{ member.name }}</NuxtLink>
+  <NuxtLinkLocale class="underline font-bold text-neutral" :to="href">{{ member.name }}</NuxtLinkLocale>
 </template>

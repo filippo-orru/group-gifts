@@ -22,7 +22,7 @@ const groups = computed(() => groupsStore.groups);
       </p>
     </div>
 
-    <NuxtLink v-for="(group, index) in groups" :key="group.id" :to="`/groups/${group.id}`"
+    <NuxtLinkLocale v-for="(group, index) in groups" :key="group.id" :to="`/groups/${group.id}`"
       class="flex flex-col border-2 border-accent rounded-xl overflow-hidden shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
       <div class="bg-accent h-16 relative overflow-hidden">
         <div class="relative -left-4 -top-4  *:text-xl *:text-neutral/50"
@@ -43,13 +43,13 @@ const groups = computed(() => groupsStore.groups);
           {{ group.members.map(m => m.name).join(", ") }}</span>
       </div>
       <!--div v-if="group.newMessages > 0" class="ml-auto badge badge-secondary">{{ group.newMessages }}</div-->
-    </NuxtLink>
+    </NuxtLinkLocale>
   </GenericPanel>
   <GenericPanel class="fixed left-0 right-0 bottom-0">
-    <NuxtLink to="/groups/new" class="btn btn-primary absolute bottom-4 right-4">
+    <NuxtLinkLocale to="/groups/new" class="btn btn-primary absolute bottom-4 right-4">
       <i class="las la-plus text-xl"></i>
-      Create Group
-    </NuxtLink>
+      {{ $t('newGroup.createGroup') }}
+    </NuxtLinkLocale>
   </GenericPanel>
 </template>
 

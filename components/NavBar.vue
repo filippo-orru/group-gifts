@@ -19,13 +19,13 @@ const goBack = () => {
 <template>
     <div class="bg-[#ead8ca]/95 shadow-md">
         <div class="max-w-4xl h-16 px-5 mx-auto flex flex-row items-center gap-4">
-            <NuxtLink v-if="!useLogo" @click="goBack" class="btn btn-accent">
+            <NuxtLinkLocale v-if="!useLogo" @click="goBack" class="btn btn-accent">
                 <i class="las la-arrow-left text-xl"></i>
-            </NuxtLink>
-            <NuxtLink v-else :to="localePath(href ?? '/')"
+            </NuxtLinkLocale>
+            <NuxtLinkLocale v-else :to="localePath(href ?? '/')"
                 class="btn btn-accent font-bold h-12 w-12 flex items-center justify-center">
                 GG
-            </NuxtLink>
+            </NuxtLinkLocale>
             <h1 class="font-bold">{{ title }}</h1>
             <div v-if="$slots.actions" class="flex-1 flex items-center justify-end">
                 <div class="dropdown dropdown-bottom dropdown-end">

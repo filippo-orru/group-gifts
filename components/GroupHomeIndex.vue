@@ -85,16 +85,16 @@ const hideInviteDialog = () => {
   <GroupHome tab="home">
     <template v-slot:actions>
       <li>
-        <NuxtLink to="?invite=true">
+        <NuxtLinkLocale to="?invite=true">
           <i class="las la-user-plus text-xl"></i>
           {{ $t('groupHome.actions.invite') }}
-        </NuxtLink>
+        </NuxtLinkLocale>
       </li>
     </template>
     <GenericPanel :disable-padding="true">
       <div class="flex flex-col">
         <!-- todo all-chat -->
-        <NuxtLink v-for="(memberInGroup, index) in sortedMembers" :to="`${baseHref}/members/${memberInGroup.member.id}`"
+        <NuxtLinkLocale v-for="(memberInGroup, index) in sortedMembers" :to="`${baseHref}/members/${memberInGroup.member.id}`"
           class="hover:bg-base-200">
           <div class="flex gap-4 items-center px-6 py-5">
             <div class="avatar">
@@ -149,7 +149,7 @@ const hideInviteDialog = () => {
               </div>
             </div>
           </div>
-        </NuxtLink>
+        </NuxtLinkLocale>
       </div>
     </GenericPanel>
   </GroupHome>

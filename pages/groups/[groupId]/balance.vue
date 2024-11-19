@@ -26,7 +26,7 @@ definePageMeta({
 
 <template>
   <div class="h-dvh w-full flex flex-col">
-    <NavBar title="Balance" :back="{ href: `/groups/${groupId}` }">
+    <NavBar title="Balance" :href="`/groups/${groupId}`">
     </NavBar>
 
     <GenericPanel>

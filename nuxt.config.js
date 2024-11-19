@@ -21,13 +21,6 @@ export default defineNuxtConfig({
     mongoose: { uri: 'mongodb://localhost:27017/group-gifts' },
   },
 
-  plugins: [
-    {
-      src: '~/plugins/aos.js',
-      mode: 'client',
-    },
-  ],
-
   ssr: false,
 
   app: {

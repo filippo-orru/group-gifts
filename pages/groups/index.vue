@@ -5,7 +5,7 @@ const groups = computed(() => groupsStore.groups);
 </script>
 
 <template>
-  <NavBar title="Groups">
+  <NavBar title="Groups" href="/" :use-logo="true">
   </NavBar>
   <GenericPanel :disable-padding="true" class="flex flex-col gap-4 p-4">
     <div v-if="groups.length === 0" class="mt-6 text-neutral">

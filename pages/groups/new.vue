@@ -80,7 +80,7 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
 </script>
 
 <template>
-    <NavBar :title="$t('newGroup.title')" :back="{ href: '/' }" />
+    <NavBar :title="$t('newGroup.title')" :href="'/'" />
 
     <form @submit="submit">
         <GenericPanel class="mb-4">

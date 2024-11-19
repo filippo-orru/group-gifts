@@ -54,7 +54,7 @@ const goToBalance = () => {
   </dialog>
 
   <div class="h-dvh w-full flex flex-col">
-    <NavBar :title="group.name" :back="{ href: '/groups', useLogo: true }">
+    <NavBar :title="group.name" href='/groups' :useLogo=true>
       <template v-slot:actions>
         <slot name="actions" />
         <li>

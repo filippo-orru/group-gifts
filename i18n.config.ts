@@ -25,7 +25,7 @@ export default defineI18nConfig(() => ({
                 howItWorks3: '<b>Chat</b> about other person\'s wishes',
                 howItWorks4: 'Everyone buys gifts for the person they were assigned to',
                 footerSubtitle: 'Christmas Gift Giving, made easy',
-                footerCopyright: 'Created by Filippo — Copyright © {date}',
+                footerCopyright: 'Created by Filippo © {date}',
             },
             newGroup: {
                 title: 'Create Group',
@@ -167,7 +167,7 @@ export default defineI18nConfig(() => ({
                 howItWorks3: '<b>Chatte</b> um Geschenke zu besprechen',
                 howItWorks4: 'Jede*r kauft Geschenke für die Person, die er/sie zugelost bekommen hat',
                 footerSubtitle: 'Weihnachtsgeschenke, leicht gemacht',
-                footerCopyright: 'Erstellt von Filippo — Copyright © {date}',
+                footerCopyright: 'Filippo © {date}',
             },
             newGroup: {
                 title: 'Neue Gruppe',

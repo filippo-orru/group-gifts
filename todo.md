@@ -1,4 +1,6 @@
 # TO-DO
+
+# DONE
 - join group
     - open link to join
     - select "who am i"
@@ -28,5 +30,3 @@
             - add expense
                 - paid by `member`
 - landing page
-
-# DONE

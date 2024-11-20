@@ -18,7 +18,7 @@ export default defineEventHandler(async (event): Promise<Group[]> => {
       throw new Error("User not found in group");
     }
 
-    return await toClientGroup(dbGroup._id, dbGroup, userInGroup.memberId);
+    return await toClientGroup(dbGroup, userInGroup.memberId);
   }));
 
   return clientGroups;

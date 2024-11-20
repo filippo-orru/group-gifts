@@ -28,5 +28,5 @@ export default defineEventHandler(async (event) => {
 
     await group.save();
 
-    return toClientGroup(group._id, group, member.id);
+    return toClientGroup(group, member.id);
 })

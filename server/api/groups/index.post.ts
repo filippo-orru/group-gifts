@@ -46,5 +46,5 @@ export default defineEventHandler(async (event) => {
 
   await MongoUserGroups.create(userGroupAssociation);
 
-  return toClientGroup(dbGroup._id, dbGroup, group.members[0].id);
+  return toClientGroup(dbGroup, group.members[0].id);
 })

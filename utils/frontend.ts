@@ -1,7 +1,7 @@
 
 export const formatMessageDay = (date: number) => {
     const i18n = useI18n();
-    
+
     const givenDate = new Date(date);
     const now = new Date();
     if (givenDate.getDate() === now.getDate()) {
@@ -47,3 +47,14 @@ export const vFocus = {
         }
     },
 };
+
+export const formatEnumeration = (items: string[]) => {
+    if (items.length === 0) {
+        return '';
+    } else if (items.length === 1) {
+        return items[0];
+    } else {
+        const last = items.pop();
+        return `${items} ${useI18n().t('general.and')} ${last}`;
+    }
+}

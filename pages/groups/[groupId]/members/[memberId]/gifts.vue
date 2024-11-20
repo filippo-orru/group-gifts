@@ -1,36 +1,37 @@
 <script lang="ts" setup>
 import type { AddOrEditGiftMode } from '~/components/AddOrEditGiftDialog.vue';
-import type { MemberGift, MemberWishlistItem, OtherMemberWishlistItem, PutBudget, PutOtherWishlist } from '~/utils/types';
+import type { MemberGift, MemberWishlistItem, MyBudget, OtherMemberWishlistItem, PutBudget, PutOtherWishlist } from '~/utils/types';
 import '~/utils/extensions';
 
 const router = useRouter();
-const groupId = router.currentRoute.value.params.groupId;
-const memberId = router.currentRoute.value.params.memberId;
+const groupId = router.currentRoute.value.params.groupId as string;
+const memberId = router.currentRoute.value.params.memberId as string;
 
 const groupsStore = useGroupsStore()
 await useAsyncData('groups', () => groupsStore.getGroups().then(() => true))
 
-const group = groupsStore.groups.find(g => g.id === groupId)!;
-const member = group.members.find(m => m.id === memberId)!;
+const group = computed(() => groupsStore.groups.find(g => g.id === groupId)!);
+const member = computed(() => group.value.members.find(m => m.id === memberId)!);
 
-const myBudget = useState<string>(`myBudget-${groupId}-${memberId}`, () => member.myBudget?.toString() ?? '');
+const myBudget = ref<string>(member.value.myBudget?.amount?.toString() ?? '');
+const myBudgetIsFlexible = ref<boolean>(member.value.myBudget?.flexible ?? false);
 
-const shouldAddBudget = computed(() => member.myBudget === null);
+const shouldAddBudget = computed(() => member.value.myBudget === null);
 
-const submitBudget = (event: SubmitEvent) => {
+const submitBudget = async (event: SubmitEvent) => {
   event.preventDefault();
+
   let budget: number | null = parseInt(myBudget.value);
   if (isNaN(budget)) {
     budget = null;
   }
-  const body: PutBudget = { budget: budget };
+  const body: PutBudget = {
+    amount: budget,
+    flexible: myBudgetIsFlexible.value,
+  };
 
   try {
-    $fetch(`/api/groups/${groupId}/members/${memberId}/budget`, {
-      method: 'PUT',
-      body: body,
-    });
-    member.myBudget = budget;
+    groupsStore.updateMemberBudget(groupId, memberId, body);
   } catch (e) {
     console.error(e);
     // TODO show error
@@ -40,7 +41,7 @@ const submitBudget = (event: SubmitEvent) => {
 const toggleBought = (wish: OtherMemberWishlistItem) => {
   const newBought = !wish.bought;
   try {
-    const body: PutOtherWishlist = member.wishlist.map((w) => {
+    const body: PutOtherWishlist = member.value.wishlist.map((w) => {
       return {
         id: w.id,
         bought: w.id === wish.id ? newBought : w.bought,
@@ -58,13 +59,13 @@ const toggleBought = (wish: OtherMemberWishlistItem) => {
 };
 
 const sortedWishes: ComputedRef<OtherMemberWishlistItem[]> = computed(() => [
-  ...member.wishlist.filter((wish) => !wish.bought),
-  ...member.wishlist.filter((wish) => wish.bought)
+  ...member.value.wishlist.filter((wish) => !wish.bought),
+  ...member.value.wishlist.filter((wish) => wish.bought)
 ]);
 
-const totalBudget = computed(() => member.otherBudgetSum + (member.myBudget ?? 0));
+const totalBudget = computed(() => member.value.otherBudgetSum + (member.value.myBudget?.amount ?? 0));
 
-const giftPricesSum = computed(() => member.gifts.reduce((sum, gift) => sum + gift.price, 0));
+const giftPricesSum = computed(() => member.value.gifts.reduce((sum, gift) => sum + gift.price, 0));
 
 const addOrEditGiftMode: Ref<AddOrEditGiftMode> = ref({ mode: null });
 
@@ -75,7 +76,7 @@ const cancelAddOrEditGift = () => {
 const addOrEditGift = (gift?: MemberGift) => {
   const originalGiftMode = addOrEditGiftMode.value;
 
-  const gifts = [...member.gifts];
+  const gifts = [...member.value.gifts];
   switch (originalGiftMode.mode) {
     case null:
       break;
@@ -104,7 +105,7 @@ const addOrEditGift = (gift?: MemberGift) => {
       method: 'PUT',
       body: { gifts },
     });
-    member.gifts = gifts;
+    member.value.gifts = gifts;
   } catch (e) {
     console.error(e);
     // TODO show error
@@ -116,10 +117,10 @@ const editGift = (gift: MemberGift) => {
   addOrEditGiftMode.value = { mode: 'edit', gift: gift };
 }
 
-const iAmResponsible = member.responsibleMemberId == group.me.id;
+const iAmResponsible = member.value.responsibleMemberId == group.value.me.id;
 
 // ['You', 'are', 'know'] or ['John', 'is', 'knows']
-const responsibleName = group.members.find(m => m.id == member.responsibleMemberId)?.name ?? null;
+const responsibleName = group.value.members.find(m => m.id == member.value.responsibleMemberId)?.name ?? null;
 
 const chatHref = `/groups/${groupId}/members/${memberId}/chat`;
 
@@ -135,7 +136,7 @@ definePageMeta({
         <div class="mx-5 my-1 p-1 rounded-lg bg-base-200 flex items-center justify-center gap-2">
           <i class="las la-info-circle text-2xl"></i>
           <i18n-t :keypath="'memberHome.whoIsResponsibleInfo.' + (iAmResponsible ? 'you' : 'someoneElse')" tag='span'>
-            <b>{{ responsibleName }}</b>
+            <b>{{ iAmResponsible ? $t('general.you') : responsibleName }}</b>
             <b>{{ member.name }}</b>
           </i18n-t>
         </div>
@@ -162,14 +163,30 @@ definePageMeta({
           </p>
 
 
-          <form @submit="submitBudget" class="mt-4 flex flex-col">
-            <label class="ml-auto form-control flex flex-row gap-2 justify-end">
-              <label class="w-full input input-bordered flex items-center gap-4">
-                <input class="w-full" type="number" v-model="myBudget" placeholder="10" />
-                <span>€</span>
-              </label>
-              <button class="btn btn-primary">{{ $t('memberHome.saveBudget') }}</button>
+          <form @submit="submitBudget"
+            class="mt-4 form-control flex flex-col sm:ml-auto sm:flex-row gap-4 sm:justify-end">
+            <label class="w-full input input-bordered flex items-center gap-4">
+              <input class="w-full" type="number" v-model="myBudget" placeholder="10" />
+              <span>€</span>
             </label>
+
+            <div class="indicator w-full">
+              <button class="btn w-full" :class="{ 'btn-accent': myBudgetIsFlexible }"
+                @click="myBudgetIsFlexible = !myBudgetIsFlexible" type="button">
+                <i class="las text-xl" :class="myBudgetIsFlexible ? 'la-check' : 'la-times'"></i>
+                <span class="ml-2">{{ $t('memberHome.flexibleBudget') }}</span>
+              </button>
+
+              <div class="tooltip tooltip-left sm:tooltip-top before:shadow-md before:z-10 after:z-10"
+                :data-tip="$t('memberHome.flexibleBudgetInfo')">
+                <div class="indicator-item rounded-full w-7 h-7 bg-neutral text-neutral-content">
+                  <i class="ml-auto las la-question-circle text-xl"></i>
+                </div>
+              </div>
+
+            </div>
+
+            <button class="btn btn-primary">{{ $t('memberHome.saveBudget') }}</button>
           </form>
         </div>
 
@@ -229,8 +246,16 @@ definePageMeta({
 
           <Transition name="slide-fade">
             <div v-if="totalBudget - giftPricesSum < 0" class="mt-3 alert alert-warning mx-auto max-w-xl">
-              <i class="las la-exclamation-triangle text-2xl"></i>
-              {{ $t('memberHome.overspentBy', giftPricesSum - totalBudget) }}
+              <div class="flex items-center gap-2">
+                <i class="las la-exclamation-triangle text-2xl"></i>
+                <i18n-t keypath='memberHome.overspentBy' tag="span">
+                  <b>{{ giftPricesSum - totalBudget }} €</b>
+                  <b>{{
+                    formatEnumeration(member.memberIdsWithFlexibleBudget.map(id =>
+                      id == group.me.id ? $t('general.you') : group.members.find(m => m.id == id)?.name ?? "unknown"
+                    )) }}</b>
+                </i18n-t>
+              </div>
             </div>
           </Transition>
 

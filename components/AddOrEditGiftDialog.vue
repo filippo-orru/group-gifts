@@ -46,7 +46,9 @@ const defaultFields = computed<EditMemberGift>(() => {
 
 const fields = ref(defaultFields.value);
 
-const saveGift = () => {
+const saveGift = (event: SubmitEvent) => {
+  event.preventDefault();
+
   props.save({
     id: fields.value.id,
     name: fields.value.name,
@@ -57,7 +59,9 @@ const saveGift = () => {
   fields.value = defaultFields.value;
 };
 
-const deleteGift = () => {
+const deleteGift = (event: SubmitEvent) => {
+  event.preventDefault();
+  
   props.save();
 };
 </script>

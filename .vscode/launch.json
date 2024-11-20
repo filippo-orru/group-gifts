@@ -22,6 +22,16 @@
             "args": [
                 "dev"
             ],
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "test",
+            "outputCapture": "std",
+            "program": "vitest",
+            "args": [
+            ],
+            
         }
     ],
     "compounds": [

@@ -1,6 +1,6 @@
 import { defineMongooseModel } from '#nuxt/mongoose'
 import { Schema, Types } from 'mongoose';
-import type { BudgetTransaction, Group, GroupBudgeting, GroupMember, OtherMemberWishlistItem } from '~/utils/types';
+import type { Group, GroupBudgetForMe, GroupMember, OtherMemberWishlistItem } from '~/utils/types';
 
 interface WishlistItem {
     id: string;
@@ -19,13 +19,14 @@ interface GiftItem {
 interface BudgetForMember {
     userId: string;
     amount: number;
+    flexible: boolean;
 }
 
 export interface DbGroupMember {
     id: string;
     name: string;
-    /** id of member who is responsible for this member */
-    responsibleMemberId: string; 
+    /** id of other member who is responsible for this member */
+    responsibleMemberId: string;
     wishlist: WishlistItem[];
     budget: BudgetForMember[];
     gifts: GiftItem[];
@@ -86,6 +87,11 @@ const budgetForMemberSchema = new Schema({
         type: 'number',
         required: true,
     },
+    flexible: {
+        type: 'boolean',
+        required: false,
+        default: false,
+    }
 }, { _id: false });
 
 const groupMemberSchema = new Schema<DbGroupMember>({
@@ -133,9 +139,9 @@ export const MongoGroups = defineMongooseModel<DbGroup>({
 })
 
 
-export const toClientGroup = async (id: Types.ObjectId, group: DbGroup, memberIdMe: string): Promise<Group> => {
-    const usersForGroup: DbUserInGroup[] = await MongoUserGroups.find({ groupId: id }).exec();
-    const chatMessages: ChatMessage[] = (await MongoMessages.find({ groupId: id }).exec()).map(m => toClientMessage(m));
+export const toClientGroup = async (group: DbGroup & { _id: Types.ObjectId }, memberIdMe: string): Promise<Group> => {
+    const usersForGroup: DbUserInGroup[] = await MongoUserGroups.find({ groupId: group._id }).exec();
+    const chatMessages: ChatMessage[] = (await MongoMessages.find({ groupId: group._id }).exec()).map(m => toClientMessage(m));
 
     const me = group.members.find((m) => m.id === memberIdMe);
     if (!me) {
@@ -152,33 +158,51 @@ export const toClientGroup = async (id: Types.ObjectId, group: DbGroup, memberId
         })),
     };
     const clientGroup: Group = {
-        id: id.toHexString(),
+        id: group._id.toHexString(),
         inviteId: group.inviteId,
         name: group.name,
         date: group.date.getTime(),
         me: groupMemberMe,
         members: group.members
             .filter((member) => member.id !== memberIdMe)
-            .map((member): GroupMember => ({
-                id: member.id,
-                name: member.name,
-                wishlist: member.wishlist.map((item): OtherMemberWishlistItem => ({
-                    id: item.id,
-                    name: item.name,
-                    bought: item.bought,
-                })),
-                joined: usersForGroup.some((u) => u.memberId === member.id),
-                myBudget: member.budget.find((b) => b.userId === memberIdMe)?.amount ?? null,
-                otherBudgetSum: member.budget.filter((m) => m.userId !== memberIdMe).reduce((acc, b) => acc + b.amount, 0),
-                responsibleMemberId: member.responsibleMemberId,
-                gifts: member.gifts.map((gift) => ({
-                    id: gift.id,
-                    name: gift.name,
-                    date: gift.date.getTime(),
-                    buyerId: gift.buyerId,
-                    price: gift.price,
-                })),
-            })),
+            .map((member): GroupMember => {
+                // If noone has a flexible budget for this member, the responsible member is the default
+                const memberIdsWithFlexibleBudget = member.budget
+                    .filter(b => b.flexible)
+                    .map(m => m.userId);
+                if (memberIdsWithFlexibleBudget.length === 0) {
+                    memberIdsWithFlexibleBudget.push(member.responsibleMemberId);
+                }
+
+                const myBudget = member.budget.find((b) => b.userId === memberIdMe);
+
+                return {
+                    id: member.id,
+                    name: member.name,
+                    wishlist: member.wishlist.map((item): OtherMemberWishlistItem => ({
+                        id: item.id,
+                        name: item.name,
+                        bought: item.bought,
+                    })),
+                    joined: usersForGroup.some((u) => u.memberId === member.id),
+                    myBudget: myBudget ? {
+                        amount: myBudget.amount,
+                        flexible: myBudget.flexible,
+                    } : null,
+                    memberIdsWithFlexibleBudget,
+                    otherBudgetSum: member.budget
+                        .filter((m) => m.userId !== memberIdMe)
+                        .reduce((acc, b) => acc + b.amount, 0),
+                    responsibleMemberId: member.responsibleMemberId,
+                    gifts: member.gifts.map((gift) => ({
+                        id: gift.id,
+                        name: gift.name,
+                        date: gift.date.getTime(),
+                        buyerId: gift.buyerId,
+                        price: gift.price,
+                    })),
+                };
+            }),
     };
 
     return clientGroup;

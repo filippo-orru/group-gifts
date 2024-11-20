@@ -1,16 +1,18 @@
+import type { GroupBudgetForMe } from "~/utils/types";
+
 export const useGroupsStore = defineStore({
   id: 'groupStore',
   state: () => ({
     groups: [] as Group[],
-    budgeting: {} as { [groupId: string]: GroupBudgeting },
+    budgeting: {} as { [groupId: string]: GroupBudgetForMe },
   }),
   actions: {
     async getGroup(id: string): Promise<Group | undefined> {
       await useAsyncData('groups', () => this.getGroups());
       return this.groups.find((g) => g.id === id);
     },
-    async getBudgeting(groupId: string): Promise<GroupBudgeting> {
-      const budgeting = await $fetch<GroupBudgeting>(`/api/groups/${groupId}/budgeting`);
+    async getBudgeting(groupId: string): Promise<GroupBudgetForMe> {
+      const budgeting = await $fetch<GroupBudgetForMe>(`/api/groups/${groupId}/budgeting`);
       this.budgeting[groupId] = budgeting;
       return this.budgeting[groupId]!;
     },
@@ -35,6 +37,14 @@ export const useGroupsStore = defineStore({
         method: 'DELETE',
       });
       this.groups = this.groups.filter((g) => g.id !== id);
+    },
+    async updateMemberBudget(groupId: string, memberId: string, body: PutBudget) {
+      const group = await $fetch<Group>(`/api/groups/${groupId}/members/${memberId}/budget`, {
+        method: 'PUT',
+        body: body,
+      });
+      const index = this.groups.findIndex((g) => g.id === groupId);
+      this.groups[index] = group;
     },
   }
 })

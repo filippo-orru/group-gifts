@@ -85,10 +85,10 @@ const hideInviteDialog = () => {
   <GroupHome tab="home">
     <template v-slot:actions>
       <li>
-        <NuxtLinkLocale to="?invite=true">
+        <NuxtLink to="?invite=true">
           <i class="las la-user-plus text-xl"></i>
           {{ $t('groupHome.actions.invite') }}
-        </NuxtLinkLocale>
+        </NuxtLink>
       </li>
     </template>
     <GenericPanel :disable-padding="true">

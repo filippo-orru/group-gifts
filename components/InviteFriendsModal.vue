@@ -34,7 +34,7 @@ const onLinkFocus = (event: FocusEvent) => {
       </div>
       <p class="py-4">{{ $t('invite.description') }}</p>
       <div class="flex gap-2">
-        <input class="input input-bordered grow min-w-0" dir="rtl" readonly :value="inviteLink" @focus="onLinkFocus" />
+        <input class="input input-bordered grow min-w-0" readonly :value="inviteLink" @focus="onLinkFocus" />
         <button class="btn" :class="{ 'btn-primary': !hasCopiedLink }" @click="copyLink">
           <template v-if="hasCopiedLink">{{ $t('invite.copied') }}</template>
           <template v-else>{{ $t('invite.copy') }}</template>

@@ -7,7 +7,8 @@ export type CreateGroup = {
 }
 
 export type PutBudget = {
-    budget: number | null;
+    amount: number | null;
+    flexible: boolean;
 }
 
 export type PutGifts = {
@@ -46,7 +47,8 @@ export interface GroupMember {
     name: string;
     wishlist: OtherMemberWishlistItem[];
     joined: boolean;
-    myBudget: number | null;
+    myBudget: MyBudget | null;
+    memberIdsWithFlexibleBudget: string[];
     otherBudgetSum: number;
     responsibleMemberId: string;
     gifts: MemberGift[];
@@ -58,6 +60,11 @@ export interface MemberWishlistItem {
     // description: string;
     // link: string | null;
     // price: number | null;
+}
+
+export interface MyBudget {
+    amount: number;
+    flexible: boolean;
 }
 
 export interface OtherMemberWishlistItem extends MemberWishlistItem {
@@ -84,21 +91,31 @@ export interface ChatMessage {
 }
 
 /** Always from the perspective of a member ("me") */
-export interface GroupBudgeting {
+export interface GroupBudgetForMe {
     budgetSum: number;
     expensesSum: number;
 
-    /** If the group overspent for the member I'm responsible for, this overspend is covered by me by adjusting my budget. */
-    responsibleMemberOverspend: number;
+    /** If the budget for any member is exceeded, this is covered by members with a flexible budget, 
+     * or the one responsible member if noone has a flexible budget. */
+    overspend:AmountForMembers;
 
-    /** 1 means the budget was consumed exactly. 0.5 means half of the budget was consumed. */
-    groupUnderspendFactor: number;
+    /** If the budget for any member is not fully spent, 
+     * the remaining amount is split between all members, with respect to their budgets */
+    underspend: AmountForMembers;
+
+    /** If positive, the member should receive this sum via [myTransactions] - or pay this sum, if negative. */
+    remainder: number;
 
     /** Transactions that need to be made FROM OR TO ME to balance the budget */
-    myTransactions: BudgetTransaction[];
+    myTransactions: MyBudgetTransaction[];
 }
 
-export interface BudgetTransaction {
+export interface AmountForMembers {
+    amount: number;
+    forMemberIds: string[];
+}
+
+export interface MyBudgetTransaction {
     fromId: string;
     toId: string;
     amountCents: number;

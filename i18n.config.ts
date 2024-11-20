@@ -13,6 +13,7 @@ export default defineI18nConfig(() => ({
                 today: 'Today',
                 yesterday: 'Yesterday',
                 close: 'Close',
+                and: 'and',
             },
             landing: {
                 title: 'Christmas Gift Giving,<br>made easy',
@@ -94,7 +95,7 @@ export default defineI18nConfig(() => ({
                     chat: 'Chat',
                 },
                 whoIsResponsibleInfo: {
-                    you: '{0} are responsible for buying gifts for {0}',
+                    you: '{0} are responsible for buying gifts for {1}',
                     someoneElse: '{0} is responsible for buying gifts for {1}',
                 },
                 mustSetBudget: [
@@ -120,7 +121,8 @@ export default defineI18nConfig(() => ({
                     chat: 'chat'
                 },
                 noGiftsYet: 'No gifts yet.{0}If you bought something for {1}, add it here!',
-                overspentBy: 'Overspent by {n} €',
+                overspentBy: 'Overspent by {0}. The overspent amount will be covered by {1}.',
+                overspentByYou: 'you',
                 giftBoughtBy: {
                     you: 'by you',
                     someoneElse: 'by {0}',
@@ -128,7 +130,8 @@ export default defineI18nConfig(() => ({
                 expensesSum: 'Sum: {n} €',
                 remainingBudget: 'Remaining Budget: {n} €',
                 addGift: 'Add Gift',
-
+                flexibleBudget: 'My budget is flexible',
+                flexibleBudgetInfo: 'Check this if you\'re willing to exceed your budget if necessary',
             },
             giftDialog: {
                 title: {
@@ -164,6 +167,7 @@ export default defineI18nConfig(() => ({
                 today: 'Heute',
                 yesterday: 'Gestern',
                 close: 'Schließen',
+                and: 'und',
             },
             landing: {
                 title: 'Weihnachtsgeschenke,<br>leicht gemacht',
@@ -245,7 +249,7 @@ export default defineI18nConfig(() => ({
                     chat: 'Chat',
                 },
                 whoIsResponsibleInfo: {
-                    you: 'Du bist für die Geschenke für {1} verantwortlich',
+                    you: '{0} bist für die Geschenke für {1} verantwortlich',
                     someoneElse: '{0} ist für die Geschenke für {1} verantwortlich',
                 },
                 mustSetBudget: [
@@ -271,7 +275,8 @@ export default defineI18nConfig(() => ({
                     chat: 'Chat',
                 },
                 noGiftsYet: 'Es gibt noch keine Geschenke.{0}Wenn du etwas für {1} gekauft hast, füge es hier hinzu!',
-                overspentBy: 'Es wurde {n} € zu viel ausgegeben | Es wurden {n} € zu viel ausgegeben',
+                overspentBy: '| Es wurden {0} zu viel ausgegeben. Die Mehrkosten werden von {1} getragen.',
+                overspentByYou: 'dir',
                 giftBoughtBy: {
                     you: 'von dir',
                     someoneElse: 'von {0}',
@@ -279,6 +284,8 @@ export default defineI18nConfig(() => ({
                 expensesSum: 'Summe: {n} €',
                 remainingBudget: 'Verbleibendes Budget: {n} €',
                 addGift: 'Geschenk hinzufügen',
+                flexibleBudget: 'Mein Budget ist flexibel',
+                flexibleBudgetInfo: 'Klicke hier, wenn du bereit bist, dein Budget wenn nötig zu überschreiten',
             },
             giftDialog: {
                 title: {

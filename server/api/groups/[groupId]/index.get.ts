@@ -4,5 +4,5 @@ import { getGroupData } from "~/server/utils/groups";
 export default defineEventHandler(async (event) => {
     const { group, member } = await getGroupData(event);
 
-    return await toClientGroup(group._id, group, member.id);
+    return await toClientGroup(group, member.id);
 });

@@ -10,3 +10,4 @@ dist
 .firebase/*
 
 volumes
+docker-compose.override.yml

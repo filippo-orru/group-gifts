@@ -17,9 +17,12 @@ const addItem = () => {
   }
 };
 
+const state: Ref<'saved' | 'saving' | 'error'> = ref('saved');
+
 const changeTimer = ref<NodeJS.Timeout | null>(null);
 const onChange = () => {
   // debounce
+  state.value = 'saving';
   if (changeTimer.value) {
     clearTimeout(changeTimer.value);
   }
@@ -27,13 +30,29 @@ const onChange = () => {
     const body: PutMyWishlist = {
       items: wishlistItems.value
     }
-    await $fetch(`/api/groups/${props.group.id}/members/me/wishlist`, {
-      method: 'PUT',
-      body: body
-    });
-    props.group.me.wishlist = wishlistItems.value;
+    try {
+      await $fetch(`/api/groups/${props.group.id}/members/me/wishlist`, {
+        method: 'PUT',
+        body: body
+      });
+      props.group.me.wishlist = wishlistItems.value;
+      state.value = 'saved';
+    } catch (e) {
+      state.value = 'error';
+    }
     changeTimer.value = null;
   }, 800);
+};
+
+const onKeydown = (event: KeyboardEvent, index: number) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        addItem();
+
+    // } else if (event.key === "Backspace" && memberNames.value[index].name === "") {
+    //     event.preventDefault();
+    //     removeMember(index);
+    }
 };
 </script>
 
@@ -48,16 +67,24 @@ const onChange = () => {
         <div v-for="(item, index) in wishlistItems" :key="item.id" class="flex items-center">
           <span class="rounded-full h-4 w-4 mx-4 border-2 border-neutral"></span>
           <label class="input input-bordered grow flex flex-row gap-2">
-            <input type="text" class="" v-model="item.name" v-focus="index == wishlistItems.length - 1"
-              :placeholder="$t('wishlist.placeholder')" @input="onChange" />
+            <input type="text" class="w-full" v-model="item.name" v-focus="index == wishlistItems.length - 1"
+              :placeholder="$t('wishlist.placeholder')" @input="onChange" @keydown="(e: KeyboardEvent) => onKeydown(e, index)" />
           </label>
         </div>
 
         <div key="add" class="flex items-center">
           <span class="rounded-full h-4 w-4 mx-4 border-2 border-neutral/60"></span>
           <label class="input input-bordered grow flex flex-row gap-2 border-dashed">
-            <input type="text" class="" @focus="addItem" :placeholder="$t('wishlist.add')" />
+            <input type="text" class="w-full" @focus="addItem" :placeholder="$t('wishlist.add')" readonly/>
           </label>
+        </div>
+
+        <div class="ml-auto text-neutral text-sm">
+          <Transition name="fade" mode="out-in">
+            <span v-if="state === 'saving'">{{ $t('wishlist.saving') }}</span>
+            <span v-else-if="state === 'saved'">{{ $t('wishlist.saved') }}</span>
+            <span v-else-if="state === 'error'">{{ $t('wishlist.error') }}</span>
+          </Transition>
         </div>
       </div>
     </GenericPanel>

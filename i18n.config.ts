@@ -181,6 +181,9 @@ export default defineI18nConfig(() => ({
                     'Your friends can see this list.',
                 placeholder: 'What do you wish for?',
                 add: 'Add a wish',
+                saved: 'Saved',
+                saving: 'Saving...',
+                error: 'Error saving wishes. Please try again.',
             }
         },
         // MARK: DE
@@ -355,6 +358,16 @@ export default defineI18nConfig(() => ({
                 youDontNeedToMakeTransactions: 'Du musst keine Transaktionen durchführen.',
                 noNeedToMakeTransactions: 'Es müssen keine Transaktionen durchgeführt werden, dein Budget ist schon ausgeglichen!',
                 transactionMarkAsDone: 'Als erledigt markieren',
+            },
+            wishlist: {
+                title: 'Wunschliste',
+                description: 'Trage all deine Wünsche auf dieser Liste ein, damit die anderen wissen was sie dir schenken sollen! ' +
+                    'Deine Freunde können diese Liste sehen.',
+                placeholder: 'Was wünschst du dir?',
+                add: 'Wunsch hinzufügen',
+                saved: 'Gespeichert',
+                saving: 'Wird gespeichert...',
+                error: 'Fehler beim Speichern der Wünsche. Bitte versuche es noch einmal.',
             }
         }
     }

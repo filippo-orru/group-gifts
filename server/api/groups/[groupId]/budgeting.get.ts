@@ -1,6 +1,7 @@
 import { type DbGroupMember } from "~/server/models/groups.schema";
 import calculateGroupBudget from "~/utils/budget-calc";
 import { getGroupData } from "~/server/utils/groups";
+import {getTransactionId} from "~/utils/utils";
 
 export default defineEventHandler(async (event) => {
   const { group, member } = await getGroupData(event);
@@ -13,6 +14,8 @@ const calculateBudgetForMe = (group: DbGroup, me: DbGroupMember): GroupBudgetFor
   const groupBudget = calculateGroupBudget(group);
 
   const myBudget = groupBudget.membersBudgets.find(m => m.id === me.id)!;
+
+  const transactionsMap = new Map(group.transactions.map(t => [t.id, t.completed]) ?? []);
 
   return {
     budgetSum: myBudget.budget,
@@ -29,7 +32,7 @@ const calculateBudgetForMe = (group: DbGroup, me: DbGroupMember): GroupBudgetFor
         fromId: t.fromId,
         toId: t.toId,
         amountCents: t.amountCents,
-        completed: false, // TODO
+        completed: transactionsMap.get(getTransactionId(t)) ?? false,
       })),
   };
 };

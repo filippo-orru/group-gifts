@@ -34,6 +34,8 @@ export default defineEventHandler(async (event) => {
     inviteId: generateId(),
     members: members,
     date: new Date(body.date),
+    createdDate: new Date(),
+    transactions: [],
   };
 
   const dbGroup = await MongoGroups.create(group);

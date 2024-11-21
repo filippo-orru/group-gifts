@@ -1,4 +1,4 @@
-import type { GroupBudgetForMe } from "~/utils/types";
+import { type GroupBudgetForMe, type MyBudgetTransaction, type PutTransaction } from "~/utils/types";
 
 export const useGroupsStore = defineStore({
   id: 'groupStore',
@@ -46,5 +46,16 @@ export const useGroupsStore = defineStore({
       const index = this.groups.findIndex((g) => g.id === groupId);
       this.groups[index] = group;
     },
+    async toggleTransactionCompleted(groupId: string, transaction: MyBudgetTransaction) {
+      const transactionId = getTransactionId(transaction);
+      const body: PutTransaction = {
+        completed: !transaction.completed
+      };
+      await $fetch<Group>(`/api/groups/${groupId}/transactions/${transactionId}`, {
+        method: 'PUT',
+        body: body,
+      });
+      transaction.completed = !transaction.completed;
+    }
   }
 })

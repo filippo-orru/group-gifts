@@ -11,6 +11,10 @@ export type PutBudget = {
     flexible: boolean;
 }
 
+export interface PutTransaction {
+    completed: boolean;
+}
+
 export type PutGifts = {
     gifts: MemberGift[];
 }
@@ -115,10 +119,7 @@ export interface AmountForMembers {
     forMemberIds: string[];
 }
 
-export interface MyBudgetTransaction {
-    fromId: string;
-    toId: string;
-    amountCents: number;
+export interface MyBudgetTransaction extends BudgetTransaction {
     completed: boolean;
 }
 

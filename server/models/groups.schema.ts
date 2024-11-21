@@ -36,8 +36,26 @@ export interface DbGroup {
     name: string;
     inviteId: string;
     date: Date;
+    createdDate: Date;
     members: DbGroupMember[];
+    transactions: DbTransaction[];
 }
+
+export interface DbTransaction {
+    id: string;
+    completed: boolean;
+}
+
+const transactionSchema = new Schema<DbTransaction>({
+    id: {
+        type: 'string',
+        required: true,
+    },
+    completed: {
+        type: 'boolean',
+        required: true,
+    },
+}, { _id: false });
 
 const wishlistSchema = new Schema<WishlistItem>({
     id: {
@@ -128,7 +146,15 @@ export const MongoGroups = defineMongooseModel<DbGroup>({
             type: 'date',
             required: true,
         },
+        createdDate: {
+            type: 'date',
+            required: true,
+        },
         members: [groupMemberSchema],
+        transactions: {
+            type: [transactionSchema],
+            default: [],
+        },
     },
     options: {
 

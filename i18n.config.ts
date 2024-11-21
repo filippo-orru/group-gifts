@@ -153,7 +153,25 @@ export default defineI18nConfig(() => ({
                 memberCantSee: 'Don\'t worry, {0} can\'t see this chat',
                 memberCantSeeShort: '{0} can\'t see this chat',
             },
-            pages: {
+            balance: {
+                title: 'Balance',
+                info1: 'Here you can see how to balance the expenses of the group.',
+                info2: 'Make sure all budgets and expenses (gifts) have been added before you start to balance!',
+                calculation: 'Calculation',
+                yourExpenses: 'Your expenses',
+                yourExpensesTooltip: 'You bought gifts for {0}',
+                yourBudget: 'Your budget',
+                yourOverspend: 'Your overspend',
+                yourOverspendTooltip: 'Because you spent more than the available budget for {0}',
+                yourUnderspend: 'Your underspend',
+                yourUnderspendTooltip: 'Because the group spent less than the available budget for {0}',
+                result: 'Result',
+                transactions: 'Transactions',
+                youNeedToMakeTheseTransactions: 'You need to make these transactions so that the budget is balanced.',
+                othersNeedToMakeTheseTransactions: 'Others needs to make these transactions so your budget is balanced.',
+                youDontNeedToMakeTransactions: 'You don\'t need to make any transactions.',
+                noNeedToMakeTransactions: 'No transactions need to be made, your budget is already balanced!',
+                transactionMarkAsDone: 'Mark as done',
             }
         },
         // MARK: DE
@@ -307,8 +325,26 @@ export default defineI18nConfig(() => ({
                 memberCantSee: 'Keine Sorge, {0} kann diesen Chat nicht sehen',
                 memberCantSeeShort: '{0} kann diesen Chat nicht sehen',
             },
-            pages: {
+            balance: {
+                title: 'Bilanz',
+                info1: 'Hier siehst du, wie die Ausgaben der Gruppe ausgeglichen werden können.',
+                info2: 'Bevor du mit dem Ausgleich beginnst sollten alle Budgets und Ausgaben (Geschenke) hinzugefügt werden!',
+                calculation: 'Berechnung',
+                yourExpenses: 'Deine Ausgaben',
+                yourExpensesTooltip: 'Du hast Geschenke für {0} gekauft',
+                yourBudget: 'Dein Budget',
+                yourOverspend: 'Deine Mehrausgaben',
+                yourOverspendTooltip: 'Weil du mehr als das verfügbare Budget für {0} ausgegeben hast',
+                yourUnderspend: 'Deine Minderausgaben',
+                yourUnderspendTooltip: 'Weil weniger als das verfügbare Budget für {0} ausgegeben wurde',
+                result: 'Ergebnis',
+                transactions: 'Transaktionen',
+                youNeedToMakeTheseTransactions: 'Du musst diese Transaktionen durchführen, damit das Budget ausgeglichen ist.',
+                othersNeedToMakeTheseTransactions: 'Andere müssen diese Transaktionen durchführen, damit dein Budget ausgeglichen ist.',
+                youDontNeedToMakeTransactions: 'Du musst keine Transaktionen durchführen.',
+                noNeedToMakeTransactions: 'Es müssen keine Transaktionen durchgeführt werden, dein Budget ist schon ausgeglichen!',
+                transactionMarkAsDone: 'Als erledigt markieren',
             }
         }
     }
-}))
+}));

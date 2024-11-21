@@ -172,6 +172,13 @@ export default defineI18nConfig(() => ({
                 youDontNeedToMakeTransactions: 'You don\'t need to make any transactions.',
                 noNeedToMakeTransactions: 'No transactions need to be made, your budget is already balanced!',
                 transactionMarkAsDone: 'Mark as done',
+            },
+            wishlist: {
+                title: 'Wishlist',
+                description: 'Help your friends know what to get you by adding all your wishes to this list! ' +
+                    'Your friends can see this list.',
+                placeholder: 'What do you wish for?',
+                add: 'Add a wish',
             }
         },
         // MARK: DE

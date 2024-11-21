@@ -41,25 +41,22 @@ const onChange = () => {
   <GroupHome tab="wishlist">
     <GenericPanel :disable-padding="false" class="flex flex-col gap-4">
       <div class="p-2">
-        <h1 class="text-2xl font-bold">Your Wishlist</h1>
-        <p>
-          Help your friends know what to get you by adding all your wishes to this list!
-          Your friends can see this list.
-        </p>
+        <h1 class="text-2xl font-bold">{{ $t('wishlist.title') }}</h1>
+        <p>{{ $t('wishlist.description') }}</p>
       </div>
       <div class="flex flex-col gap-3">
         <div v-for="(item, index) in wishlistItems" :key="item.id" class="flex items-center">
           <span class="rounded-full h-4 w-4 mx-4 border-2 border-neutral"></span>
           <label class="input input-bordered grow flex flex-row gap-2">
             <input type="text" class="" v-model="item.name" v-focus="index == wishlistItems.length - 1"
-              placeholder="What do you wish for?" @input="onChange" />
+              :placeholder="$t('wishlist.placeholder')" @input="onChange" />
           </label>
         </div>
 
         <div key="add" class="flex items-center">
           <span class="rounded-full h-4 w-4 mx-4 border-2 border-neutral/60"></span>
           <label class="input input-bordered grow flex flex-row gap-2 border-dashed">
-            <input type="text" class="" @focus="addItem" placeholder="Add a wish" />
+            <input type="text" class="" @focus="addItem" :placeholder="$t('wishlist.add')" />
           </label>
         </div>
       </div>

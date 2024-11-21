@@ -79,6 +79,7 @@ export default defineI18nConfig(() => ({
             },
             join: {
                 error: 'Something went wrong. Please open the invite link again, or ask the person who invited you to send you a new invite link.',
+                errorSorry: 'Sorry',
                 title: 'Join Group',
                 description: 'You have been invited to join the group {0}!',
                 features: [
@@ -87,6 +88,7 @@ export default defineI18nConfig(() => ({
                     'You only need to buy gifts for one person, with a shared budget'
                 ],
                 join: 'Join Group',
+                selectYourName: 'Select your name',
             },
             memberHome: {
                 title: 'Gift for {0}',
@@ -258,6 +260,7 @@ export default defineI18nConfig(() => ({
             },
             join: {
                 error: 'Etwas ist schief gelaufen. Bitte öffne den Einladungslink erneut, oder bitte die Person, die dich eingeladen hat, dir einen neuen Link zu senden.',
+                errorSorry: 'Entschuldigung',
                 title: 'Gruppe beitreten',
                 description: 'Du wurdest eingeladen, der Gruppe {0} beizutreten!',
                 features: [
@@ -266,6 +269,7 @@ export default defineI18nConfig(() => ({
                     'Du musst nur Geschenke für eine Person kaufen, mit einem gemeinsamen Budget'
                 ],
                 join: 'Gruppe beitreten',
+                selectYourName: 'Wer bist du?',
             },
             memberHome: {
                 title: 'Geschenk für {0}',

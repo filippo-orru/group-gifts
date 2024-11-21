@@ -47,7 +47,7 @@ definePageMeta({
     <dialog class="modal" :open="data?.state !== 'already-joined'">
       <div class="modal-box ">
         <div v-if="!data || error" class="prose">
-          <h1 class="text-lg font-bold">Sorry</h1>
+          <h1 class="text-lg font-bold">{{$t('join.errorSorry')}}</h1>
           <p>
             {{ $t('join.error') }}
           </p>
@@ -65,7 +65,7 @@ definePageMeta({
             </ul>
           </div>
 
-          <h2 class="mt-2 text-md font-bold">Select your name</h2>
+          <h2 class="mt-2 text-md font-bold">{{$t('join.selectYourName')}}</h2>
           <div class="flex flex-col gap-3">
             <label v-for="member in data.group.members" :key="member.id"
               class="flex items-center gap-3 border-2 border-accent rounded-xl px-1 py-3 cursor-pointer" :class="{

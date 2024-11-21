@@ -11,11 +11,7 @@ type WsClient = {
 
 type WsPeer = { send: (message: string) => void; token?: string };
 
-interface ChatInfo {
-    members: WsClient[];
-}
-
-const clients: { [token: string]: WsClient } = {};
+const clients: Map<string, WsClient> = new Map();
 
 export async function onNewChatMessage(
     from: WsClient,
@@ -38,7 +34,7 @@ export async function onNewChatMessage(
     const tokens = usersInGroup.map((userInGroup) => userInGroup.token);
 
     for (const token of tokens) {
-        const client = clients[token];
+        const client = clients.get(token);
         if (client) {
             // if (client === from) {
             //     console.log("Skipping sending message to sender");
@@ -74,7 +70,7 @@ export default defineWebSocketHandler({
         const token = getTokenFromRequest(peer.request as { headers: Headers; });
         console.log("token", token);
 
-        clients[token] = { token, peer };
+        clients.set(token, { token, peer });
     },
 
     async message(peer, message) {
@@ -82,7 +78,11 @@ export default defineWebSocketHandler({
         const msg = JSON.parse(message.text()) as WsMessageC;
 
         const token = getTokenFromRequest(peer.request as { headers: Headers; });
-        const client = clients[token];
+        const client = clients.get(token);
+        
+        if (!client) {
+            throw new Error("Client not found, closing connection");
+        }
 
         switch (msg.id) {
             case 'sendChatMessage':
@@ -93,6 +93,11 @@ export default defineWebSocketHandler({
 
     close(peer, event) {
         // console.log("[ws] close", peer, event);
+        Object.values(clients).forEach((client) => {
+            if (client.peer === peer) {
+                clients.delete(client.token);
+            }
+        });
     },
 
     error(peer, error) {

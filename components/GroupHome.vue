@@ -2,6 +2,8 @@
 import { vShowModal } from '~/utils/frontend';
 export type GroupTab = "home" | "wishlist";
 
+const localePath = useLocalePath();
+
 const props = defineProps<{
   tab: GroupTab;
 }>();
@@ -20,11 +22,11 @@ const setShowConfirmDeleteDialog = (show: boolean) => {
 };
 const confirmDeleteGroup = async () => {
   await groupsStore.deleteGroup(group.id);
-  router.push('/groups');
+  router.push(localePath('/groups'));
 };
 
 const goToBalance = () => {
-  router.push(`/groups/${groupId}/balance`);
+  router.push(localePath(`/groups/${groupId}/balance`));
 };
 </script>
 

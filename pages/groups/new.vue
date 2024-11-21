@@ -2,6 +2,7 @@
 import type { CreateGroup } from '~/utils/types';
 import { vFocus } from '~/utils/frontend';
 
+const localePath = useLocalePath();
 const router = useRouter();
 
 const groupsStore = useGroupsStore();
@@ -58,7 +59,7 @@ const submit = async (event: SubmitEvent) => {
         };
         const group = await groupsStore.createGroup(createGroupBody);
 
-        router.push(`/groups/${group.id}?invite=true`);
+        router.push(localePath(`/groups/${group.id}?invite=true`));
     } catch (e) {
         submitState.value = { state: "error" };
         setTimeout(() => {

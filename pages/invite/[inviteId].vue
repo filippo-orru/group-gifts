@@ -2,6 +2,7 @@
 import '~/utils/extensions';
 import type { AcceptInviteBody } from '~/utils/types';
 
+const localePath = useLocalePath();
 const router = useRouter();
 const inviteId = router.currentRoute.value.params.inviteId;
 
@@ -23,16 +24,16 @@ const joinGroup = async (groupId: string) => {
     body: body
   });
   await groupsStore.getGroups({ force: true });
-  router.push(`/groups/${groupId}`);
+  router.push(localePath(`/groups/${groupId}`));
 };
 
 const onCancel = () => {
-  router.push('/');
+  router.push(localePath('/'));
 };
 
 onMounted(() => {
   if (data.value?.state === 'already-joined') {
-    router.push(`/groups/${data.value.groupId}`);
+    router.push(localePath(`/groups/${data.value.groupId}`));
   }
 });
 

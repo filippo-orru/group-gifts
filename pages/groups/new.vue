@@ -12,20 +12,33 @@ const minimumMembers = 3;
 const groupName = ref('');
 // Default date: this christmas
 const date = ref(new Date(new Date().getFullYear(), 11, 28).toISOString().split('T')[0]);
-const memberNames = ref(Array.from({ length: minimumMembers }, () => ''));
+const memberNames = ref(Array.from({ length: minimumMembers }, () => ({ name: '', focus: false })));
 
-const addMember = () => {
-    if (memberNames.value[memberNames.value.length - 1] === "") {
+const addMember = (index: number) => {
+    if (memberNames.value[index].name === "") {
         return;
+    } else if (index < memberNames.value.length - 1) {
+        focusMemberName(index + 1);
+    } else {
+        memberNames.value.splice(index + 1, 0, { name: '', focus: false });
+        focusMemberName(index + 1);
     }
-    memberNames.value.push("");
+};
+
+const focusMemberName = (index: number) => {
+    memberNames.value[index].focus = true;
+    nextTick(() => {
+        memberNames.value[index].focus = false;
+    });
 };
 
 const removeMember = (index: number) => {
     if (memberNames.value.length <= minimumMembers) {
-        return;
+        focusMemberName(Math.max(0, index - 1));
+    } else {
+        memberNames.value.splice(index, 1);
+        focusMemberName(index - 1);
     }
-    memberNames.value.splice(index, 1);
 };
 
 
@@ -41,7 +54,7 @@ const submit = async (event: SubmitEvent) => {
         const createGroupBody: CreateGroup = {
             name: groupName.value,
             date: new Date(date.value).getTime(),
-            memberNames: memberNames.value,
+            memberNames: memberNames.value.map(m => m.name),
         };
         const group = await groupsStore.createGroup(createGroupBody);
 
@@ -65,15 +78,11 @@ const submitState = ref<SubmitState>({ state: "initial" });
 const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
     if (event.key === "Enter") {
         event.preventDefault();
-        if (index === memberNames.value.length - 1) {
-            addMember();
-        } else {
+        addMember(index);
 
-        }
-    } else if (event.key === "Backspace" &&
-        memberNames.value.length > 1 && memberNames.value[memberNames.value.length - 1] === "") {
+    } else if (event.key === "Backspace" && memberNames.value[index].name === "") {
         event.preventDefault();
-        removeMember(memberNames.value.length - 1);
+        removeMember(index);
     }
 };
 
@@ -101,13 +110,13 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
                     <div class="flex flex-col gap-4">
                         <div class="flex gap-2" v-for="(member, index) in memberNames" :key="index">
                             <label class="input input-bordered flex items-center gap-2 grow group"
-                                v-focus="index == memberNames.length - 1" aria-autocomplete="none">
+                                v-focus="member.focus" aria-autocomplete="none">
                                 <input class="grow peer"
                                     :placeholder="index == 0 ? $t('general.you') : $t('general.name')"
-                                    v-model="memberNames[index]" required autocomplete="off"
+                                    v-model="memberNames[index].name" required autocomplete="off"
                                     @keydown="(e: KeyboardEvent) => onMemberInputKeydown(e, index)" />
 
-                                <div v-if="index > minimumMembers" class="p-1 h-full transition-all opacity-0 
+                                <div v-if="index >= minimumMembers" class="p-1 h-full transition-all opacity-0 
                                     group-hover:opacity-100 peer-focus:opacity-100 focus-within:opacity-100">
                                     <button v-if="index > 0" type="button" class="h-full aspect-square btn btn-ghost min-h-0 p-0
                                         border border-base-300" @click="removeMember(index)"> - </button>
@@ -117,7 +126,8 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
 
                         <label class="input input-bordered border-dashed flex items-center gap-2">
                             <span class="opacity-50">+</span>
-                            <input class="grow" readonly :placeholder="$t('newGroup.addMember')" @focus="addMember" />
+                            <input class="grow" readonly :placeholder="$t('newGroup.addMember')"
+                                @focus="addMember(memberNames.length - 1)" />
                         </label>
                     </div>
                 </div>

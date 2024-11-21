@@ -20,8 +20,6 @@ services:
       - traefik
   mongodb:
     image: mongo:8.0.3
-    ports:
-      - "27017:27017"
     volumes:
       - ./volumes/mongodb:/data/db
     restart: unless-stopped

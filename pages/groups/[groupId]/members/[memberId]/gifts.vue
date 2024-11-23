@@ -196,10 +196,10 @@ definePageMeta({
             </label>
 
             <div class="indicator w-full">
-              <button class="btn w-full" :class="{ 'btn-accent': myBudgetIsFlexible }" :disabled="!parseInt(myBudget)"
+              <button class="btn max-sm:w-full gap-2" :class="{ 'btn-accent': myBudgetIsFlexible }" :disabled="!parseInt(myBudget)"
                 @click="myBudgetIsFlexible = !myBudgetIsFlexible" type="button">
                 <i class="las text-xl" :class="parseInt(myBudget) && myBudgetIsFlexible ? 'la-check' : 'la-times'"></i>
-                <span class="ml-2">{{ $t('memberHome.flexibleBudget') }}</span>
+                <span>{{ $t('memberHome.flexibleBudget') }}</span>
               </button>
 
               <div class="tooltip tooltip-left sm:tooltip-top before:shadow-md before:z-10 after:z-10"

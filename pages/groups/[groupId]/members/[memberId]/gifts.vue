@@ -204,9 +204,9 @@ definePageMeta({
           </div>
           <div class="flex flex-col gap-2 mt-3">
             <div v-for="(wish, index) in sortedWishes" :key="wish.id">
-              <button @click="toggleBought(wish)" class="w-full p-4 rounded-lg flex align-center gap-6
+              <button @click="toggleBought(wish)" class="w-full p-4 rounded-lg flex items-center text-start gap-6
                 hover:bg-neutral hover:text-neutral-content hover:shadow-lg group">
-                <div class="rounded-full h-6 w-6 border border-primary flex items-center justify-center
+                <div class="flex-shrink-0 rounded-full h-6 w-6 border border-primary flex items-center justify-center
                 group-hover:border-neutral-content">
                   <span v-if="wish.bought">✓</span>
                 </div>
@@ -263,27 +263,29 @@ definePageMeta({
             <div v-for="(gift, index) in member.gifts" class="py-2">
               <button @click="editGift(gift)" class="w-full flex items-center gap-2 p-4 rounded-lg 
                 hover:bg-neutral hover:text-neutral-content hover:shadow-lg">
-                <div class="flex flex-col items-start gap-1">
+                <div class="w-full flex flex-col items-stretch gap-1">
                   <div class="flex gap-2 items-center">
                     <i class="las la-gift text-xl"></i>
                     <span class="text-lg">{{ gift.name }}</span>
+                    <span class="w-12 ml-auto">
+                      {{ gift.price }} €
+                    </span>
                   </div>
                   <div class="flex gap-1 items-center text-sm">
                     <i class="las la-gift text-xl invisible"></i>
                     <i class="las la-user text-lg"></i>
-                    {{ gift.buyerId == group.me.id ?
-                      $t('memberHome.giftBoughtBy.you') :
-                      $t('memberHome.giftBoughtBy.someoneElse',
-                        [group.members.find((member) => member.id == gift.buyerId)?.name ?? "unknown"])
-                    }},
+                    <span class="text-start">
+                      {{ gift.buyerId == group.me.id ?
+                        $t('memberHome.giftBoughtBy.you') :
+                        $t('memberHome.giftBoughtBy.someoneElse',
+                          [group.members.find((member) => member.id == gift.buyerId)?.name ?? "unknown"])
+                      }},
+                    </span>
                     <i class="las la-clock text-lg"></i>
                     {{ formatMessageDay(gift.date) }}
                   </div>
                 </div>
                 <div class="grow"></div>
-                <div class="w-12 text-end">
-                  {{ gift.price }} €
-                </div>
               </button>
 
               <!--hr class="border" v-if="index < (member.gifts.length - 1)" /-->

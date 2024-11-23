@@ -1,3 +1,4 @@
+import type { DbUserInGroup } from "~/server/models/userGroups.schema";
 import type { AcceptInviteBody } from "~/utils/types";
 
 export default defineEventHandler(async (event) => {
@@ -23,7 +24,7 @@ export default defineEventHandler(async (event) => {
     throw new Error("User has already joined this group with this device");
   }
 
-  const userGroupAssociation: UserInGroup = {
+  const userGroupAssociation: DbUserInGroup = {
     token: token,
     groupId: group._id,
     memberId: body.memberId,

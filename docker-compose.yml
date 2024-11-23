@@ -20,6 +20,7 @@ services:
       - traefik
   mongodb:
     image: mongo:8.0.3
+    command: --quiet
     volumes:
       - ./volumes/mongodb:/data/db
     restart: unless-stopped

@@ -56,6 +56,14 @@ export const useGroupsStore = defineStore({
         body: body,
       });
       transaction.completed = !transaction.completed;
+    },
+    async updateBudgetForAll(groupId: string, body: PutBudget) {
+      const group = await $fetch<Group>(`/api/groups/${groupId}/budget`, {
+        method: 'PUT',
+        body: body,
+      });
+      const index = this.groups.findIndex((g) => g.id === groupId);
+      this.groups[index] = group;
     }
   }
 })

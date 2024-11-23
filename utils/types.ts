@@ -9,7 +9,7 @@ export type CreateGroup = {
 export type PutBudget = {
     amount: number | null;
     flexible: boolean;
-}
+};
 
 export interface PutTransaction {
     completed: boolean;
@@ -101,7 +101,7 @@ export interface GroupBudgetForMe {
 
     /** If the budget for any member is exceeded, this is covered by members with a flexible budget, 
      * or the one responsible member if noone has a flexible budget. */
-    overspend:AmountForMembers;
+    overspend: AmountForMembers;
 
     /** If the budget for any member is not fully spent, 
      * the remaining amount is split between all members, with respect to their budgets */

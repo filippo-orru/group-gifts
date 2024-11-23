@@ -13,28 +13,53 @@ await useAsyncData('groups', () => groupsStore.getGroups().then(() => true))
 const group = computed(() => groupsStore.groups.find(g => g.id === groupId)!);
 const member = computed(() => group.value.members.find(m => m.id === memberId)!);
 
+const shouldAddBudget = computed(() => member.value.myBudget === null);
+
 const myBudget = ref<string>(member.value.myBudget?.amount?.toString() ?? '');
 const myBudgetIsFlexible = ref<boolean>(member.value.myBudget?.flexible ?? false);
+const saveBudgetState = ref<null | 'saving' | 'error'>(null);
 
-const shouldAddBudget = computed(() => member.value.myBudget === null);
+const saveBudgetForAllState = ref<null | 'show' | 'saving' | 'saved'>(null);
+const saveBudgetForAll = async () => {
+  saveBudgetForAllState.value = 'saving';
+  try {
+    let budgetAmount: number | null = parseInt(myBudget.value);
+    if (isNaN(budgetAmount)) {
+      budgetAmount = null;
+    }
+    const body: PutBudget = {
+      amount: budgetAmount,
+      flexible: myBudgetIsFlexible.value,
+    };
+    await groupsStore.updateBudgetForAll(groupId, body);
+    saveBudgetForAllState.value = 'saved';
+  } catch (e) {
+    saveBudgetForAllState.value = 'show';
+    saveBudgetState.value = 'error';
+  }
+};
 
 const submitBudget = async (event: SubmitEvent) => {
   event.preventDefault();
 
-  let budget: number | null = parseInt(myBudget.value);
-  if (isNaN(budget)) {
-    budget = null;
+  saveBudgetForAllState.value = null;
+
+  let budgetAmount: number | null = parseInt(myBudget.value);
+  if (isNaN(budgetAmount)) {
+    budgetAmount = null;
   }
   const body: PutBudget = {
-    amount: budget,
+    amount: budgetAmount,
     flexible: myBudgetIsFlexible.value,
   };
 
   try {
-    groupsStore.updateMemberBudget(groupId, memberId, body);
+    saveBudgetState.value = 'saving';
+    await groupsStore.updateMemberBudget(groupId, memberId, body);
+    saveBudgetState.value = null;
+    saveBudgetForAllState.value = 'show';
   } catch (e) {
-    console.error(e);
-    // TODO show error
+    saveBudgetState.value = 'error';
   }
 };
 
@@ -171,9 +196,9 @@ definePageMeta({
             </label>
 
             <div class="indicator w-full">
-              <button class="btn w-full" :class="{ 'btn-accent': myBudgetIsFlexible }"
+              <button class="btn w-full" :class="{ 'btn-accent': myBudgetIsFlexible }" :disabled="!parseInt(myBudget)"
                 @click="myBudgetIsFlexible = !myBudgetIsFlexible" type="button">
-                <i class="las text-xl" :class="myBudgetIsFlexible ? 'la-check' : 'la-times'"></i>
+                <i class="las text-xl" :class="parseInt(myBudget) && myBudgetIsFlexible ? 'la-check' : 'la-times'"></i>
                 <span class="ml-2">{{ $t('memberHome.flexibleBudget') }}</span>
               </button>
 
@@ -186,7 +211,30 @@ definePageMeta({
 
             </div>
 
-            <button class="btn btn-primary">{{ $t('memberHome.saveBudget') }}</button>
+            <button class="btn btn-primary">
+              <span v-if="saveBudgetState == 'saving'" class="loading loading-spinner"></span>
+              <span v-else>
+                {{ $t('memberHome.saveBudget') }}
+              </span>
+            </button>
+
+            <Transition name="fade">
+              <button v-if="saveBudgetForAllState" class="text-neutral underline flex items-center justify-center gap-2"
+                @click="saveBudgetForAll" type="button">
+                <span v-if="saveBudgetForAllState == 'saved'">
+                  <i class="las la-check"></i>
+                </span>
+                
+                <span v-if="saveBudgetForAllState != 'saving'" class="text-start">{{ $t('memberHome.saveBudgetForAll') }}</span>
+                <span v-else class="loading loading-spinner loading-sm"></span>
+                
+              </button>
+            </Transition>
+            
+            <span v-if="saveBudgetState == 'error'" class="text-neutral text-sm">
+              <i class="las la-times"></i>
+              {{ $t('memberHome.saveBudgetError') }}
+            </span>
           </form>
         </div>
 

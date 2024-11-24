@@ -43,7 +43,11 @@ export default defineNuxtConfig({
         { name: 'og:type', content: 'website' },
         { name: 'og:site_name', content: 'gifts.filippo-orru.com' },
         { name: "og:image", content: "/images/social.png" },
-      ]
+      ],
+      script: [
+        // Plausible Analytics
+        { defer: true, 'data-domain': 'gifts.filippo-orru.com', src: 'https://statistics.filippo-orru.com/psb.js' },
+      ],
     },
   },
 

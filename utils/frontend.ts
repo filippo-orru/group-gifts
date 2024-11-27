@@ -48,7 +48,9 @@ export const vFocus = {
     },
 };
 
-export const formatEnumeration = (items: string[]) => {
+export const formatEnumeration = (unfilteredItems: (string | undefined)[]) => {
+    const items = unfilteredItems.filter(item => item !== undefined) as string[];
+    
     if (items.length === 0) {
         return '';
     } else if (items.length === 1) {

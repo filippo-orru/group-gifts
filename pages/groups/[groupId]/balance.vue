@@ -63,7 +63,7 @@ definePageMeta({
                 {{ $t('balance.yourOverspend') }}
                 <div class="tooltip"
                   :data-tip="$t('balance.yourOverspendTooltip', [
-                    formatEnumeration(budgeting.overspend.forMemberIds.map(id => group.members.find(m => m.id == id)!.name))])">
+                    formatEnumeration(budgeting.overspend.forMemberIds.map(id => group.members.find(m => m.id == id)?.name))])">
                   <i class="las la-info-circle"></i>
                 </div>
               </span>
@@ -78,7 +78,7 @@ definePageMeta({
                 {{ $t('balance.yourUnderspend') }}
                 <div class="tooltip"
                   :data-tip="$t('balance.yourUnderspendTooltip', [
-                    formatEnumeration(budgeting.underspend.forMemberIds.map(id => group.members.find(m => m.id == id)!.name))])">
+                    formatEnumeration(budgeting.underspend.forMemberIds.map(id => group.members.find(m => m.id == id)?.name))])">
                   <i class="las la-info-circle"></i>
                 </div>
               </span>

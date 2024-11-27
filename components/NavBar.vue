@@ -17,7 +17,7 @@ const goBack = () => {
 }
 </script>
 <template>
-    <div class="bg-[#ead8ca]/95 shadow-md">
+    <div class="bg-[#ead8ca]/95 shadow-md z-10">
         <div class="max-w-4xl h-16 px-5 mx-auto flex flex-row items-center gap-4">
             <NuxtLinkLocale v-if="!useLogo" @click="goBack" class="btn btn-accent">
                 <i class="las la-arrow-left text-xl"></i>

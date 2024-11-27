@@ -15,11 +15,11 @@ const toggleCompleted = async () => {
 </script>
 
 <template>
-  <button class="mt-3 mb-3 w-full px-4 py-4 rounded-lg border-2 transition-all " :class="{
-    'border-green-800/60 hover:bg-green-800/10': !sending,
-    'border-red-800/60 hover:bg-red-800/10': sending,
+  <div class="mt-3 mb-3 w-full px-4 py-4 rounded-lg border-2" :class="{
+    'border-green-800/60': !sending,
+    'border-red-800/60': sending,
     'opacity-60 border-dashed': transaction.completed
-  }" @click="toggleCompleted">
+  }">
     <div class="flex max-sm:flex-wrap items-center gap-2">
       <div class="sm:w-full flex items-center gap-2">
         <span class="sm:mr-auto w-7 h-7 flex-shrink-0 rounded-full flex items-center justify-center" :class="{
@@ -44,18 +44,20 @@ const toggleCompleted = async () => {
         </div>
       </div>
 
-      <span class="flex-shrink-0 ml-auto px-3 rounded-xl flex items-center justify-center gap-2 border-2 border-transparent" :class="{
-        'bg-green-500/20 border-green-800/30': !transaction.completed && !sending,
-        'bg-green-500/40 text-green-800': transaction.completed && !sending,
+      <button
+        class="flex-shrink-0 ml-auto px-3 rounded-xl flex items-center justify-center gap-2 border-2 transition-all"
+        :class="{
+          'bg-green-500/20 border-green-800/30 hover:bg-green-800/70 hover:text-white/90': !transaction.completed && !sending,
+          'bg-green-500/40 text-green-800 hover:text-green-800 hover:border-green-800': transaction.completed && !sending,
 
-        'border-red-800/30': !transaction.completed && sending,
-        'bg-red-500/40 text-red-800': transaction.completed && sending,
-      }">
+          'bg-red-800/20 border-red-800/30 hover:bg-red-800/70 hover:text-white/90': !transaction.completed && sending,
+          'bg-red-500/40 text-red-800 hover:text-red-800 hover:border-red-800': transaction.completed && sending,
+        }" @click="toggleCompleted">
         {{ $t('balance.transactionMarkAsDone') }}
         <i class="las la-check"></i>
-      </span>
+      </button>
     </div>
-  </button>
+  </div>
 </template>
 
 <style></style>

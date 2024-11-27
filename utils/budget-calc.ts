@@ -20,37 +20,39 @@ export interface BudgetTransaction {
 }
 
 export default function calculateGroupBudget(group: DbGroup): GroupBudget {
-    // TODO merge underspending and overspending calculation?
-    const membersWithFlexibleBudget: {
-        flexibleMembers: string[], // If I am in one of these lists, I cover (1/length) of the overspending
+    // For each channel (= target member), calculate underspending and overspending
+    const unevenBudgetCalculation: {
         forMemberId: string,
+        underspending: {
+            amount: number, // e.g. if the budget for this member was 100 and we spent 90, this is 10
+            memberPortions: Map<string, number>, // userId -> fraction of the total budget, e.g. { "user1": 0.5, "user2": 0.5 }. Must sum to 1
+        },
+        overspending: {
+            flexibleMembers: string[], // If I am in one of these lists, I cover (1/length) of the overspending
+        },
     }[] = group.members.map((member) => {
+        // Calculate underspending
+        const budgetForMember = member.budget.reduce((acc, b) => acc + b.amount, 0);
+        const expensesForMember = member.gifts.reduce((acc, b) => acc + b.price, 0);
+
+        // Calculate overspending
         const membersWithFlexibleBudgetForMember = member.budget.filter(b => b.flexible).map(b => b.userId);
         if (membersWithFlexibleBudgetForMember.length === 0) {
             membersWithFlexibleBudgetForMember.push(member.responsibleMemberId);
         }
 
         return {
-            flexibleMembers: membersWithFlexibleBudgetForMember,
             forMemberId: member.id,
-        };
-    });
-
-    // for each channel (= target member), calculate underspending and 
-    const underspending: {
-        forMemberId: string,
-        amount: number, // e.g. if the budget for this member was 100 and we spent 90, this is 10
-        memberPortions: Map<string, number>, // userId -> fraction of the total budget, e.g. { "user1": 0.5, "user2": 0.5 }. Must sum to 1
-    }[] = group.members.map((member) => {
-        const budgetForMember = member.budget.reduce((acc, b) => acc + b.amount, 0);
-        const expensesForMember = member.gifts.reduce((acc, b) => acc + b.price, 0);
-        return {
-            forMemberId: member.id,
-            amount: Math.max(0, budgetForMember - expensesForMember), // Don't count overspending
-            memberPortions: new Map(member.budget.map(b => [
-          /* userId: */ b.userId,
-          /* fraction: */ b.amount / budgetForMember
-            ])),
+            underspending: {
+                amount: Math.max(0, budgetForMember - expensesForMember), // Don't count overspending
+                memberPortions: new Map(member.budget.map(b => [
+                /* userId: */ b.userId,
+                /* fraction: */ b.amount / budgetForMember
+                ])),
+            },
+            overspending: {
+                flexibleMembers: membersWithFlexibleBudgetForMember,
+            }
         };
     });
 
@@ -60,15 +62,16 @@ export default function calculateGroupBudget(group: DbGroup): GroupBudget {
         // If the group overspent for this member, this is covered by members with a flexible budget, 
         // or the one responsible member if noone has a flexible budget.
 
-        const overspend = membersWithFlexibleBudget
-            .filter(m => m.flexibleMembers.includes(member.id))
-            .map(({ flexibleMembers, forMemberId }) => {
+        const overspend = unevenBudgetCalculation
+            .filter(m => m.overspending.flexibleMembers.includes(member.id))
+            .map(({ overspending: { flexibleMembers }, forMemberId }) => {
                 // If we overspent for [forMember], the group of [flexibleMembers] members covers the overspent amount.
                 // This includes [member]
 
                 const forMember = group.members.find(m => m.id == forMemberId)!;
                 const budgetSumForMember = forMember
-                    .budget.reduce((acc, b) => acc + b.amount, 0);
+                    .budget
+                    .reduce((acc, b) => acc + b.amount, 0);
                 const expensesSumForMember = forMember
                     .gifts
                     // .filter(b => b.buyerId == member.id) // TODO i think this isn't necessary
@@ -88,12 +91,12 @@ export default function calculateGroupBudget(group: DbGroup): GroupBudget {
         // Calculate underspending.
         // If the budget for any member is not fully spent, 
         // the remaining amount is split between all members, with respect to their budgets 
-        const underspend = underspending
-            .filter(u => u.memberPortions.has(member.id))
+        const underspend = unevenBudgetCalculation
+            .filter(m => m.underspending.memberPortions.has(member.id))
             .map(u => {
-                const fraction = u.memberPortions.get(member.id)!;
+                const fraction = u.underspending.memberPortions.get(member.id)!;
                 return {
-                    amount: u.amount * fraction,
+                    amount: u.underspending.amount * fraction,
                     forMemberId: u.forMemberId,
                 };
             });

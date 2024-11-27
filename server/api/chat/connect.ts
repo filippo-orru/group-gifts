@@ -3,6 +3,7 @@ import { getTokenFromRequest } from "~/server/utils/auth";
 import type { DbUserInGroup } from "~/server/models/userGroups.schema";
 import type { DbChatMessage } from "~/server/models/messages.schema";
 import { toClientMessage } from "~/server/models/messages.schema";
+import { sendNotificationForToken } from "~/server/utils/notifications";
 
 type WsClient = {
     token: string;
@@ -27,19 +28,30 @@ export async function onNewChatMessage(
     };
     const dbMessage = await MongoMessages.create(createDbMessage);
 
-    // Send to active clients
     const usersInGroup: DbUserInGroup[] = await MongoUserGroups.find({
         groupId: message.groupId,
     }).exec();
-    const tokens = usersInGroup.map((userInGroup) => userInGroup.token);
+    const tokens = usersInGroup
+        .map((userInGroup) => userInGroup.token)
+        .filter((token) => token !== message.memberId); // Don't send to the channel (= dont send to 'XYZ' of channel 'gift for XYZ')
+
+    const group = (await MongoGroups.findOne({
+        _id: message.groupId,
+    }).exec())!;
+    const authorName = group.members.find((member) => member.id === message.authorId)!.name;
+
+    let content = "";
+    if (message.content.length > 70) {
+        content = message.content.slice(0, 70) + "...";
+    } else {
+        content = message.content;
+    }
+    const messageNotificationText = `${authorName}: ${content}`;
 
     for (const token of tokens) {
+        // Send to active client
         const client = clients.get(token);
         if (client) {
-            // if (client === from) {
-            //     console.log("Skipping sending message to sender");
-            //     continue;
-            // }
             sendMessage(
                 client.peer,
                 {
@@ -47,6 +59,12 @@ export async function onNewChatMessage(
                     message: toClientMessage(dbMessage),
                 }
             );
+        }
+
+        // Send push notification. If the website is open, the message will not be shown
+        const messagingToken = await MongoMessagingTokens.findOne({ _id: token }).exec();
+        if (messagingToken) {
+            sendNotificationForToken(token, { title: group.name, body: messageNotificationText });
         }
     }
 }
@@ -56,7 +74,7 @@ function sendMessage(peer: WsPeer, message: WsMessageS) {
 }
 
 export default defineWebSocketHandler({
-    async upgrade(request) {
+    async upgrade(_) {
         // console.log("[ws] upgrade", request.url);
         // throw new Error("test");
     },
@@ -68,7 +86,6 @@ export default defineWebSocketHandler({
         }
 
         const token = getTokenFromRequest(peer.request as { headers: Headers; });
-        console.log("token", token);
 
         clients.set(token, { token, peer });
     },
@@ -79,7 +96,7 @@ export default defineWebSocketHandler({
 
         const token = getTokenFromRequest(peer.request as { headers: Headers; });
         const client = clients.get(token);
-        
+
         if (!client) {
             throw new Error("Client not found, closing connection");
         }

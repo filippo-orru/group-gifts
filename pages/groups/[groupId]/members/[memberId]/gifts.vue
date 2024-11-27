@@ -126,6 +126,7 @@ const addOrEditGift = (gift?: MemberGift) => {
   }
 
   try {
+    // Hopefully noone is updating at the same time, or else it's a race condition
     $fetch(`/api/groups/${groupId}/members/${memberId}/gifts`, {
       method: 'PUT',
       body: { gifts },

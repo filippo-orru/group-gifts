@@ -91,11 +91,14 @@ const hideInviteDialog = () => {
         </NuxtLink>
       </li>
     </template>
+
     <GenericPanel :disable-padding="true">
       <div class="flex flex-col">
+        <EnableNotifications />
+
         <!-- todo all-chat -->
-        <NuxtLinkLocale v-for="(memberInGroup, index) in sortedMembers" :to="`${baseHref}/members/${memberInGroup.member.id}`"
-          class="hover:bg-base-200">
+        <NuxtLinkLocale v-for="(memberInGroup, index) in sortedMembers"
+          :to="`${baseHref}/members/${memberInGroup.member.id}`" class="hover:bg-base-200">
           <div class="flex gap-4 items-center px-6 py-5">
             <div class="avatar">
               <div class="w-12 rounded-full outline outline-accent outline-offset-2 outline-offset-base-100"

@@ -1,10 +1,7 @@
-// Give the service worker access to Firebase Messaging.
-// Note that you can only use Firebase Messaging here. Other Firebase libraries
-// are not available in the service worker.
-// Replace 10.13.2 with latest version of the Firebase JS SDK.
 importScripts('https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/11.0.2/firebase-messaging-compat.js');
 
+// Keep in sync with the one in nuxt.config.js!
 firebase.initializeApp({
     apiKey: "AIzaSyDqLgiOyZOsME9lDie0qRQwAxf-bfc7kUY",
     authDomain: "group-gifts-4b208.firebaseapp.com",
@@ -14,24 +11,18 @@ firebase.initializeApp({
     appId: "1:530776730060:web:7791cd422580be9d31d569",
 });
 
-// Retrieve an instance of Firebase Messaging so that it can handle background
-// messages.
+console.log("Service worker loading!"); 
+
+// Retrieve an instance of Firebase Messaging so that it can handle background messages.
 const messaging = firebase.messaging();
 
 messaging.onMessage((payload) => {
     console.log('Message received. ', payload);
-    // ...
+    // Hm this doesnt work... Whatever
 });
 
 messaging.onBackgroundMessage((payload) => {
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
-    // Customize notification here
-    const notificationTitle = 'Background Message Title';
-    const notificationOptions = {
-        body: 'Background Message body.',
-        icon: '/favicon.png'
-    };
-
-    self.registration.showNotification(notificationTitle, notificationOptions);
+    self.registration.showNotification(payload.notification.title, payload.notification);
 });

@@ -1,30 +1,36 @@
-import { getMessaging, type Message } from "firebase-admin/messaging";
+import { getMessaging, type BaseMessage, type Notification } from "firebase-admin/messaging";
 
-export const sendNotification = async (token: string, messageText: string) => {
+
+export async function sendNotificationForToken(token: string, notification: Notification) {
   const messagingToken = await MongoMessagingTokens.findOne({ _id: token }).exec();
 
   if (!messagingToken) {
     console.error("No messaging token found for token", token);
     return;
   }
+  return sendNotification(messagingToken.messagingToken, notification);
+}
 
-  const message: Message = {
-    token: messagingToken.messagingToken,
+export async function sendNotification(messagingToken: string | string[], notification: Notification) {
+  const message: BaseMessage = {
+
+    notification: notification,
     webpush: {
       notification: {
-        title: "New message",
-        body: messageText,
         icon: "/favicon/favicon.png",
-      },
+        ...notification,
+      }
     }
   };
-
-  // Send a message to the device corresponding to the provided
-  // registration token.
+  
   try {
-    const response = await getMessaging().send(message);
-    console.log('Successfully sent message:', response);
+    const messaging = getMessaging();
+    if (Array.isArray(messagingToken)) {
+      await messaging.sendEachForMulticast({ tokens: messagingToken, ...message });
+    } else {
+      await messaging.send({ token: messagingToken, ...message });
+    }
   } catch (error) {
     console.log('Error sending message:', error);
   }
-};
+}

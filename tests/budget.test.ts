@@ -32,7 +32,9 @@ const demoGroup = (): DbGroup => ({
         demoMember(0, 3),
         demoMember(1, 3),
         demoMember(2, 3),
-    ]
+    ],
+    createdDate: new Date(0),
+    transactions: []
 });
 
 describe('budget calculation', () => {

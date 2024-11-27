@@ -7,9 +7,6 @@
       <div class="navbar-start pl-4">
         <NuxtLinkLocale class="font-bold" href="/">{{ $t('info.name') }}</NuxtLinkLocale>
       </div>
-      <div class="navbar-center hidden lg:flex">
-        <!-- TODO: You can add menu here -->
-      </div>
       <div class="navbar-end">
         <NuxtLinkLocale class="btn btn-accent" to="/groups">
           → {{ $t('landing.myGroups') }}

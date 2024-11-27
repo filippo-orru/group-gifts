@@ -186,6 +186,25 @@ export default defineI18nConfig(() => ({
                 saved: 'Saved',
                 saving: 'Saving...',
                 error: 'Error saving wishes. Please try again.',
+            },
+            notifications: {
+                enable: {
+                    title: 'Notifications',
+                    description: 'Tap here to enable notifications for new messages.',
+                    titleSuccess: 'Notifications enabled',
+                    descriptionSuccess: 'You will now receive notifications.',
+
+                    dialog: {
+                        title: 'Enable Notifications',
+                        description: 'To be notified about new messages and gifts, please enable the notifications here.',
+                        permissionDenied: 'You denied the permission to receive notifications. To reenable them, you need to go to the site settings in your browser.',
+                        error: 'Error enabling notifications. Please try again.',
+                        
+                        close: 'Close',
+                        dontAskAgain: 'Don\'t ask again',
+                        enable: 'Enable Notifications',
+                    }
+                }
             }
         },
         // MARK: DE
@@ -372,6 +391,25 @@ export default defineI18nConfig(() => ({
                 saved: 'Gespeichert',
                 saving: 'Wird gespeichert...',
                 error: 'Fehler beim Speichern der Wünsche. Bitte versuche es noch einmal.',
+            },
+            notifications: {
+                enable: {
+                    title: 'Benachrichtigungen',
+                    description: 'Tippe hier um Benachrichtigungen für neue Nachrichten zu aktivieren.',
+                    titleSuccess: 'Benachrichtigungen aktiviert',
+                    descriptionSuccess: 'Du wirst jetzt Benachrichtigungen erhalten.',
+
+                    dialog: {
+                        title: 'Benachrichtigungen aktivieren',
+                        description: 'Um bei neue Nachrichten, Geschenken benachrichtigt zu werden, aktiviere bitte hier die Benachrichtigungen.',
+                        permissionDenied: 'Du hast die Benachrichtigungen abgelehnt. Um sie erneut zu aktivieren, musst du in die Seiteneinstellungen deines Browsers gehen.',
+                        error: 'Fehler beim Aktivieren der Benachrichtigungen. Bitte versuche es noch einmal.',
+                        
+                        close: 'Schließen',
+                        dontAskAgain: 'Nicht mehr fragen',
+                        enable: 'Benachrichtigungen aktivieren',
+                    }
+                }
             }
         }
     }

@@ -22,10 +22,6 @@ export default defineNuxtConfig({
     'nuxt-vuefire',
   ],
 
-  gtag: {
-    id: '', // TODO: Add your google analytics 4 tag here
-  },
-
   runtimeConfig: {
     mongoose: { uri: 'mongodb://localhost:27017/group-gifts' },
   },
@@ -122,6 +118,7 @@ export default defineNuxtConfig({
 
   vuefire: {
     config: {
+      // Keep in sync with public/firebase-messaging-sw.js!
       apiKey: "AIzaSyDqLgiOyZOsME9lDie0qRQwAxf-bfc7kUY",
       authDomain: "group-gifts-4b208.firebaseapp.com",
       projectId: "group-gifts-4b208",

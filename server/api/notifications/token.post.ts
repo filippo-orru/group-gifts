@@ -1,5 +1,4 @@
 import { MongoMessagingTokens, type DbMessagingToken } from "~/server/models/messagingTokens.schema";
-import { sendNotification } from "~/server/utils/notifications";
 
 export default defineEventHandler(async (event) => {
   // Save FCM token
@@ -22,7 +21,4 @@ export default defineEventHandler(async (event) => {
     await existingToken.save();
     console.log("updated messaging token", existingToken);
   }
-
-
-  sendNotification(ggToken, "Test message! " + Math.random().toString());
 })

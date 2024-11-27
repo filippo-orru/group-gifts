@@ -22,5 +22,18 @@ export default defineEventHandler(async (event) => {
 
     await group.save();
 
+    // Notify others that gifts were updated
+    const usersInGroup = (await MongoUserGroups.find({ groupId: group.id }).exec())
+        .filter((u) => u.memberId !== member.id && u.memberId !== targetMemberId);
+    const messagingTokens = await MongoMessagingTokens.find({ _id: { $in: usersInGroup.map((u) => u.token) } }).exec();
+
+    await sendNotification(
+        messagingTokens.map((t) => t.messagingToken),
+        {
+            title: "Gifts updated",
+            body: `${member.name} updated gifts for ${targetMember.name}`
+        },
+    );
+
     return toClientGroup(group, member.id);
 })

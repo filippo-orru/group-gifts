@@ -35,7 +35,7 @@ const defaultFields = computed<EditMemberGift>(() => {
     };
   } else {
     return {
-      id: generateId(), // TODO test if this changes if i add multiple gifts
+      id: generateId(),
       name: '',
       date: new Date().toISOString().substring(0, 10),
       buyerId: group.me.id,

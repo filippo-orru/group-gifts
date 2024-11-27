@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+
+import EnableNotifications from './EnableNotifications.vue';
 const props = defineProps<{
   chatMessages: ChatMessage[],
   group: Group,
@@ -60,15 +62,15 @@ const scrollViewport: Ref<HTMLElement | null> = ref(null);
 const viewportReady = ref(false);
 
 const scrollToBottom = () => {
-  nextTick(() => {
+  setTimeout(() => {
     const element = scrollViewport.value;
     if (element) {
-      element.scrollTop = element.scrollHeight;
+      element.scrollTop = element.scrollHeight - element.clientHeight;
       viewportReady.value = true;
     } else {
       console.error('scrollViewport is not ready');
     }
-  });
+  }, 100); // Not sure why this is needed, but without it, it only scrolls down halfway
 }
 
 const isMe = (id: string) => id === props.group.me.id;
@@ -92,8 +94,9 @@ onUpdated(() => {
 </script>
 
 <template>
-  <div class="flex-1 overflow-hidden">
-    <div class="flex flex-col h-full overflow-y-scroll" :class="{ 'invisible': !viewportReady }" ref="scrollViewport">
+  <div class="flex-1 overflow-hidden flex flex-col h-full">
+    <EnableNotifications />
+    <div class="flex-1 flex flex-col overflow-y-scroll" :class="{ 'invisible': !viewportReady }" ref="scrollViewport">
       <div class="px-1 pb-3">
         <span v-if="messagesByDayByAuthor.length == 0"
           class="min-h-[60vh] flex flex-col items-center justify-center text-center text-neutral">

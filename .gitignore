@@ -11,3 +11,4 @@ dist
 
 volumes
 docker-compose.override.yml
+service-account.json

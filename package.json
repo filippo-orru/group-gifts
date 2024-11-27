@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.25.9",
+    "@firebase/app-types": "^0.9.3",
     "@nuxt/devtools": "^1.6.0",
     "nuxi": "^3.15.0",
     "vitest": "^2.1.5"
@@ -31,13 +32,17 @@
     "axios": "^1.7.7",
     "cookie": "^1.0.1",
     "daisyui": "^4.12.14",
+    "firebase": "^11.0.2",
+    "firebase-admin": "^13.0.1",
     "nuxt": "^3.14.159",
     "nuxt-gtag": "^3.0.1",
     "nuxt-headlessui": "^1.2.0",
     "nuxt-mongoose": "^1.0.6",
     "nuxt-svgo": "^4.0.8",
+    "nuxt-vuefire": "^1.0.4",
     "postcss-custom-properties": "^14.0.4",
-    "rimraf": "^6.0.1"
+    "rimraf": "^6.0.1",
+    "vuefire": "^3.2.0"
   },
   "license": "MIT",
   "bugs": {

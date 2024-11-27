@@ -11,7 +11,16 @@ export default defineNuxtConfig({
     port: 2425,
   },
 
-  modules: ['@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-gtag', '@nuxtjs/i18n', 'nuxt-svgo', '@pinia/nuxt', 'nuxt-mongoose'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    'nuxt-headlessui',
+    'nuxt-gtag',
+    '@nuxtjs/i18n',
+    'nuxt-svgo',
+    '@pinia/nuxt',
+    'nuxt-mongoose',
+    'nuxt-vuefire',
+  ],
 
   gtag: {
     id: '', // TODO: Add your google analytics 4 tag here
@@ -19,6 +28,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     mongoose: { uri: 'mongodb://localhost:27017/group-gifts' },
+  },
+  mongoose: {
+    uri: 'mongodb://localhost:27017/group-gifts',
   },
 
   ssr: false,
@@ -106,6 +118,17 @@ export default defineNuxtConfig({
       fallbackLocale: 'en',
     },
     vueI18n: './i18n.config.ts', // if you are using custom path, default
+  },
+
+  vuefire: {
+    config: {
+      apiKey: "AIzaSyDqLgiOyZOsME9lDie0qRQwAxf-bfc7kUY",
+      authDomain: "group-gifts-4b208.firebaseapp.com",
+      projectId: "group-gifts-4b208",
+      storageBucket: "group-gifts-4b208.firebasestorage.app",
+      messagingSenderId: "530776730060",
+      appId: "1:530776730060:web:7791cd422580be9d31d569",
+    },
   },
 
   compatibilityDate: '2024-11-08',

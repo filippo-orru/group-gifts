@@ -15,8 +15,10 @@ export const getToken = (event: H3Event): string => {
   if (!token) {
     console.log('Missing token in request', event.path);
     token = Buffer.from(randomBytes(32)).toString('base64url')
-    setCookie(event, cookieName, token, { path: "/", httpOnly: true, sameSite: 'strict' });
   }
+  // Set / update cookie
+  const expirationDate = new Date(Date.now() + 1000 * 60 * 60 * 24 * 365); // 1 year
+  setCookie(event, cookieName, token, { path: "/", httpOnly: true, sameSite: 'strict', expires: expirationDate });
 
   return token;
 }

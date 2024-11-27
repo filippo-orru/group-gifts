@@ -141,7 +141,8 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
             <div class="ml-auto flex items-center gap-4">
                 <span v-if="submitState.state === 'error'" class="text-error">{{ $t('newGroup.error') }}</span>
                 <button class="btn btn-primary" type="submit">
-                    → {{ $t('newGroup.createGroup') }}
+                    <i class="las la-arrow-right text-lg"></i>
+                    {{ $t('newGroup.createGroup') }}
                 </button>
             </div>
         </AppFooter>

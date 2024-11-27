@@ -9,7 +9,8 @@
       </div>
       <div class="navbar-end">
         <NuxtLinkLocale class="btn btn-accent" to="/groups">
-          → {{ $t('landing.myGroups') }}
+          <i class="las la-arrow-right text-lg"></i>
+          {{ $t('landing.myGroups') }}
         </NuxtLinkLocale>
       </div>
     </GenericPanel>
@@ -26,7 +27,8 @@
       </p>
       <div class="flex justify-center space-x-5">
         <NuxtLinkLocale class="btn btn-primary" to="/groups/new">
-          → {{ $t('landing.createGroup') }}
+          <i class="las la-arrow-right text-lg"></i>
+          {{ $t('landing.createGroup') }}
         </NuxtLinkLocale>
       </div>
     </div>

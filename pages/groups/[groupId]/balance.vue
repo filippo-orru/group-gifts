@@ -48,14 +48,14 @@ definePageMeta({
               </span>
               <span class="ml-auto">
                 <b class="mr-3">
-                  - {{ budgeting.expensesSum.roundCents() }}€</b>
+                  + {{ budgeting.expensesSum.roundCents() }} €</b>
               </span>
             </div>
             <div>
               <span>{{ $t('balance.yourBudget') }}</span>
               <span class="ml-auto">
                 <b class="mr-3">
-                  + {{ budgeting.budgetSum.roundCents() }}€</b>
+                  - {{ budgeting.budgetSum.roundCents() }} €</b>
               </span>
             </div>
             <div v-if="budgeting.overspend.amount > 0">
@@ -84,7 +84,7 @@ definePageMeta({
               </span>
               <span class="ml-auto">
                 <b class="mr-3">
-                  - {{ budgeting.underspend.amount.roundCents() }} €
+                  + {{ budgeting.underspend.amount.roundCents() }} €
                 </b>
               </span>
             </div>
@@ -94,7 +94,7 @@ definePageMeta({
               </span>
               <span class="ml-auto">
                 <b class="py-1 px-3 bg-accent/70 text-accent-content rounded-md">
-                  = {{ budgeting.remainder.roundCents() }} €
+                  = {{ (-budgeting.remainder).roundCents() }} €
                 </b>
               </span>
             </div>

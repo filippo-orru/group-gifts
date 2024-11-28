@@ -221,7 +221,7 @@ definePageMeta({
             </div>
 
             <div class="flex flex-col gap-2">
-              <button class="btn btn-primary">
+              <button class="btn btn-primary relative">
                 <span :class="{ 'invisible': saveBudgetState == 'saving' }">
                   {{ $t('memberHome.saveBudget') }}
                 </span>

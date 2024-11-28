@@ -1,6 +1,6 @@
 import { getMessaging, getToken as getMessagingToken } from "firebase/messaging";
 
-export type NotificationsState = 'initializing' | 'must-give-permission' | 'permission-denied' | 'error' | 'okay';
+export type NotificationsState = 'initializing' | 'unavailable' | 'must-give-permission' | 'permission-denied' | 'error' | 'okay';
 
 export const useNotifications = async () => {
 
@@ -26,21 +26,26 @@ export const useNotifications = async () => {
       });
     }
 
-    const permission = Notification.permission;
-    switch (permission) {
-      case 'default':
-        state.value = 'must-give-permission';
-        break;
+    if (!('Notification' in window)) {
+      state.value = 'unavailable';
+    
+    } else {
+      const permission = Notification.permission;
+      switch (permission) {
+        case 'default':
+          state.value = 'must-give-permission';
+          break;
 
-      case 'denied':
-        state.value = 'permission-denied';
-        break;
+        case 'denied':
+          state.value = 'permission-denied';
+          break;
 
-      case 'granted':
-        const token = await getToken();
-        sendToken(token);
-        state.value = 'okay';
-        break;
+        case 'granted':
+          const token = await getToken();
+          sendToken(token);
+          state.value = 'okay';
+          break;
+      }
     }
   }
 

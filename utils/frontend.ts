@@ -57,6 +57,6 @@ export const formatEnumeration = (unfilteredItems: (string | undefined)[]) => {
         return items[0];
     } else {
         const last = items.pop();
-        return `${items} ${useI18n().t('general.and')} ${last}`;
+        return `${items.join(', ')} ${useI18n().t('general.and')} ${last}`;
     }
 }

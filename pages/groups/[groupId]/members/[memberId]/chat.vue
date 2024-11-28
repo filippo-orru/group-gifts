@@ -58,7 +58,7 @@ const sendMessage = (event: Event) => {
         <span v-else class="loading loading-spinner loading-lg text-neutral"></span>
       </div>
     </Transition>
-    <div class="mx-5 mt-1 p-1 rounded-lg bg-base-200 text-center">
+    <div class="mx-5 mt-1 px-3 py-1 rounded-lg bg-base-200 text-center">
       <span class="hidden sm:block">
         <i18n-t keypath="chat.memberCantSee" :member="member">
           <b>{{ member.name }}</b>

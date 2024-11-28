@@ -75,6 +75,8 @@ const formatMessageTime = (date: number) => {
 const hideInviteDialog = () => {
   router.push({ query: {} });
 };
+
+const notJoinedMembers = computed(() => group.members.filter(m => !m.joined));
 </script>
 
 <template>
@@ -92,68 +94,68 @@ const hideInviteDialog = () => {
       </li>
     </template>
 
-    <GenericPanel :disable-padding="true">
-      <div class="flex flex-col">
-        <EnableNotifications />
+    <GenericPanel :disable-padding="true" class="px-3 pt-3 flex flex-col">
+      <div v-if="notJoinedMembers.length > 0"
+        class="flex items-center gap-3 mb-3 px-3 py-1 rounded-lg bg-base-200 text-start">
+        <i class="las la-clock text-xl"></i>
+        <i18n-t keypath="groupHome.memberNotJoined" tag="span" :plural="notJoinedMembers.length">
+          <b>{{ formatEnumeration(notJoinedMembers.map(m => m.name.capitalize())) }}</b>
+        </i18n-t>
+      </div>
 
-        <!-- todo all-chat -->
-        <NuxtLinkLocale v-for="(memberInGroup, index) in sortedMembers"
-          :to="`${baseHref}/members/${memberInGroup.member.id}`" class="hover:bg-base-200">
-          <div class="flex gap-4 items-center px-6 py-5">
-            <div class="avatar">
-              <div class="w-12 rounded-full outline outline-accent outline-offset-2 outline-offset-base-100"
-                :class="{ 'bg-accent/30': memberInGroup.member.joined, 'outline-dashed bg-accent/50': !memberInGroup.member.joined }">
-                <i class="las la-user text-3xl h-full flex items-center justify-center"></i>
-              </div>
+      <EnableNotifications />
+
+      <!-- todo all-chat -->
+      <NuxtLinkLocale v-for="(memberInGroup, index) in sortedMembers"
+        :to="`${baseHref}/members/${memberInGroup.member.id}`" class="rounded-lg hover:bg-base-200">
+        <div class="flex gap-4 items-center px-6 py-5">
+          <div class="avatar">
+            <div class="w-12 rounded-full outline outline-accent outline-offset-2 outline-offset-base-100"
+              :class="{ 'bg-accent/30': memberInGroup.member.joined, 'outline-dashed bg-accent/50 text-base-content/50': !memberInGroup.member.joined }">
+              <i class="las la-user text-3xl h-full flex items-center justify-center"></i>
             </div>
-            <div class="flex-1 w-0 flex flex-col">
-              <div class="flex flex-wrap items-start items-center">
-                <span class="mr-2">
-                  <i18n-t keypath="groupHome.giftFor">
-                    <b>{{ memberInGroup.member.name }}</b>
-                  </i18n-t>
-                </span>
-                <span v-if="memberInGroup.member.responsibleMemberId == group.me.id"
-                  class="badge badge-accent overflow-hidden whitespace-nowrap flex justify-start">
-                  <i class="las la-gift"></i>&nbsp;
-                  {{ $t('groupHome.youAreResponsible') }}
-                </span>
-                <span v-if="memberInGroup.lastMessage" class="ml-auto text-sm"
-                  :class="{ 'opacity-70': memberInGroup.unreadMessages == 0, 'text-primary font-bold': memberInGroup.unreadMessages > 0 }">
-                  {{ formatMessageTime(memberInGroup.lastMessage.date) }}
-                </span>
+          </div>
+          <div class="flex-1 w-0 flex flex-col">
+            <div class="flex flex-wrap items-start items-center">
+              <span class="mr-2">
+                <i18n-t keypath="groupHome.giftFor">
+                  <b>{{ memberInGroup.member.name }}</b>
+                </i18n-t>
+              </span>
+              <span v-if="memberInGroup.member.responsibleMemberId == group.me.id"
+                class="badge badge-accent overflow-hidden whitespace-nowrap flex justify-start">
+                <i class="las la-gift"></i>&nbsp;
+                {{ $t('groupHome.youAreResponsible') }}
+              </span>
+              <span v-if="memberInGroup.lastMessage" class="ml-auto text-sm"
+                :class="{ 'opacity-70': memberInGroup.unreadMessages == 0, 'text-primary font-bold': memberInGroup.unreadMessages > 0 }">
+                {{ formatMessageTime(memberInGroup.lastMessage.date) }}
+              </span>
+            </div>
+            <div class="flex flex-col text-sm text-neutral *:flex *:items-center *:gap-1">
+              <div v-if="memberInGroup.member.myBudget === null" class="">
+                <i class="las la-exclamation-circle text-xl"></i>
+                <i18n-t keypath="groupHome.memberNoBudget" tag="span">
+                  <b>{{ memberInGroup.member.name.capitalize() }}</b>
+                </i18n-t>
               </div>
-              <div class="flex flex-col text-sm text-neutral *:flex *:items-center *:gap-1">
-                <div v-if="!memberInGroup.member.joined" class="">
-                  <i class="las la-clock text-xl"></i>
-                  <i18n-t keypath="groupHome.memberNotJoined" tag="span">
-                    <b>{{ memberInGroup.member.name.capitalize() }}</b>
-                  </i18n-t>
+              <div v-else-if="memberInGroup.lastMessage" class="">
+                <i class="las la-comment-dots text-lg"></i>
+                <b>
+                  {{ memberInGroup.lastMessage.authorId == group.me.id ?
+                    $t('general.you') : group.members.find(m => m.id == memberInGroup.lastMessage!.authorId)!.name }}:
+                </b>
+                <div class="flex-1 overflow-hidden whitespace-nowrap text-ellipsis">
+                  {{ memberInGroup.lastMessage.content }}
                 </div>
-                <div v-else-if="memberInGroup.member.myBudget === null" class="">
-                  <i class="las la-exclamation-circle text-xl"></i>
-                  <i18n-t keypath="groupHome.memberNoBudget" tag="span">
-                    <b>{{ memberInGroup.member.name.capitalize() }}</b>
-                  </i18n-t>
-                </div>
-                <div v-else-if="memberInGroup.lastMessage" class="">
-                  <i class="las la-comment-dots text-lg"></i>
-                  <b>
-                    {{ memberInGroup.lastMessage.authorId == group.me.id ?
-                      $t('general.you') : group.members.find(m => m.id == memberInGroup.lastMessage!.authorId)!.name }}:
-                  </b>
-                  <div class="flex-1 overflow-hidden whitespace-nowrap text-ellipsis">
-                    {{ memberInGroup.lastMessage.content }}
-                  </div>
-                  <div v-if="memberInGroup.unreadMessages > 0" class="ml-auto badge badge-accent">
-                    {{ memberInGroup.unreadMessages }}
-                  </div>
+                <div v-if="memberInGroup.unreadMessages > 0" class="ml-auto badge badge-accent">
+                  {{ memberInGroup.unreadMessages }}
                 </div>
               </div>
             </div>
           </div>
-        </NuxtLinkLocale>
-      </div>
+        </div>
+      </NuxtLinkLocale>
     </GenericPanel>
   </GroupHome>
 </template>

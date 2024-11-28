@@ -72,7 +72,7 @@ export default defineI18nConfig(() => ({
                     home: 'Home',
                     wishlist: 'Your Wishlist',
                 },
-                memberNotJoined: '{0} has not joined the group yet',
+                memberNotJoined: '{0} has not joined the group yet|{0} have not joined the group yet',
                 memberNoBudget: 'You need to set your budget for {0}',
                 youAreResponsible: 'You are responsible',
                 giftFor: 'Gift for {0}',
@@ -115,10 +115,10 @@ export default defineI18nConfig(() => ({
                 giftsInfo: {
                     you: 'You can buy gifts for up to the total budget of {0}. {1}{2}' +
                         'Everyone can buy a gift, but don\'t forget that {3} are responsible for {4}\'s gifts. ' +
-                        'Use the {5} to coordinate who buys what',
+                        'Use the {5} to coordinate who buys what.',
                     someoneElse: 'You can buy gifts for up to the total budget of {0}. {1}{2} ' +
                         'Everyone can buy a gift, but don\'t forget that {3} is responsible for {4}\'s gifts. ' +
-                        'Use the {5} to coordinate who buys what',
+                        'Use the {5} to coordinate who buys what.',
                     chat: 'chat'
                 },
                 ifBudgetExceeded: 'If the budget is exceeded, the overspent amount will be covered by {0}.',
@@ -276,7 +276,7 @@ export default defineI18nConfig(() => ({
                     home: 'Übersicht',
                     wishlist: 'Deine Wunschliste',
                 },
-                memberNotJoined: '{0} ist der Gruppe noch nicht beigetreten',
+                memberNotJoined: '{0} ist der Gruppe noch nicht beigetreten|{0} sind der Gruppe noch nicht beigetreten',
                 memberNoBudget: 'Du musst dein Budget für {0} festlegen',
                 youAreResponsible: 'Du bist verantwortlich',
                 giftFor: 'Geschenk für {0}',
@@ -316,23 +316,13 @@ export default defineI18nConfig(() => ({
                 noWishesYet: 'Noch keine Wünsche{0}Bitte {1}, welche hinzufügen!',
                 giftsTitle: 'Geschenke',
                 totalBudget: 'Gesamtbudget: {0} €',
-                // giftsInfo: {
-                //     you: 'You can buy gifts for up to the total budget of {0}. {1}{2}' +
-                //         'Everyone can buy a gift, but don\'t forget that {3} are responsible for {4}\'s gifts. ' +
-                //         'Use the {5} to coordinate who buys what',
-                //     someoneElse: 'You can buy gifts for up to the total budget of {0}. {1}{2} ' +
-                //         'Everyone can buy a gift, but don\'t forget that {3} is responsible for {4}\'s gifts. ' +
-                //         'Use the {5} to coordinate who buys what',
-                //     chat: 'chat'
-                // },
-                // ifBudgetExceeded: 'If the budget is exceeded, the overspent amount will be covered by {0}.',
                 giftsInfo: {
                     you: 'Du kannst Geschenke für bis zu dem Gesamtbudget von {0} kaufen. {1}{2}' +
                         'Jede*r kann ein Geschenk kaufen, aber vergiss nicht, dass {3} für die Geschenke von {4} verantwortlich bist. ' +
-                        'Benutze den {5} um zu koordinieren, wer was kauft',
+                        'Benutze den {5} um zu koordinieren, wer was kauft.',
                     someoneElse: 'Du kannst Geschenke für bis zu dem Gesamtbudget von {0} kaufen. {1}{2}' +
                         'Jede*r kann ein Geschenk kaufen, aber vergiss nicht, dass {3} für die Geschenke von {4} verantwortlich ist. ' +
-                        'Benutze den {5} um zu koordinieren, wer was kauft',
+                        'Benutze den {5} um zu koordinieren, wer was kauft.',
                     chat: 'Chat',
                 },
                 ifBudgetExceeded: 'Wenn das Budget überschritten wird, werden die Mehrkosten von {0} getragen.',
@@ -403,7 +393,7 @@ export default defineI18nConfig(() => ({
             notifications: {
                 enable: {
                     title: 'Benachrichtigungen',
-                    description: 'Tippe hier um Benachrichtigungen für neue Nachrichten zu aktivieren.',
+                    description: 'Tippe hier um Benachrichtigungen zu aktivieren.',
                     titleSuccess: 'Benachrichtigungen aktiviert',
                     descriptionSuccess: 'Du wirst jetzt Benachrichtigungen erhalten.',
 

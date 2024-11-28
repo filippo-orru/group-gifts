@@ -48,14 +48,14 @@ const dontAskAgain = (event: Event) => {
 <template>
   <Transition name="slide-fade">
     <div v-if="!dismissed && state !== 'initializing' && (showEvenIfOkay || state !== 'okay')" @click="clickInfo"
-      class="w-full px-3 py-5">
+      class="w-full mb-3">
 
-      <button class="w-full flex items-center gap-5 px-6 py-3 rounded-lg border-2 " :class="{
-        'border-red-800/70 bg-red-700/20 hover:bg-red-800/30': state !== 'okay',
+      <button class="w-full flex items-center gap-4 px-6 py-3 rounded-lg border-2 " :class="{
+        'border-red-800/60 bg-red-700/20 hover:bg-red-800/30': state !== 'okay',
         'border-green-800/60 bg-green-700/20': state === 'okay'
       }">
-        <i class="las text-3xl" :class="{
-          'la-exclamation-triangle text-red-800': state !== 'okay',
+        <i class="las text-3xl w-12" :class="{
+          'la-exclamation-circle text-red-800': state !== 'okay',
           'la-check text-green-800': state === 'okay'
         }"></i>
         <div class="flex flex-col items-start text-start gap-1">
@@ -86,15 +86,19 @@ const dontAskAgain = (event: Event) => {
         </p>
         <div class="mt-5 flex flex-col gap-3 sm:flex-row-reverse">
           <button class="btn btn-primary" @click="showPrompt">
-            <span :class="{'invisible': promptLoading}">
+            <span class="flex items-center gap-2" :class="{'invisible': promptLoading}">
+              <i class="las la-bell text-xl"></i>
               {{ $t('notifications.enable.dialog.enable') }}
             </span>
             <span v-if="promptLoading" class="loading loading-spinner absolute" ></span>
           </button>
-          <button class="btn" @click="dontAskAgain">
+          <button class="btn items-center gap-2" @click="dontAskAgain">
+            <i class="las la-bell-slash text-xl"></i>
             {{ $t('notifications.enable.dialog.dontAskAgain') }}
           </button>
-          <button class="btn" @click="onClose">{{ $t('notifications.enable.dialog.close') }}</button>
+          <button class="btn" @click="onClose">
+            {{ $t('notifications.enable.dialog.close') }}
+          </button>
         </div>
       </div>
       <form method="dialog" class="modal-backdrop" @submit="onClose">

@@ -100,10 +100,7 @@ export default defineI18nConfig(() => ({
                     you: '{0} are responsible for buying gifts for {1}',
                     someoneElse: '{0} is responsible for buying gifts for {1}',
                 },
-                mustSetBudget: [
-                    'You haven\'t defined a budget for {0} yet.',
-                    'Please set one to help others know how much you can spend.'
-                ],
+                mustSetBudget: 'You haven\'t defined a budget for {0} yet.',
                 budgetInfo: {
                     you: 'Enter your budget for {0}, so you know how much to spend.',
                     someoneElse: 'Enter the budget for {0}, so {1} know how much to spend.',
@@ -116,14 +113,16 @@ export default defineI18nConfig(() => ({
                 giftsTitle: 'Gifts',
                 totalBudget: 'Total budget: {0} €',
                 giftsInfo: {
-                    you: 'You can buy gifts for up to the total budget of {0}. ' +
-                        'Everyone can buy a gift, but don\'t forget that you are responsible for {2}\'s gifts. ' +
-                        'Use the {3} to coordinate who buys what',
-                    someoneElse: 'You can buy gifts for up to the total budget of {0}. ' +
-                        'Everyone can buy a gift, but don\'t forget that {1} is responsible for {2}\'s gifts. ' +
-                        'Use the {3} to coordinate who buys what',
+                    you: 'You can buy gifts for up to the total budget of {0}. {1}{2}' +
+                        'Everyone can buy a gift, but don\'t forget that {3} are responsible for {4}\'s gifts. ' +
+                        'Use the {5} to coordinate who buys what',
+                    someoneElse: 'You can buy gifts for up to the total budget of {0}. {1}{2} ' +
+                        'Everyone can buy a gift, but don\'t forget that {3} is responsible for {4}\'s gifts. ' +
+                        'Use the {5} to coordinate who buys what',
                     chat: 'chat'
                 },
+                ifBudgetExceeded: 'If the budget is exceeded, the overspent amount will be covered by {0}.',
+                ifBudgetExceededYou: 'you',
                 noGiftsYet: 'No gifts yet.{0}If you bought something for {1}, add it here!',
                 overspentBy: 'Overspent by {0}. The overspent amount will be covered by {1}.',
                 overspentByYou: 'you',
@@ -199,7 +198,7 @@ export default defineI18nConfig(() => ({
                         description: 'To be notified about new messages and gifts, please enable the notifications here.',
                         permissionDenied: 'You denied the permission to receive notifications. To reenable them, you need to go to the site settings in your browser.',
                         error: 'Error enabling notifications. Please try again.',
-                        
+
                         close: 'Close',
                         dontAskAgain: 'Don\'t ask again',
                         enable: 'Enable Notifications',
@@ -305,10 +304,7 @@ export default defineI18nConfig(() => ({
                     you: '{0} bist für die Geschenke für {1} verantwortlich',
                     someoneElse: '{0} ist für die Geschenke für {1} verantwortlich',
                 },
-                mustSetBudget: [
-                    'Du hast noch kein Budget für {0} festgelegt.',
-                    'Bitte trage es ein, damit andere wissen, wie viel du ausgeben kannst.'
-                ],
+                mustSetBudget: 'Du hast noch kein Budget für {0} festgelegt.',
                 budgetInfo: {
                     you: 'Trage dein Budget für {0} ein, damit du weißt, wie viel du ausgeben kannst.',
                     someoneElse: 'Trage das Budget für {0} ein, damit {1} weiß, wie viel er/sie ausgeben kann.',
@@ -320,17 +316,29 @@ export default defineI18nConfig(() => ({
                 noWishesYet: 'Noch keine Wünsche{0}Bitte {1}, welche hinzufügen!',
                 giftsTitle: 'Geschenke',
                 totalBudget: 'Gesamtbudget: {0} €',
+                // giftsInfo: {
+                //     you: 'You can buy gifts for up to the total budget of {0}. {1}{2}' +
+                //         'Everyone can buy a gift, but don\'t forget that {3} are responsible for {4}\'s gifts. ' +
+                //         'Use the {5} to coordinate who buys what',
+                //     someoneElse: 'You can buy gifts for up to the total budget of {0}. {1}{2} ' +
+                //         'Everyone can buy a gift, but don\'t forget that {3} is responsible for {4}\'s gifts. ' +
+                //         'Use the {5} to coordinate who buys what',
+                //     chat: 'chat'
+                // },
+                // ifBudgetExceeded: 'If the budget is exceeded, the overspent amount will be covered by {0}.',
                 giftsInfo: {
-                    you: 'Du kannst Geschenke für bis zu dem Gesamtbudget von {0} kaufen. ' +
-                        'Jede*r kann ein Geschenk kaufen, aber vergiss nicht, dass du für die Geschenke von {2} verantwortlich bist. ' +
-                        'Benutze den {3} um zu koordinieren, wer was kauft',
-                    someoneElse: 'Du kannst Geschenke für bis zu dem Gesamtbudget von {0} kaufen. ' +
-                        'Jede*r kann ein Geschenk kaufen, aber vergiss nicht, dass {1} für die Geschenke von {2} verantwortlich ist. ' +
-                        'Benutze den {3} um zu koordinieren, wer was kauft',
+                    you: 'Du kannst Geschenke für bis zu dem Gesamtbudget von {0} kaufen. {1}{2}' +
+                        'Jede*r kann ein Geschenk kaufen, aber vergiss nicht, dass {3} für die Geschenke von {4} verantwortlich bist. ' +
+                        'Benutze den {5} um zu koordinieren, wer was kauft',
+                    someoneElse: 'Du kannst Geschenke für bis zu dem Gesamtbudget von {0} kaufen. {1}{2}' +
+                        'Jede*r kann ein Geschenk kaufen, aber vergiss nicht, dass {3} für die Geschenke von {4} verantwortlich ist. ' +
+                        'Benutze den {5} um zu koordinieren, wer was kauft',
                     chat: 'Chat',
                 },
+                ifBudgetExceeded: 'Wenn das Budget überschritten wird, werden die Mehrkosten von {0} getragen.',
+                ifBudgetExceededYou: 'dir',
                 noGiftsYet: 'Es gibt noch keine Geschenke.{0}Wenn du etwas für {1} gekauft hast, füge es hier hinzu!',
-                overspentBy: '| Es wurden {0} zu viel ausgegeben. Die Mehrkosten werden von {1} getragen.',
+                overspentBy: 'Es wurden {0} zu viel ausgegeben. Die Mehrkosten werden von {1} getragen.',
                 overspentByYou: 'dir',
                 giftBoughtBy: {
                     you: 'von dir',
@@ -404,7 +412,7 @@ export default defineI18nConfig(() => ({
                         description: 'Um bei neue Nachrichten, Geschenken benachrichtigt zu werden, aktiviere bitte hier die Benachrichtigungen.',
                         permissionDenied: 'Du hast die Benachrichtigungen abgelehnt. Um sie erneut zu aktivieren, musst du in die Seiteneinstellungen deines Browsers gehen.',
                         error: 'Fehler beim Aktivieren der Benachrichtigungen. Bitte versuche es noch einmal.',
-                        
+
                         close: 'Schließen',
                         dontAskAgain: 'Nicht mehr fragen',
                         enable: 'Benachrichtigungen aktivieren',

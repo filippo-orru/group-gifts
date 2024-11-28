@@ -19,7 +19,7 @@ const myBudget = ref<string>(member.value.myBudget?.amount?.toString() ?? '');
 const myBudgetIsFlexible = ref<boolean>(member.value.myBudget?.flexible ?? false);
 const saveBudgetState = ref<null | 'saving' | 'error'>(null);
 
-const saveBudgetForAllState = ref<null | 'show' | 'saving' | 'saved'>(null);
+const saveBudgetForAllState = ref<null | 'saving' | 'saved'>(null);
 const saveBudgetForAll = async () => {
   saveBudgetForAllState.value = 'saving';
   try {
@@ -31,18 +31,24 @@ const saveBudgetForAll = async () => {
       amount: budgetAmount,
       flexible: myBudgetIsFlexible.value,
     };
-    await groupsStore.updateBudgetForAll(groupId, body);
+    await Promise.all([
+      groupsStore.updateBudgetForAll(groupId, body),
+      new Promise(resolve => setTimeout(resolve, 1000)), // Wait for a bit to show the loading process
+    ]);
     saveBudgetForAllState.value = 'saved';
   } catch (e) {
-    saveBudgetForAllState.value = 'show';
     saveBudgetState.value = 'error';
   }
 };
 
-const submitBudget = async (event: SubmitEvent) => {
-  event.preventDefault();
+const toggleFlexibleBudget = () => {
+  myBudgetIsFlexible.value = !myBudgetIsFlexible.value;
 
-  saveBudgetForAllState.value = null;
+  submitBudget();
+};
+
+const submitBudget = async (event?: SubmitEvent) => {
+  event?.preventDefault();
 
   let budgetAmount: number | null = parseInt(myBudget.value);
   if (isNaN(budgetAmount)) {
@@ -55,9 +61,11 @@ const submitBudget = async (event: SubmitEvent) => {
 
   try {
     saveBudgetState.value = 'saving';
-    await groupsStore.updateMemberBudget(groupId, memberId, body);
+    await Promise.all([
+      groupsStore.updateMemberBudget(groupId, memberId, body),
+      new Promise(resolve => setTimeout(resolve, 1000)), // Wait for a bit to show the loading process
+    ]);
     saveBudgetState.value = null;
-    saveBudgetForAllState.value = 'show';
   } catch (e) {
     saveBudgetState.value = 'error';
   }
@@ -98,7 +106,7 @@ const cancelAddOrEditGift = () => {
   addOrEditGiftMode.value = { mode: null };
 }
 
-const addOrEditGift = (gift?: MemberGift) => {
+const addOrEditGift = async (gift?: MemberGift) => {
   const originalGiftMode = addOrEditGiftMode.value;
 
   const gifts = [...member.value.gifts];
@@ -127,7 +135,7 @@ const addOrEditGift = (gift?: MemberGift) => {
 
   try {
     // Hopefully noone is updating at the same time, or else it's a race condition
-    $fetch(`/api/groups/${groupId}/members/${memberId}/gifts`, {
+    await $fetch(`/api/groups/${groupId}/members/${memberId}/gifts`, {
       method: 'PUT',
       body: { gifts },
     });
@@ -143,10 +151,8 @@ const editGift = (gift: MemberGift) => {
   addOrEditGiftMode.value = { mode: 'edit', gift: gift };
 }
 
-const iAmResponsible = member.value.responsibleMemberId == group.value.me.id;
-
-// ['You', 'are', 'know'] or ['John', 'is', 'knows']
-const responsibleName = group.value.members.find(m => m.id == member.value.responsibleMemberId)?.name ?? null;
+const iAmResponsible = computed(() => member.value.responsibleMemberId == group.value.me.id);
+const responsibleName = computed(() => group.value.members.find(m => m.id == member.value.responsibleMemberId)?.name ?? null);
 
 const chatHref = `/groups/${groupId}/members/${memberId}/chat`;
 
@@ -159,25 +165,13 @@ definePageMeta({
   <MemberHome activeTab="gifts">
     <div class="grow overflow-y-scroll">
       <div class="flex flex-col gap-4 px-5">
-        <div class="mx-5 my-1 p-1 rounded-lg bg-base-200 flex items-center justify-center gap-2">
+        <div class="my-1 px-3 py-1 rounded-lg bg-base-200 flex items-center justify-center gap-2">
           <i class="las la-info-circle text-2xl"></i>
           <i18n-t :keypath="'memberHome.whoIsResponsibleInfo.' + (iAmResponsible ? 'you' : 'someoneElse')" tag='span'>
             <b>{{ iAmResponsible ? $t('general.you') : responsibleName }}</b>
             <b>{{ member.name }}</b>
           </i18n-t>
         </div>
-        <Transition name="slide-fade">
-          <div v-if="shouldAddBudget" class="alert alert-warning">
-            <i class="las la-exclamation-triangle text-2xl"></i>
-            <p>
-              <i18n-t :keypath="'memberHome.mustSetBudget.0'">
-                <b>{{ member.name }}</b>
-              </i18n-t>
-              <br />
-              {{ $t('memberHome.mustSetBudget.1') }}
-            </p>
-          </div>
-        </Transition>
 
         <div class="flex flex-col mb-4">
           <h1 class="text-2xl">Budget</h1>
@@ -188,18 +182,32 @@ definePageMeta({
             </i18n-t>
           </p>
 
+          <Transition name="slide-fade">
+            <div v-if="shouldAddBudget" class="mt-2 alert alert-info text-start">
+              <div class="flex gap-2 items-center">
+                <i class="las la-info-circle text-2xl"></i>
+                <p>
+                  <i18n-t :keypath="'memberHome.mustSetBudget'">
+                    <b>{{ member.name }}</b>
+                  </i18n-t>
+                </p>
+              </div>
+            </div>
+          </Transition>
 
           <form @submit="submitBudget"
-            class="mt-4 form-control flex flex-col sm:ml-auto sm:flex-row gap-4 sm:justify-end">
-            <label class="w-full input input-bordered flex items-center gap-4">
-              <input class="w-full" type="number" v-model="myBudget" placeholder="10" />
+            class="mt-4 form-control flex gap-4 flex-col items-stretch sm:flex-row sm:justify-end">
+
+            <label class="grow input input-bordered flex items-center gap-4">
+              <input class="w-full" type="number" v-model="myBudget" min="0" placeholder="10" />
               <span>€</span>
             </label>
 
-            <div class="indicator w-full">
-              <button class="btn max-sm:w-full gap-2" :class="{ 'btn-accent': myBudgetIsFlexible }" :disabled="!parseInt(myBudget)"
-                @click="myBudgetIsFlexible = !myBudgetIsFlexible" type="button">
-                <i class="las text-xl" :class="parseInt(myBudget) && myBudgetIsFlexible ? 'la-check' : 'la-times'"></i>
+            <div class="indicator w-auto">
+              <button class="btn max-sm:w-full gap-2" :class="{ 'btn-accent': myBudgetIsFlexible }"
+                :disabled="isNaN(parseInt(myBudget))" @click="toggleFlexibleBudget" type="button">
+                <i class="las text-xl"
+                  :class="!isNaN(parseInt(myBudget)) && myBudgetIsFlexible ? 'la-check' : 'la-times'"></i>
                 <span>{{ $t('memberHome.flexibleBudget') }}</span>
               </button>
 
@@ -212,26 +220,30 @@ definePageMeta({
 
             </div>
 
-            <button class="btn btn-primary">
-              <span v-if="saveBudgetState == 'saving'" class="loading loading-spinner"></span>
-              <span v-else>
-                {{ $t('memberHome.saveBudget') }}
-              </span>
-            </button>
+            <div class="flex flex-col gap-2">
+              <button class="btn btn-primary">
+                <span :class="{ 'invisible': saveBudgetState == 'saving' }">
+                  {{ $t('memberHome.saveBudget') }}
+                </span>
+                <span v-if="saveBudgetState == 'saving'" class="loading loading-spinner absolute"></span>
+              </button>
 
-            <Transition name="fade">
-              <button v-if="saveBudgetForAllState" class="text-neutral underline flex items-center justify-center gap-2"
+              <button class="text-neutral underline flex items-center justify-center gap-2 relative"
                 @click="saveBudgetForAll" type="button">
-                <span v-if="saveBudgetForAllState == 'saved'">
+                <span :class="{ 'invisible': saveBudgetForAllState !== 'saved' }">
                   <i class="las la-check"></i>
                 </span>
-                
-                <span v-if="saveBudgetForAllState != 'saving'" class="text-start">{{ $t('memberHome.saveBudgetForAll') }}</span>
-                <span v-else class="loading loading-spinner loading-sm"></span>
-                
+
+                <span class="text-start" :class="{ 'invisible': saveBudgetForAllState == 'saving' }">
+                  {{ $t('memberHome.saveBudgetForAll') }}
+                </span>
+                <span v-if="saveBudgetForAllState == 'saving'"
+                  class="loading loading-spinner loading-sm text-neutral absolute"></span>
+
+                <i class="invisible las la-check"></i> <!-- to make sure the text is centered -->
               </button>
-            </Transition>
-            
+            </div>
+
             <span v-if="saveBudgetState == 'error'" class="text-neutral text-sm">
               <i class="las la-times"></i>
               {{ $t('memberHome.saveBudgetError') }}
@@ -275,14 +287,24 @@ definePageMeta({
             <h1 class="text-2xl mt-3">{{ $t('memberHome.giftsTitle') }}</h1>
             <span class="ml-auto pl-8 pr-4 text-neutral">{{ $t('memberHome.totalBudget', [totalBudget]) }}</span>
           </div>
-          <span class="mt-4 mb-2 text-neutral md:mr-32">
+
+          <p class="mt-4 mb-2 text-neutral md:mr-32">
             <i18n-t :keypath="'memberHome.giftsInfo.' + (iAmResponsible ? 'you' : 'someoneElse')">
               <b>{{ totalBudget }} €</b>
-              <b>{{ responsibleName }}</b>
+              <span>
+                <i18n-t keypath="memberHome.ifBudgetExceeded">
+                  <b>{{ formatEnumeration(
+                    member.memberIdsWithFlexibleBudget.map(id =>
+                      id == group.me.id ? $t('memberHome.ifBudgetExceededYou') : group.members.find(m => m.id == id)?.name ?? "unknown")
+                  ) }}</b>
+                </i18n-t>
+              </span>
+              <p class="py-1"></p>
+              <b>{{ iAmResponsible ? $t('general.you') : responsibleName }}</b>
               <b>{{ member.name }}</b>
               <NuxtLinkLocale :to="chatHref" class="underline">{{ $t('memberHome.giftsInfo.chat') }}</NuxtLinkLocale>
             </i18n-t>
-          </span>
+          </p>
 
           <div v-if="member.gifts.length == 0" class="mt-6 text-center text-neutral">
             <i class="las la-shopping-bag text-3xl"></i>
@@ -294,15 +316,16 @@ definePageMeta({
           </div>
 
           <Transition name="slide-fade">
-            <div v-if="totalBudget - giftPricesSum < 0" class="mt-3 alert alert-warning mx-auto max-w-xl">
+            <div v-if="totalBudget - giftPricesSum < 0" class="mt-3 alert alert-warning text-start mx-auto max-w-xl">
               <div class="flex items-center gap-2">
                 <i class="las la-exclamation-triangle text-2xl"></i>
                 <i18n-t keypath='memberHome.overspentBy' tag="span">
                   <b>{{ giftPricesSum - totalBudget }} €</b>
-                  <b>{{
-                    formatEnumeration(member.memberIdsWithFlexibleBudget.map(id =>
-                      id == group.me.id ? $t('general.you') : group.members.find(m => m.id == id)?.name ?? "unknown"
-                    )) }}</b>
+                  <b>{{ formatEnumeration(
+                    member.memberIdsWithFlexibleBudget.map(id =>
+                      id == group.me.id ? $t('memberHome.ifBudgetExceededYou') : group.members.find(m => m.id == id)?.name ?? "unknown"
+                    )
+                  ) }}</b>
                 </i18n-t>
               </div>
             </div>
@@ -316,7 +339,7 @@ definePageMeta({
                   <div class="flex gap-2 items-center">
                     <i class="las la-gift text-xl"></i>
                     <span class="text-lg">{{ gift.name }}</span>
-                    <span class="w-12 ml-auto">
+                    <span class="ml-auto">
                       {{ gift.price }} €
                     </span>
                   </div>
@@ -334,7 +357,6 @@ definePageMeta({
                     {{ formatMessageDay(gift.date) }}
                   </div>
                 </div>
-                <div class="grow"></div>
               </button>
 
               <!--hr class="border" v-if="index < (member.gifts.length - 1)" /-->

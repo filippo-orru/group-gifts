@@ -73,7 +73,7 @@ const sendMessage = (event: Event) => {
     <form @submit="sendMessage">
       <div class="flex gap-4 px-2 pt-2 pb-4">
         <input class="input input-bordered flex-grow" :placeholder="$t('chat.typeMessagePlaceholder')"
-          v-model="messageInput" />
+          v-model="messageInput" autofocus/>
         <button class="btn btn-primary" @click="sendMessage">
           <i class="las la-paper-plane text-xl"></i>
         </button>

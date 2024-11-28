@@ -188,7 +188,7 @@ export default defineI18nConfig(() => ({
             },
             notifications: {
                 enable: {
-                    title: 'Notifications',
+                    title: 'Enable Notifications',
                     description: 'Tap here to enable notifications for new messages.',
                     titleSuccess: 'Notifications enabled',
                     descriptionSuccess: 'You will now receive notifications.',
@@ -198,6 +198,9 @@ export default defineI18nConfig(() => ({
                         description: 'To be notified about new messages and gifts, please enable the notifications here.',
                         permissionDenied: 'You denied the permission to receive notifications. To reenable them, you need to go to the site settings in your browser.',
                         error: 'Error enabling notifications. Please try again.',
+
+                        iosMustInstall: 'You are using an iPhone or iPad. Before you can enable notifications, you need to add the website to your home screen.{0}' +
+                            '{1} Tap the {2} icon and then "Add to Home Screen".',
 
                         close: 'Close',
                         dontAskAgain: 'Don\'t ask again',
@@ -392,7 +395,7 @@ export default defineI18nConfig(() => ({
             },
             notifications: {
                 enable: {
-                    title: 'Benachrichtigungen',
+                    title: 'Benachrichtigungen aktivieren',
                     description: 'Tippe hier um Benachrichtigungen zu aktivieren.',
                     titleSuccess: 'Benachrichtigungen aktiviert',
                     descriptionSuccess: 'Du wirst jetzt Benachrichtigungen erhalten.',
@@ -402,6 +405,8 @@ export default defineI18nConfig(() => ({
                         description: 'Um bei neue Nachrichten, Geschenken benachrichtigt zu werden, aktiviere bitte hier die Benachrichtigungen.',
                         permissionDenied: 'Du hast die Benachrichtigungen abgelehnt. Um sie erneut zu aktivieren, musst du in die Seiteneinstellungen deines Browsers gehen.',
                         error: 'Fehler beim Aktivieren der Benachrichtigungen. Bitte versuche es noch einmal.',
+                        iosMustInstall: 'Du benutzt ein iPhone oder iPad. Bevor du Benachrichtigungen aktivieren kannst, musst du die Website zu deinem Startbildschirm hinzufügen.{0}' +
+                            '{1} Tippe auf das {2} Symbol und dann "Zum Home-Bildschirm hinzufügen".',
 
                         close: 'Schließen',
                         dontAskAgain: 'Nicht mehr fragen',

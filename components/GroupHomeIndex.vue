@@ -107,7 +107,7 @@ const notJoinedMembers = computed(() => group.members.filter(m => !m.joined));
 
       <!-- todo all-chat -->
       <NuxtLinkLocale v-for="(memberInGroup, index) in sortedMembers"
-        :to="`${baseHref}/members/${memberInGroup.member.id}`" class="rounded-lg hover:bg-base-200">
+        :to="`${baseHref}/members/${memberInGroup.member.id}/gifts`" class="rounded-lg hover:bg-base-200">
         <div class="flex gap-4 items-center px-6 py-5">
           <div class="avatar">
             <div class="w-12 rounded-full outline outline-accent outline-offset-2 outline-offset-base-100"

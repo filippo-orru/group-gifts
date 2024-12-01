@@ -95,7 +95,10 @@ onUpdated(() => {
 
 <template>
   <div class="flex-1 overflow-hidden flex flex-col h-full">
-    <EnableNotifications />
+    <div class="px-3">
+      <EnableNotifications />
+    </div>
+
     <div class="flex-1 flex flex-col overflow-y-scroll" :class="{ 'invisible': !viewportReady }" ref="scrollViewport">
       <div class="px-1 pb-3">
         <span v-if="messagesByDayByAuthor.length == 0"

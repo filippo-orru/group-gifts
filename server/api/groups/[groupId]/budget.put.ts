@@ -6,6 +6,10 @@ export default defineEventHandler(async (event) => {
 
   const body: PutBudget = await readBody(event);
 
+  if (group.maxBudget !== null && body.amount !== null && body.amount > group.maxBudget) {
+    throw new Error("Amount exceeds group budget");
+  }
+
   group.members.forEach((m) => {
     if (m.id === member.id) {
       return; // Don't set budget for the member making the request

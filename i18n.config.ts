@@ -117,7 +117,7 @@ export default defineI18nConfig(() => ({
                     someoneElse: 'Enter the budget for {0}, so {1} know how much to spend.',
                 },
                 saveBudget: 'Save Budget',
-                saveBudgetForAll: 'Apply this budget for all',
+                saveBudgetForAll: 'Apply budget for all',
                 saveBudgetError: 'Error saving budget. Please try again.',
                 wishlistTitle: '{0}\'s Wishlist',
                 noWishesYet: 'No wishes yet.{0}Tell {1} to add some!',
@@ -146,6 +146,7 @@ export default defineI18nConfig(() => ({
                 addGift: 'Add Gift',
                 flexibleBudget: 'My budget is flexible',
                 flexibleBudgetInfo: 'Check this if you\'re willing to exceed your budget if necessary',
+                maxBudget: 'The maximum budget you can set is {0} €',
             },
             giftDialog: {
                 title: {
@@ -335,7 +336,7 @@ export default defineI18nConfig(() => ({
                     someoneElse: 'Trage das Budget für {0} ein, damit {1} weiß, wie viel er/sie ausgeben kann.',
                 },
                 saveBudget: 'Budget speichern',
-                saveBudgetForAll: 'Dieses Budget für alle übernehmen',
+                saveBudgetForAll: 'Budget für alle speichern',
                 saveBudgetError: 'Fehler beim Speichern des Budgets. Bitte versuche es noch einmal.',
                 wishlistTitle: 'Wunschliste von {0}',
                 noWishesYet: 'Noch keine Wünsche{0}Bitte {1}, welche hinzufügen!',
@@ -364,6 +365,7 @@ export default defineI18nConfig(() => ({
                 addGift: 'Geschenk hinzufügen',
                 flexibleBudget: 'Mein Budget ist flexibel',
                 flexibleBudgetInfo: 'Klicke hier, wenn du bereit bist, dein Budget wenn nötig zu überschreiten',
+                maxBudget: 'Das maximale Budget, das du festlegen kannst ist {0} €',
             },
             giftDialog: {
                 title: {

@@ -5,6 +5,10 @@ export default defineEventHandler(async (event) => {
   const { group, member } = await getGroupData(event);
 
   const body: PutBudget = await readBody(event);
+  
+  if (group.maxBudget !== null && body.amount !== null && body.amount > group.maxBudget) {
+    throw new Error("Amount exceeds group budget");
+  }
 
   const targetMemberId = getRouterParams(event).memberId;
   const targetMember = group.members.find((m) => m.id === targetMemberId)

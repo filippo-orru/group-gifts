@@ -15,6 +15,11 @@ const myBudget = ref<string>(props.member.myBudget?.amount?.toString() ?? '');
 const myBudgetIsFlexible = ref<boolean>(props.member.myBudget?.flexible ?? false);
 const saveBudgetState = ref<null | 'saving' | 'error'>(null);
 
+const exceedMaxBudget = computed(() => {
+  if (!props.group.maxBudget || !parseInt(myBudget.value)) return false;
+  return parseInt(myBudget.value) > props.group.maxBudget;
+});
+
 const saveBudgetForAllState = ref<null | 'saving' | 'saved'>(null);
 const saveBudgetForAll = async () => {
   saveBudgetForAllState.value = 'saving';
@@ -92,22 +97,29 @@ const submitBudget = async (event?: SubmitEvent) => {
       </div>
     </Transition>
 
-    <form @submit="submitBudget" class="mt-4 form-control flex gap-4 flex-col items-stretch sm:flex-row sm:justify-end">
-
-      <label class="grow input input-bordered flex items-center gap-4">
-        <input class="w-full" type="number" v-model="myBudget" min="0" placeholder="10" />
-        <span>€</span>
-      </label>
+    <form @submit="submitBudget" class="mt-4 form-control flex gap-4 flex-col items-stretch md:flex-row md:justify-end">
+      <div class="flex flex-col gap-2 items-stretch">
+        <label class="grow input input-bordered flex items-center gap-4">
+          <input class="w-full" type="number" v-model="myBudget" min="0" placeholder="10" />
+          <span>€</span>
+        </label>
+        <span v-if="group.maxBudget" class="pl-2 pr-3 text-neutral text-sm flex items-center gap-2"
+          :class="{ 'text-red-600 font-bold': exceedMaxBudget }">
+          <i class="las text-lg"
+            :class="{ 'la-info-circle': !exceedMaxBudget, 'la-exclamation-circle': exceedMaxBudget }"></i>
+          {{ $t('memberHome.maxBudget', [group.maxBudget]) }}
+        </span>
+      </div>
 
       <div class="indicator w-auto shrink-0">
-        <button class="btn max-sm:w-full gap-2" :class="{ 'btn-accent': myBudgetIsFlexible }"
-          :disabled="isNaN(parseInt(myBudget))" @click="toggleFlexibleBudget" type="button">
+        <button class="btn max-md:w-full gap-2" :class="{ 'btn-accent': myBudgetIsFlexible }"
+          :disabled="exceedMaxBudget || isNaN(parseInt(myBudget))" @click="toggleFlexibleBudget" type="button">
           <i class="las text-xl"
             :class="!isNaN(parseInt(myBudget)) && myBudgetIsFlexible ? 'la-check' : 'la-times'"></i>
           <span>{{ $t('memberHome.flexibleBudget') }}</span>
         </button>
 
-        <div class="tooltip tooltip-left sm:tooltip-top before:shadow-md before:z-10 after:z-10"
+        <div class="tooltip tooltip-left md:tooltip-top before:shadow-md before:z-10 after:z-10"
           :data-tip="$t('memberHome.flexibleBudgetInfo')">
           <div class="indicator-item rounded-full w-7 h-7 bg-neutral text-neutral-content">
             <i class="ml-auto las la-question-circle text-xl"></i>
@@ -117,26 +129,25 @@ const submitBudget = async (event?: SubmitEvent) => {
       </div>
 
       <div class="flex flex-col gap-2">
-        <button class="btn btn-primary relative">
+        <button class="btn btn-primary relative" :disabled="exceedMaxBudget">
           <span :class="{ 'invisible': saveBudgetState == 'saving' }">
             {{ $t('memberHome.saveBudget') }}
           </span>
           <span v-if="saveBudgetState == 'saving'" class="loading loading-spinner absolute"></span>
         </button>
 
-        <button class="text-neutral text-sm underline flex items-center justify-center gap-2 relative" @click="saveBudgetForAll"
-          type="button">
+        <button class="text-neutral text-sm underline flex items-center justify-center gap-2 pr-3 relative"
+          :class="{ 'text-neutral/50': exceedMaxBudget }" @click="saveBudgetForAll" type="button"
+          :disabled="exceedMaxBudget">
           <span :class="{ 'invisible': saveBudgetForAllState !== 'saved' }">
             <i class="las la-check"></i>
           </span>
 
-          <span class="text-start" :class="{ 'invisible': saveBudgetForAllState == 'saving' }">
+          <span class="text-start text-xs" :class="{ 'invisible': saveBudgetForAllState == 'saving' }">
             {{ $t('memberHome.saveBudgetForAll') }}
           </span>
           <span v-if="saveBudgetForAllState == 'saving'"
             class="loading loading-spinner loading-sm text-neutral absolute"></span>
-
-          <i class="invisible las la-check"></i> <!-- to make sure the text is centered -->
         </button>
       </div>
 

@@ -13,6 +13,7 @@ const minimumMembers = 3;
 const groupName = ref('');
 const hasMaxBudget: Ref<boolean> = ref(false);
 const maxBudget: Ref<number> = ref(10);
+const secretMode = ref(false);
 // Default date: this christmas
 const date = ref(new Date(new Date().getFullYear(), 11, 28).toISOString().split('T')[0]);
 const memberNames = ref(Array.from({ length: minimumMembers }, () => ({ name: '', focus: false })));
@@ -57,8 +58,9 @@ const submit = async (event: SubmitEvent) => {
             date: new Date(date.value).getTime(),
             memberNames: memberNames.value.map(m => m.name),
             maxBudget: hasMaxBudget.value ? maxBudget.value : null,
+            secretMode: secretMode.value,
         };
-        const group= await groupsStore.createGroup(createGroupBody);
+        const group = await groupsStore.createGroup(createGroupBody);
 
         router.push(localePath(`/groups/${group.id}?invite=true`));
     } catch (e) {
@@ -115,6 +117,15 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
                         <input class="w-full" type="number" v-model="maxBudget" :min="1" :placeholder="10" />
                         <span>€</span>
                     </label>
+                </div>
+                <div class="form-control w-full">
+                    <h1 class="text-lg mb-2">{{ $t('groupSettings.secretMode') }}</h1>
+                    <p class="text-neutral mb-2">{{ $t('groupSettings.secretModeDescription') }}</p>
+
+                    <button class="btn" :class="{ 'btn-primary': secretMode }" type="button" @click="secretMode = !secretMode">
+                        <i class="las" :class="{ 'la-check': secretMode, 'la-times': !secretMode }"></i>
+                        <span>{{ $t('groupSettings.secretMode') }}</span>
+                    </button>
                 </div>
                 <div>
                     <div class="label">{{ $t('newGroup.members') }}</div>

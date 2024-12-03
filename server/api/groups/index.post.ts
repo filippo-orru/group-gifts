@@ -34,6 +34,7 @@ export default defineEventHandler(async (event) => {
     inviteId: generateId(),
     members: members,
     maxBudget: body.maxBudget,
+    secretMode: body.secretMode,
     date: new Date(body.date),
     createdDate: new Date(),
     transactions: [],

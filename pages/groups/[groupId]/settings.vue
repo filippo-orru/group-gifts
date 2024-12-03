@@ -8,6 +8,11 @@ const group = await groupsStore.getGroup(groupId);
 const groupName = ref(group.value.name);
 const nameChanged = computed(() => groupName.value !== group.value.name);
 const savingName = ref(false);
+const saveName = async () => {
+  savingName.value = true;
+  await groupsStore.updateGroup(groupId, { name: groupName.value });
+  savingName.value = false;
+};
 
 const hasMaxBudget = ref(!!(group.value.maxBudget));
 const maxBudget = ref(group.value.maxBudget || 10);
@@ -15,16 +20,19 @@ const budgetChanged = computed(() =>
   !!(group.value.maxBudget) !== hasMaxBudget.value || maxBudget.value !== group.value.maxBudget
 );
 const savingBudget = ref(false);
-
-const saveName = async () => {
-  savingName.value = true;
-  await groupsStore.updateGroup(groupId, { name: groupName.value });
-  savingName.value = false;
-};
 const saveBudget = async () => {
   savingBudget.value = true;
   await groupsStore.updateGroup(groupId, { maxBudget: hasMaxBudget.value ? maxBudget.value : null });
   savingBudget.value = false;
+};
+
+const secretMode = ref(group.value.secretMode);
+const savingSecretMode = ref(false);
+const toggleSecretMode = async () => {
+  secretMode.value = !secretMode.value
+  savingSecretMode.value = true;
+  await groupsStore.updateGroup(groupId, { secretMode: secretMode.value });
+  savingSecretMode.value = false;
 };
 </script>
 
@@ -69,6 +77,18 @@ const saveBudget = async () => {
           </button>
         </div>
 
+        <div class="form-control w-full">
+          <h1 class="text-lg mb-2">{{ $t('groupSettings.secretMode') }}</h1>
+          <p class="text-neutral mb-2">{{ $t('groupSettings.secretModeDescription') }}</p>
+
+          <button class="btn" :class="{ 'btn-primary': secretMode }" type="button" @click="toggleSecretMode">
+            <span class="flex items-center gap-2" :class="{ 'invisible': savingSecretMode }">
+              <i class="las" :class="{ 'la-check': secretMode, 'la-times': !secretMode }"></i>
+              <span>{{ $t('groupSettings.secretMode') }}</span>
+            </span>
+            <span v-if="savingSecretMode" class="absolute loading loading-spinner"></span>
+          </button>
+        </div>
       </div>
     </GenericPanel>
   </div>

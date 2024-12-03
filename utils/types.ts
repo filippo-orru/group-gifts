@@ -5,11 +5,13 @@ export type CreateGroup = {
     date: number;
     memberNames: string[];
     maxBudget: number | null;
+    secretMode: boolean;
 }
 
 export type UpdateGroup = {
     name?: string;
     maxBudget?: number | null;
+    secretMode?: boolean;
 }
 
 export type PutBudget = {
@@ -41,6 +43,7 @@ export interface Group {
     id: string;
     name: string;
     maxBudget: number | null;
+    secretMode: boolean;
     date: number;
     me: GroupMemberMe;
     members: GroupMember[];

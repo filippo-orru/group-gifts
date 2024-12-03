@@ -10,6 +10,9 @@ export default defineEventHandler(async (event) => {
   if (body.maxBudget !== undefined) {
     group.maxBudget = body.maxBudget;
   }
+  if (body.secretMode !== undefined) {
+    group.secretMode = body.secretMode;
+  }
 
   await group.save();
 

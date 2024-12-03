@@ -100,8 +100,8 @@ const submitBudget = async (event?: SubmitEvent) => {
     </Transition>
 
     <form @submit="submitBudget" class="mt-5 form-control flex gap-4 flex-col items-stretch md:flex-row md:justify-end">
-      <div class="flex flex-col gap-2 items-stretch">
-        <label class="grow input input-bordered flex items-center gap-4">
+      <div class="grow flex flex-col gap-2 items-stretch">
+        <label class="input input-bordered flex items-center gap-4">
           <input class="w-full" type="number" v-model="myBudget" min="0" placeholder="10" />
           <span>€</span>
         </label>

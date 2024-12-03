@@ -81,6 +81,7 @@ export default defineI18nConfig(() => ({
                 memberNoBudget: 'You need to set your budget for {0}',
                 youAreResponsible: 'You are responsible',
                 giftFor: 'Gift for {0}',
+                giftForYou : 'Gift for you ({0})',
             },
             groupSettings: {
                 title: 'Group Settings',
@@ -153,6 +154,8 @@ export default defineI18nConfig(() => ({
                 flexibleBudget: 'My budget is flexible',
                 flexibleBudgetInfo: 'Check this if you\'re willing to exceed your budget if necessary',
                 maxBudget: 'The maximum budget you can set is {0} €',
+                notJoinedYet: '{0} has not joined the group yet, but you can {1} {0}.',
+                notJoinedYetInvite: 'Invite',
             },
             giftDialog: {
                 title: {
@@ -306,6 +309,7 @@ export default defineI18nConfig(() => ({
                 memberNoBudget: 'Du musst dein Budget für {0} festlegen',
                 youAreResponsible: 'Du bist verantwortlich',
                 giftFor: 'Geschenk für {0}',
+                giftForYou : 'Geschenk für dich ({0})',
             },
             groupSettings: {
                 title: 'Gruppeneinstellungen',
@@ -314,7 +318,7 @@ export default defineI18nConfig(() => ({
                 hasMaxBudget: 'Maximales Budget pro Person festlegen',
                 save: 'Speichern',
                 secretMode: 'Geheimer Modus',
-                secretModeDescription: 'Wenn der geheime Modus aktiviert ist, können Mitglieder nur sehen für wen sie verantwortlich sind, aber nicht wer für andere Mitglieder verantwortlich ist.',
+                secretModeDescription: 'Wenn der geheime Modus aktiviert ist, können Mitglieder nur sehen für wen sie verantwortlich sind, aber nicht wer für andere Mitglieder verantwortlich sind.',
             },
             join: {
                 error: 'Etwas ist schief gelaufen. Bitte öffne den Einladungslink erneut, oder bitte die Person, die dich eingeladen hat, dir einen neuen Link zu senden.',
@@ -378,6 +382,8 @@ export default defineI18nConfig(() => ({
                 flexibleBudget: 'Mein Budget ist flexibel',
                 flexibleBudgetInfo: 'Klicke hier, wenn du bereit bist, dein Budget wenn nötig zu überschreiten',
                 maxBudget: 'Das maximale Budget, das du festlegen kannst ist {0} €',
+                notJoinedYet: '{0} ist der Gruppe noch nicht beigetreten, aber du kannst {0} {1}.',
+                notJoinedYetInvite: 'einladen',
             },
             giftDialog: {
                 title: {

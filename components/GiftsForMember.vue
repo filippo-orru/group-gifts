@@ -7,7 +7,8 @@ const props = defineProps<{
 }>();
 
 const iAmResponsible = computed(() => props.member.responsibleMemberId == props.group.me.id);
-const responsibleName: ComputedRef<string | null> = computed(() => props.group.secretMode ? null : props.group.members.find(m => m.id == props.member.responsibleMemberId)?.name ?? null);
+const responsibleName: ComputedRef<string | null> = computed(() => props.group.secretMode ? null :
+  props.group.members.find(m => m.id == props.member.responsibleMemberId)?.name ?? null);
 
 const chatHref = `/groups/${props.group.id}/members/${props.member.id}/chat`;
 
@@ -94,7 +95,7 @@ const editGift = (gift: MemberGift) => {
       </i18n-t>
     </p>
 
-    <div v-if="member.gifts.length == 0" class="mt-6 text-center text-neutral">
+    <div v-if="member.gifts.length == 0" class="my-12 text-center text-neutral">
       <i class="las la-shopping-bag text-3xl"></i>
       <br />
       <i18n-t :keypath="'memberHome.noGiftsYet'">

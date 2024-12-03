@@ -15,16 +15,9 @@ export default defineEventHandler(async (event) => {
     groupId: group._id
   }).exec();
 
-  if (userInGroup) {
-    const ret: GroupForInvite = {
-      state: "already-joined",
-      groupId: group._id.toHexString()
-    };
-    return ret;
-  }
 
   const ret: GroupForInvite = {
-    state: "can-join",
+    state: userInGroup ? 'already-joined' : 'can-join',
     group: {
       id: group._id.toHexString(),
       name: group.name,

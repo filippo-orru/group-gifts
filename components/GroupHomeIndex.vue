@@ -98,6 +98,12 @@ const notJoinedMembers = computed(() => group.members.filter(m => !m.joined));
           {{ $t('groupHome.actions.settings') }}
         </NuxtLinkLocale>
       </li>
+      <li>
+        <NuxtLinkLocale :to="`/invite/${group.inviteId}?changeMember=1`">
+          <i class="las la-user-times text-xl"></i>
+          {{ $t('groupHome.actions.changeMember') }}
+        </NuxtLinkLocale>
+      </li>
     </template>
 
     <GenericPanel :disable-padding="true" class="px-3 pt-3 flex flex-col">

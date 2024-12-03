@@ -5,11 +5,12 @@ import type { AcceptInviteBody } from '~/utils/types';
 const localePath = useLocalePath();
 const router = useRouter();
 const inviteId = router.currentRoute.value.params.inviteId;
+const changeMember = router.currentRoute.value.query.changeMember;
 
 const { data, error } = await useFetch(`/api/invites/${inviteId}`);
 
 const members = computed(() => data.value?.state === 'can-join' ? data.value.group.members : null);
-const selectedMember = ref<string | null>(members.value ? members.value[0].id : null);
+const selectedMember = ref<string | null>(null);
 
 const groupsStore = useGroupsStore();
 
@@ -32,8 +33,8 @@ const onCancel = () => {
 };
 
 onMounted(() => {
-  if (data.value?.state === 'already-joined') {
-    router.push(localePath(`/groups/${data.value.groupId}`));
+  if (data.value?.state === 'already-joined' && !changeMember) {
+    router.push(localePath(`/groups/${data.value.group.id}`));
   }
 });
 
@@ -44,7 +45,7 @@ definePageMeta({
 
 <template>
   <div class="bg-base-200 min-h-screen min-w-screen">
-    <dialog class="modal" :open="data?.state !== 'already-joined'">
+    <dialog class="modal" :open="data?.state !== 'already-joined' || changeMember">
       <div class="modal-box ">
         <div v-if="!data || error" class="prose">
           <h1 class="text-lg font-bold">{{$t('join.errorSorry')}}</h1>
@@ -54,7 +55,7 @@ definePageMeta({
           <button @click="onCancel" class="btn mt-4 ml-auto">{{ $t('general.close') }}</button>
         </div>
 
-        <div v-else-if="data.state == 'can-join'" class="flex flex-col gap-3">
+        <div v-else class="flex flex-col gap-3">
           <h1 class="text-lg font-bold">{{ $t('join.title') }}</h1>
           <div class="prose">
             <i18n-t tag="p" keypath="join.description">

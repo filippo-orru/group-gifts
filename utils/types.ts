@@ -133,20 +133,15 @@ export interface MyBudgetTransaction extends BudgetTransaction {
     completed: boolean;
 }
 
-export type GroupForInvite
-    = {
-        state: 'can-join';
-        group: {
-            id: string;
-            name: string;
-            date: number;
-            members: { id: string; name: string; }[];
-        };
-    }
-    | {
-        state: 'already-joined',
-        groupId: string;
+export type GroupForInvite = {
+    state: 'can-join' | 'already-joined';
+    group: {
+        id: string;
+        name: string;
+        date: number;
+        members: { id: string; name: string; }[];
     };
+};
 
 // MARK: - Websocket messages
 

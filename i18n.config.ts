@@ -71,6 +71,7 @@ export default defineI18nConfig(() => ({
                     invite: 'Invite Friends',
                     settings: 'Group Settings',
                     delete: 'Delete Group',
+                    changeMember: 'Change Member',
                 },
                 tabs: {
                     home: 'Home',
@@ -295,6 +296,7 @@ export default defineI18nConfig(() => ({
                     invite: 'Teilnehmer einladen',
                     settings: 'Gruppeneinstellungen',
                     delete: 'Gruppe löschen',
+                    changeMember: 'Teilnehmer ändern',
                 },
                 tabs: {
                     home: 'Übersicht',

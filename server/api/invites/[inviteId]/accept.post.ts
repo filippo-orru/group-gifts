@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     groupId: group._id,
   }).exec();
   if (userGroup) {
-    throw new Error("User has already joined this group with this device");
+    await userGroup.deleteOne(); // Allow changing member
   }
 
   const userGroupAssociation: DbUserInGroup = {

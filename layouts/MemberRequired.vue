@@ -5,16 +5,12 @@ const groupId = router.currentRoute.value.params.groupId;
 const memberId = router.currentRoute.value.params.memberId;
 
 const groupsStore = useGroupsStore();
-await useAsyncData('groups', () => groupsStore.getGroups().then(() => true));
-
-const groups: Group[] = groupsStore.groups;
-const group = groups.find(g => g.id === groupId);
-const member = group && group.members.find(m => m.id === memberId)!;
+const group = await groupsStore.getGroup(groupId);
 </script>
 
 <template>
   <GroupHomeNotFound v-if="!group" />
-  <div v-else-if="!member">
+  <div v-else-if="!group.members.find(m => m.id === memberId)">
     <div>
       <NavBar title="Member" />
       <GenericPanel>

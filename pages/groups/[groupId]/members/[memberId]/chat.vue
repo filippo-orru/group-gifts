@@ -7,14 +7,13 @@ const groupId = router.currentRoute.value.params.groupId as string;
 const memberId = router.currentRoute.value.params.memberId as string;
 
 const groupsStore = useGroupsStore();
-await useAsyncData('groups', () => groupsStore.getGroups().then(() => true)); // TODO test if we need useAsyncData herei
 const chatStore = useChatStore();
 chatStore.connect();
 
-const group = groupsStore.groups.find(g => g.id === groupId)!;
-const myId = group.me.id;
+const group = await groupsStore.getGroup(groupId);
+const myId = group.value.me.id;
 
-const member = group.members.find(m => m.id === memberId)!;
+const member = group.value.members.find(m => m.id === memberId)!;
 
 const { data: chatMessages, error } = await useAsyncData(
   `chatMessages-${groupId}-${memberId}`,
@@ -73,7 +72,7 @@ const sendMessage = (event: Event) => {
     <form @submit="sendMessage">
       <div class="flex gap-4 px-2 pt-2 pb-4">
         <input class="input input-bordered flex-grow" :placeholder="$t('chat.typeMessagePlaceholder')"
-          v-model="messageInput" autofocus/>
+          v-model="messageInput" autofocus />
         <button class="btn btn-primary" @click="sendMessage">
           <i class="las la-paper-plane text-xl"></i>
         </button>

@@ -11,6 +11,8 @@ const minimumMembers = 3;
 
 // Fields
 const groupName = ref('');
+const hasMaxBudget: Ref<boolean> = ref(false);
+const maxBudget: Ref<number> = ref(10);
 // Default date: this christmas
 const date = ref(new Date(new Date().getFullYear(), 11, 28).toISOString().split('T')[0]);
 const memberNames = ref(Array.from({ length: minimumMembers }, () => ({ name: '', focus: false })));
@@ -48,16 +50,15 @@ const submit = async (event: SubmitEvent) => {
 
     submitState.value = { state: "loading" };
 
-    // Wait for a bit to show the loading screen
-    await new Promise((resolve) => setTimeout(resolve, 2200));
 
     try {
         const createGroupBody: CreateGroup = {
             name: groupName.value,
             date: new Date(date.value).getTime(),
             memberNames: memberNames.value.map(m => m.name),
+            maxBudget: hasMaxBudget.value ? maxBudget.value : null,
         };
-        const group = await groupsStore.createGroup(createGroupBody);
+        const group= await groupsStore.createGroup(createGroupBody);
 
         router.push(localePath(`/groups/${group.id}?invite=true`));
     } catch (e) {
@@ -104,6 +105,17 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
                     <div class="label">{{ $t('newGroup.date') }}</div>
                     <input class="input input-bordered" type="date" v-model="date" />
                 </label>
+                <div class="form-control w-full">
+                    <label class="mx-1">
+                        <input type="checkbox" v-model="hasMaxBudget" />
+                        <span class="ml-2">{{ $t('newGroup.hasMaxBudget') }}</span>
+                    </label>
+                    <div class="label text-neutral text-md">{{ $t('newGroup.maxBudgetDescription') }}</div>
+                    <label v-if="hasMaxBudget" class="input input-bordered flex items-center gap-4">
+                        <input class="w-full" type="number" v-model="maxBudget" :min="1" :placeholder="10" />
+                        <span>€</span>
+                    </label>
+                </div>
                 <div>
                     <div class="label">{{ $t('newGroup.members') }}</div>
                     <p class="label pt-0 text-neutral">{{ $t('newGroup.minimumMembers', { count: minimumMembers }) }}

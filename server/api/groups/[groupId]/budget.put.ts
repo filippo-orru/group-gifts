@@ -7,6 +7,9 @@ export default defineEventHandler(async (event) => {
   const body: PutBudget = await readBody(event);
 
   group.members.forEach((m) => {
+    if (m.id === member.id) {
+      return; // Don't set budget for the member making the request
+    }
     m.budget = m.budget.filter((b) => b.userId !== member.id);
 
     if (body.amount !== null) {

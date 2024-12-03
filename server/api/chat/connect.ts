@@ -4,6 +4,8 @@ import type { DbUserInGroup } from "~/server/models/userGroups.schema";
 import type { DbChatMessage } from "~/server/models/messages.schema";
 import { toClientMessage } from "~/server/models/messages.schema";
 import { sendNotificationForToken } from "~/server/utils/notifications";
+import { Types } from "mongoose";
+import { toClientGroup } from "~/server/models/groups.schema";
 
 type WsClient = {
     token: string;
@@ -65,6 +67,22 @@ export async function onNewChatMessage(
         const messagingToken = await MongoMessagingTokens.findOne({ _id: token }).exec();
         if (messagingToken) {
             sendNotificationForToken(token, { title: group.name, body: messageNotificationText });
+        }
+    }
+}
+
+export async function onGroupUpdate(group: DbGroup & { _id: Types.ObjectId }) {
+    const usersInGroup: DbUserInGroup[] = await MongoUserGroups.find({
+        groupId: group._id,
+    }).exec();
+
+    for (const userInGroup of usersInGroup) {
+        const client = clients.get(userInGroup.token);
+        if (client) {
+            sendMessage(client.peer, {
+                id: "groupUpdate",
+                group: await toClientGroup(group, userInGroup.memberId),
+            });
         }
     }
 }

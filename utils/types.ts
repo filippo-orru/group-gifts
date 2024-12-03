@@ -4,6 +4,12 @@ export type CreateGroup = {
     name: string;
     date: number;
     memberNames: string[];
+    maxBudget: number | null;
+}
+
+export type UpdateGroup = {
+    name?: string;
+    maxBudget?: number | null;
 }
 
 export type PutBudget = {
@@ -34,6 +40,7 @@ export interface AcceptInviteBody {
 export interface Group {
     id: string;
     name: string;
+    maxBudget: number | null;
     date: number;
     me: GroupMemberMe;
     members: GroupMember[];
@@ -144,10 +151,13 @@ export type GroupForInvite
 export type WsMessageC = {
     id: 'sendChatMessage';
     message: ChatMessage;
-}
+};
 
 // Messages sent by the server
 export type WsMessageS = {
     id: 'newChatMessage';
     message: ChatMessage;
-}
+} | {
+    id: 'groupUpdate';
+    group: Group;
+};

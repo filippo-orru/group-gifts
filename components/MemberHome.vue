@@ -9,10 +9,8 @@ const groupId = router.currentRoute.value.params.groupId;
 const memberId = router.currentRoute.value.params.memberId;
 
 const groupsStore = useGroupsStore()
-await useAsyncData('groups', () => groupsStore.getGroups().then(() => true))
-
-const group = groupsStore.groups.find(g => g.id === groupId)!;
-const member = group.members.find(m => m.id === memberId)!;
+const group = await groupsStore.getGroup(groupId);
+const member = group.value.members.find(m => m.id === memberId)!;
 
 type MemberTabs = 'gifts' | 'chat';
 

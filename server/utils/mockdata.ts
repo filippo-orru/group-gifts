@@ -53,22 +53,27 @@ const me: GroupMember = {
     ],
     gifts: [], // hidden for me
     otherBudgetSum: 0,
+    joined: false,
+    memberIdsWithFlexibleBudget: [],
+    responsibleMemberId: ""
 }
 
 function getMockGroups(): Group[] {
     const groups: Group[] = Array.from({ length: 10 }, (_, groupIndex) => {
         const memberNames = randomPickDistinct(names, Math.floor(Math.random() * 6) + 3);
-        const members = memberNames.map((name, memberIndex) => {
+        const members: GroupMember[] = memberNames.map((name, memberIndex) => {
             const otherMemberIds: number[] = memberNames.map((_, j) => j + 1).filter(j => j !== memberIndex + 1);
             if (groupIndex == 0 && memberIndex == 3) {
                 console.log(`Other members: `, otherMemberIds);
             }
 
-            return {
+            const member: GroupMember = {
                 id: `mem-${memberIndex + 1}`,
                 name: name,
-                myBudget: Math.random() > 0.4 ? Math.floor(Math.random() * 100) : null,
-                totalBudget: Math.floor(Math.random() * 10) * 5 + 50,
+                myBudget: Math.random() > 0.4 ? {
+                    amount: Math.floor(Math.random() * 100),
+                    flexible: Math.random() > 0.8,
+                } : null,
                 wishlist: Math.random() > 0.9 ? [] : randomPickDistinct(giftNames, 5).map((gift, i) => (
                     {
                         id: i.toString(),
@@ -85,9 +90,14 @@ function getMockGroups(): Group[] {
                         price: Math.floor(Math.random() * 10) * 5 + 5
                     }
                 )),
+                joined: false,
+                memberIdsWithFlexibleBudget: [],
+                otherBudgetSum: 0,
+                responsibleMemberId: ""
             };
+            return member;
         });
-        return {
+        const group: Group = {
             id: `group-${groupIndex}`,
             name: `Christmas 202${groupIndex}`,
             date: getRandomDate().getTime(),
@@ -100,9 +110,12 @@ function getMockGroups(): Group[] {
                     name: gift,
                 })),
             },
-            newMessages: Math.floor(Math.random() * 10),
+            maxBudget: null,
+            inviteId: "1234"
+            // newMessages: Math.floor(Math.random() * 10),
             // members.reduce((acc, member) => acc + member.chat.messages.filter(m => !m.isRead).length, 0)
-        }
+        };
+        return group;
     });
     return groups;
 }
@@ -112,6 +125,8 @@ function getMockChatMessages(): ChatMessage[] {
         const date = getRandomDate().getTime();
         return {
             id: i.toString(),
+            groupId: "group-" + Math.floor(Math.random() * 10),
+            memberId: "mem-" + Math.floor(Math.random() * 6),
             authorId: "mem-" + Math.floor(Math.random() * 2),
             content: chatMessages[Math.floor(Math.random() * chatMessages.length)],
             date: date,

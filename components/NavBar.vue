@@ -27,7 +27,8 @@ const goBack = () => {
                 GG
             </NuxtLinkLocale>
             <h1 class="font-bold">{{ title }}</h1>
-            <div v-if="$slots.actions" class="flex-1 flex items-center justify-end">
+            <div v-if="$slots.actions || $slots.buttons" class="flex-1 flex items-center justify-end gap-3">
+                <slot name="buttons" />
                 <div class="dropdown dropdown-bottom dropdown-end">
                     <button tabindex="0" class="btn btn-ghost">
                         <i class="las la-ellipsis-v text-xl"></i>

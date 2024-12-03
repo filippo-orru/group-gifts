@@ -32,6 +32,9 @@ export default defineI18nConfig(() => ({
                 title: 'Create Group',
                 groupName: 'Group Name',
                 groupNamePlaceholder: 'Christmas {year}',
+                hasMaxBudget: 'Maximum budget per person',
+                maxBudgetDescription: 'Each person sets an individual budget for each other. ' +
+                    'If this option is enabled, the individual budget is limited. The total budget per person is the sum of all budgets.',
                 date: 'Date',
                 members: 'Members',
                 minimumMembers: 'A group needs at least {count} members',
@@ -66,6 +69,7 @@ export default defineI18nConfig(() => ({
                 actions: {
                     balance: 'Balance',
                     invite: 'Invite Friends',
+                    settings: 'Group Settings',
                     delete: 'Delete Group',
                 },
                 tabs: {
@@ -76,6 +80,13 @@ export default defineI18nConfig(() => ({
                 memberNoBudget: 'You need to set your budget for {0}',
                 youAreResponsible: 'You are responsible',
                 giftFor: 'Gift for {0}',
+            },
+            groupSettings: {
+                title: 'Group Settings',
+                description: 'Here you can edit the group\'s settings.',
+                maxBudget: 'Maximum Budget',
+                hasMaxBudget: 'Set maximum budget per person',
+                save: 'Save',
             },
             join: {
                 error: 'Something went wrong. Please open the invite link again, or ask the person who invited you to send you a new invite link.',
@@ -239,6 +250,9 @@ export default defineI18nConfig(() => ({
                 title: 'Neue Gruppe',
                 groupName: 'Gruppenname',
                 groupNamePlaceholder: 'Weihnachten {year}',
+                hasMaxBudget: 'Maximales Budget pro Person',
+                maxBudgetDescription: 'Jede*r legt ein individuelles Budget für jede*n anderen fest. ' +
+                    'Wenn diese Option aktiviert ist, wird das individuelle Budget begrenzt. Das Gesamtbudget pro Person ist die Summe aller Budgets.',
                 date: 'Datum',
                 members: 'Teilnehmer',
                 minimumMembers: 'Eine Gruppe muss mindestens {count} Teilnehmer haben',
@@ -273,6 +287,7 @@ export default defineI18nConfig(() => ({
                 actions: {
                     balance: 'Bilanz',
                     invite: 'Teilnehmer einladen',
+                    settings: 'Gruppeneinstellungen',
                     delete: 'Gruppe löschen',
                 },
                 tabs: {
@@ -283,6 +298,13 @@ export default defineI18nConfig(() => ({
                 memberNoBudget: 'Du musst dein Budget für {0} festlegen',
                 youAreResponsible: 'Du bist verantwortlich',
                 giftFor: 'Geschenk für {0}',
+            },
+            groupSettings: {
+                title: 'Gruppeneinstellungen',
+                description: 'Hier kannst du die Gruppe bearbeiten.',
+                maxBudget: 'Maximales Budget',
+                hasMaxBudget: 'Maximales Budget pro Person festlegen',
+                save: 'Speichern',
             },
             join: {
                 error: 'Etwas ist schief gelaufen. Bitte öffne den Einladungslink erneut, oder bitte die Person, die dich eingeladen hat, dir einen neuen Link zu senden.',

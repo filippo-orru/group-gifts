@@ -1,4 +1,4 @@
-import { type GroupBudgetForMe, type MyBudgetTransaction, type PutTransaction } from "~/utils/types";
+import { type Group, type GroupBudgetForMe, type MyBudgetTransaction, type PutTransaction, type UpdateGroup } from "~/utils/types";
 
 export const useGroupsStore = defineStore({
   id: 'groupStore',
@@ -7,30 +7,53 @@ export const useGroupsStore = defineStore({
     budgeting: {} as { [groupId: string]: GroupBudgetForMe },
   }),
   actions: {
-    async getGroup(id: string): Promise<Group | undefined> {
-      await useAsyncData('groups', () => this.getGroups());
-      return this.groups.find((g) => g.id === id);
+    async maybeGetGroup(id: string | string[]): Promise<ComputedRef<Group | undefined>> {
+      await this.getGroups();
+      return computed(() => this.groups.find((g) => g.id === id));
+    },
+    async getGroup(id: string | string[]): Promise<ComputedRef<Group>> {
+      await this.getGroups();
+      return computed(() => this.groups.find((g) => g.id === id)!);
     },
     async getBudgeting(groupId: string): Promise<GroupBudgetForMe> {
       const budgeting = await $fetch<GroupBudgetForMe>(`/api/groups/${groupId}/budgeting`);
       this.budgeting[groupId] = budgeting;
       return this.budgeting[groupId]!;
     },
-    async getGroups({ force = false }: { force?: boolean } = {}) {
+    async getGroups({ force = false }: { force?: boolean } = {}): Promise<Group[]> {
       if (!force && this.groups.length > 0) {
-        return
+        return this.groups;
       };
-      const groups = await $fetch<Group[]>('/api/groups');
-      this.groups = groups;
-      return groups;
+      const groups = await useFetch<Group[]>('/api/groups');
+      this.groups = groups.data.value!;
+      return this.groups;
     },
     async createGroup(body: CreateGroup): Promise<Group> {
-      const group = await $fetch<Group>('/api/groups', {
-        method: 'POST',
-        body: body,
-      });
+      const [group, _] = await Promise.all([
+        $fetch<Group>('/api/groups', {
+          method: 'POST',
+          body: body,
+        }),
+        new Promise((resolve) => setTimeout(resolve, 2200)), // Wait for a bit to show the loading screen
+      ]);
       this.groups.push(group);
       return group;
+    },
+    async updateGroup(id: string, body: UpdateGroup): Promise<Group> {
+      const [group, _] = await Promise.all([
+        $fetch<Group>(`/api/groups/${id}`, {
+          method: 'PATCH',
+          body: body,
+        }),
+        new Promise((resolve) => setTimeout(resolve, 700))
+      ]);
+      const index = this.groups.findIndex((g) => g.id === id);
+      this.groups[index] = group;
+      return group;
+    },
+    async onGroupUpdate(group: Group) {
+      const index = this.groups.findIndex((g) => g.id === group.id);
+      this.groups[index] = group;
     },
     async deleteGroup(id: string): Promise<void> {
       await $fetch(`/api/groups/${id}`, {

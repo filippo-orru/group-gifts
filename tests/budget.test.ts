@@ -27,6 +27,7 @@ const demoMember = (index: number, length: number): DbGroupMember => {
 const demoGroup = (): DbGroup => ({
     name: 'demo',
     inviteId: '',
+    maxBudget: null,
     date: new Date(0),
     members: [
         demoMember(0, 3),

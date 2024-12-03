@@ -5,15 +5,15 @@ const router = useRouter();
 const groupId = router.currentRoute.value.params.groupId as string;
 
 const groupsStore = useGroupsStore()
-const group = (await groupsStore.getGroup(groupId))!;
+const group = await groupsStore.getGroup(groupId);
 const budgeting = await groupsStore.getBudgeting(groupId);
 
-const giftsBoughtForWho = computed(() => group.members
-  .filter(member => member.gifts.some(gift => gift.buyerId === group.me.id))
+const giftsBoughtForWho = computed(() => group.value.members
+  .filter(member => member.gifts.some(gift => gift.buyerId === group.value.me.id))
 );
 
-const sendTransactions = computed(() => budgeting.myTransactions.filter(t => t.fromId === group.me.id));
-const receiveTransactions = computed(() => budgeting.myTransactions.filter(t => t.toId === group.me.id));
+const sendTransactions = computed(() => budgeting.myTransactions.filter(t => t.fromId === group.value.me.id));
+const receiveTransactions = computed(() => budgeting.myTransactions.filter(t => t.toId === group.value.me.id));
 
 definePageMeta({
   layout: 'group-required',

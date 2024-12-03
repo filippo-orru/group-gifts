@@ -1,14 +1,13 @@
 <script lang="ts" setup>
-const groupsStore = useGroupsStore()
-await useAsyncData('groups', () => groupsStore.getGroups({ force: true }).then(() => true))
-const groups = computed(() => groupsStore.groups);
+const groupsStore = useGroupsStore();
+const groups = groupsStore.getGroups({force: true});
 </script>
 
 <template>
   <NavBar title="Groups" href="/" :use-logo="true">
   </NavBar>
   <GenericPanel :disable-padding="true" class="flex flex-col gap-4 p-4">
-    <div v-if="groups.length === 0"
+    <div v-if="groupsStore.groups.length === 0"
       class="min-h-[80vh] flex flex-col gap-2 items-center justify-center text-center text-neutral">
       <i class="mt-24 las la-users text-6xl"></i>
       <h2 class="text-lg">
@@ -22,7 +21,7 @@ const groups = computed(() => groupsStore.groups);
       </p>
     </div>
 
-    <NuxtLinkLocale v-for="(group, index) in groups" :key="group.id" :to="`/groups/${group.id}`"
+    <NuxtLinkLocale v-for="group in groupsStore.groups" :key="group.id" :to="`/groups/${group.id}`"
       class="flex flex-col border-2 border-accent rounded-xl overflow-hidden shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
       <div class="bg-accent h-16 relative overflow-hidden">
         <div class="relative -left-4 -top-4  *:text-xl *:text-neutral/50"

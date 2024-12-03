@@ -1,3 +1,4 @@
+import { onGroupUpdate } from "~/server/api/chat/connect";
 import { getGroupData } from "~/server/utils/groups";
 import type { PutGifts } from "~/utils/types";
 
@@ -34,6 +35,8 @@ export default defineEventHandler(async (event) => {
             body: `${member.name} updated gifts for ${targetMember.name}`
         },
     );
+
+    onGroupUpdate(group.id);
 
     return toClientGroup(group, member.id);
 })

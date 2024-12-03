@@ -30,9 +30,10 @@ export default defineEventHandler(async (event) => {
   });
 
   const group: DbGroup = {
-    name: body.name,
+    name: body.name!,
     inviteId: generateId(),
     members: members,
+    maxBudget: body.maxBudget,
     date: new Date(body.date),
     createdDate: new Date(),
     transactions: [],

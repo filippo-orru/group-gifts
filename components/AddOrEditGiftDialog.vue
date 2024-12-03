@@ -17,7 +17,7 @@ const router = useRouter();
 const groupId = router.currentRoute.value.params.groupId;
 
 const groupsStore = useGroupsStore();
-const group = groupsStore.groups.find(g => g.id === groupId)!;
+const group = await groupsStore.getGroup(groupId);
 
 type EditMemberGift = {
   id: string;
@@ -38,7 +38,7 @@ const defaultFields = computed<EditMemberGift>(() => {
       id: generateId(),
       name: '',
       date: new Date().toISOString().substring(0, 10),
-      buyerId: group.me.id,
+      buyerId: group.value.me.id,
       price: 0
     }
   }

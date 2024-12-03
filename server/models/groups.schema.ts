@@ -35,6 +35,7 @@ export interface DbGroupMember {
 export interface DbGroup {
     name: string;
     inviteId: string;
+    maxBudget: number | null;
     date: Date;
     createdDate: Date;
     members: DbGroupMember[];
@@ -142,6 +143,11 @@ export const MongoGroups = defineMongooseModel<DbGroup>({
             type: 'string',
             required: true,
         },
+        maxBudget: {
+            type: 'number',
+            required: false,
+            default: null,
+        },
         date: {
             type: 'date',
             required: true,
@@ -187,6 +193,7 @@ export const toClientGroup = async (group: DbGroup & { _id: Types.ObjectId }, me
         id: group._id.toHexString(),
         inviteId: group.inviteId,
         name: group.name,
+        maxBudget: group.maxBudget,
         date: group.date.getTime(),
         me: groupMemberMe,
         members: group.members

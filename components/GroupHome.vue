@@ -12,16 +12,14 @@ const router = useRouter();
 const groupId = router.currentRoute.value.params.groupId;
 
 const groupsStore = useGroupsStore()
-await useAsyncData('groups', () => groupsStore.getGroups().then(() => true))
-
-const group = groupsStore.groups.find(g => g.id === groupId)!;
+const group = await groupsStore.getGroup(groupId);
 
 const showConfirmDeleteDialog = ref(false);
 const setShowConfirmDeleteDialog = (show: boolean) => {
   showConfirmDeleteDialog.value = show;
 };
 const confirmDeleteGroup = async () => {
-  await groupsStore.deleteGroup(group.id);
+  await groupsStore.deleteGroup(group.value.id);
   router.push(localePath('/groups'));
 };
 
@@ -57,9 +55,15 @@ const goToBalance = () => {
 
   <div class="h-dvh w-full flex flex-col">
     <NavBar :title="group.name" href='/groups' :useLogo=true>
+      <template v-slot:buttons>
+        <button @click="goToBalance" class="btn btn-ghost max-sm:hidden">
+          <i class="las la-coins text-xl"></i>
+          {{ $t('groupHome.actions.balance') }}
+        </button>
+      </template>
       <template v-slot:actions>
         <slot name="actions" />
-        <li>
+        <li class="sm:hidden">
           <button @click="goToBalance">
             <i class="las la-coins text-xl"></i>
             {{ $t('groupHome.actions.balance') }}

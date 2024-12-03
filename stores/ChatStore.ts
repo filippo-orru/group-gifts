@@ -31,6 +31,10 @@ export const useChatStore = defineStore({
                     case 'newChatMessage':
                         this.chatMessages[message.message.id] = message.message;
                         break;
+                    case 'groupUpdate':
+                        const groupsStore = useGroupsStore();
+                        groupsStore.onGroupUpdate(message.group);
+                        break;
                 }
             }
 

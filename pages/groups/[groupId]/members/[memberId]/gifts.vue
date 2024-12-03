@@ -36,7 +36,7 @@ const sortedWishes: ComputedRef<OtherMemberWishlistItem[]> = computed(() => [
 ]);
 
 const iAmResponsible = computed(() => member.value.responsibleMemberId == group.value.me.id);
-const responsibleName = computed(() => group.value.members.find(m => m.id == member.value.responsibleMemberId)?.name ?? null);
+const responsibleName: ComputedRef<string | null> = computed(() => group.value.secretMode ? null : group.value.members.find(m => m.id == member.value.responsibleMemberId)?.name ?? null);
 
 definePageMeta({
   layout: 'member-required',
@@ -47,7 +47,8 @@ definePageMeta({
   <MemberHome activeTab="gifts">
     <div class="grow overflow-y-scroll">
       <div class="flex flex-col gap-4 px-5">
-        <div class="my-1 px-3 py-1 rounded-lg bg-base-200 flex items-center justify-center gap-2">
+        <div v-if="iAmResponsible || responsibleName"
+          class="my-1 px-3 py-1 rounded-lg bg-base-200 flex items-center justify-center gap-2">
           <i class="las la-info-circle text-2xl"></i>
           <i18n-t :keypath="'memberHome.whoIsResponsibleInfo.' + (iAmResponsible ? 'you' : 'someoneElse')" tag='span'>
             <b>{{ iAmResponsible ? $t('general.you') : responsibleName }}</b>

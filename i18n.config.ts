@@ -117,6 +117,7 @@ export default defineI18nConfig(() => ({
                 budgetInfo: {
                     you: 'Enter your budget for {0}, so you know how much to spend.',
                     someoneElse: 'Enter the budget for {0}, so {1} know how much to spend.',
+                    someoneElseSecret: 'Enter the budget for {0}, so the responsible person knows how much to spend.',
                 },
                 saveBudget: 'Save Budget',
                 saveBudgetForAll: 'Apply budget for all',
@@ -126,11 +127,13 @@ export default defineI18nConfig(() => ({
                 giftsTitle: 'Gifts',
                 totalBudget: 'Total budget: {0} €',
                 giftsInfo: {
-                    you: 'You can buy gifts for up to the total budget of {0}. {1}{2}' +
+                    you: 'The group can buy gifts for up to the total budget of {0}. {1}{2}' +
                         'Everyone can buy a gift, but don\'t forget that {3} are responsible for {4}\'s gifts. ' +
                         'Use the {5} to coordinate who buys what.',
-                    someoneElse: 'You can buy gifts for up to the total budget of {0}. {1}{2} ' +
+                    someoneElse: 'The group can buy gifts for up to the total budget of {0}. {1}{2} ' +
                         'Everyone can buy a gift, but don\'t forget that {3} is responsible for {4}\'s gifts. ' +
+                        'Use the {5} to coordinate who buys what.',
+                    someoneElseSecret: 'The group can buy gifts for up to the total budget of {0}. ' +
                         'Use the {5} to coordinate who buys what.',
                     chat: 'chat'
                 },
@@ -338,6 +341,7 @@ export default defineI18nConfig(() => ({
                 budgetInfo: {
                     you: 'Trage dein Budget für {0} ein, damit du weißt, wie viel du ausgeben kannst.',
                     someoneElse: 'Trage das Budget für {0} ein, damit {1} weiß, wie viel er/sie ausgeben kann.',
+                    someoneElseSecret: 'Trage das Budget für {0} ein, damit die verantwortliche Person weiß, wie viel sie ausgeben kann.',
                 },
                 saveBudget: 'Budget speichern',
                 saveBudgetForAll: 'Budget für alle speichern',
@@ -347,11 +351,13 @@ export default defineI18nConfig(() => ({
                 giftsTitle: 'Geschenke',
                 totalBudget: 'Gesamtbudget: {0} €',
                 giftsInfo: {
-                    you: 'Du kannst Geschenke für bis zu dem Gesamtbudget von {0} kaufen. {1}{2}' +
+                    you: 'Es können Geschenke für bis zu {0} gekauft werden. {1}{2}' +
                         'Jede*r kann ein Geschenk kaufen, aber vergiss nicht, dass {3} für die Geschenke von {4} verantwortlich bist. ' +
                         'Benutze den {5} um zu koordinieren, wer was kauft.',
-                    someoneElse: 'Du kannst Geschenke für bis zu dem Gesamtbudget von {0} kaufen. {1}{2}' +
+                    someoneElse: 'Es können Geschenke für bis zu {0} gekauft werden. {1}{2}' +
                         'Jede*r kann ein Geschenk kaufen, aber vergiss nicht, dass {3} für die Geschenke von {4} verantwortlich ist. ' +
+                        'Benutze den {5} um zu koordinieren, wer was kauft.',
+                    someoneElseSecret: 'Es können Geschenke für bis zu {0} gekauft werden. ' +
                         'Benutze den {5} um zu koordinieren, wer was kauft.',
                     chat: 'Chat',
                 },

@@ -7,7 +7,7 @@ const props = defineProps<{
 }>();
 
 const iAmResponsible = computed(() => props.member.responsibleMemberId == props.group.me.id);
-const responsibleName = computed(() => props.group.members.find(m => m.id == props.member.responsibleMemberId)?.name ?? null);
+const responsibleName: ComputedRef<string | null> = computed(() => props.group.secretMode ? null : props.group.members.find(m => m.id == props.member.responsibleMemberId)?.name ?? null);
 
 const chatHref = `/groups/${props.group.id}/members/${props.member.id}/chat`;
 
@@ -75,7 +75,8 @@ const editGift = (gift: MemberGift) => {
     </div>
 
     <p class="mt-4 mb-2 text-neutral md:mr-32">
-      <i18n-t :keypath="'memberHome.giftsInfo.' + (iAmResponsible ? 'you' : 'someoneElse')">
+      <i18n-t
+        :keypath="'memberHome.giftsInfo.' + (iAmResponsible ? 'you' : responsibleName ? 'someoneElse' : 'someoneElseSecret')">
         <b>{{ totalBudget }} €</b>
         <span>
           <i18n-t keypath="memberHome.ifBudgetExceeded">

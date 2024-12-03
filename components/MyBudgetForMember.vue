@@ -7,7 +7,7 @@ const props = defineProps<{
 const groupsStore = useGroupsStore();
 
 const iAmResponsible = computed(() => props.member.responsibleMemberId == props.group.me.id);
-const responsibleName = computed(() => props.group.members.find(m => m.id == props.member.responsibleMemberId)?.name ?? null);
+const responsibleName: ComputedRef<string | null> = computed(() => props.group.secretMode ? null : props.group.members.find(m => m.id == props.member.responsibleMemberId)?.name ?? null);
 
 const shouldAddBudget = computed(() => props.member.myBudget === null);
 
@@ -78,14 +78,16 @@ const submitBudget = async (event?: SubmitEvent) => {
   <div class="flex flex-col mb-4">
     <h1 class="text-2xl">Budget</h1>
     <p class="text-neutral">
-      <i18n-t :keypath="'memberHome.budgetInfo.' + (iAmResponsible ? 'you' : 'someoneElse')" tag='span'>
+      <i18n-t
+        :keypath="'memberHome.budgetInfo.' + (iAmResponsible ? 'you' : responsibleName ? 'someoneElse' : 'someoneElseSecret')"
+        tag='span'>
         <b>{{ member.name }}</b>
         <b>{{ responsibleName }}</b>
       </i18n-t>
     </p>
 
     <Transition name="slide-fade">
-      <div v-if="shouldAddBudget" class="mt-2 alert alert-info text-start">
+      <div v-if="shouldAddBudget" class="mt-3 alert alert-info text-start">
         <div class="flex gap-2 items-center">
           <i class="las la-info-circle text-2xl"></i>
           <p>
@@ -97,7 +99,7 @@ const submitBudget = async (event?: SubmitEvent) => {
       </div>
     </Transition>
 
-    <form @submit="submitBudget" class="mt-4 form-control flex gap-4 flex-col items-stretch md:flex-row md:justify-end">
+    <form @submit="submitBudget" class="mt-5 form-control flex gap-4 flex-col items-stretch md:flex-row md:justify-end">
       <div class="flex flex-col gap-2 items-stretch">
         <label class="grow input input-bordered flex items-center gap-4">
           <input class="w-full" type="number" v-model="myBudget" min="0" placeholder="10" />

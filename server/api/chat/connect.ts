@@ -63,10 +63,12 @@ export async function onNewChatMessage(
             );
         }
 
-        // Send push notification. If the website is open, the message will not be shown
-        const messagingToken = await MongoMessagingTokens.findOne({ _id: token }).exec();
-        if (messagingToken) {
-            sendNotificationForToken(token, { title: group.name, body: messageNotificationText });
+        if (token !== from.token) { // Don't send push notification to the author
+            // Send push notification. If the website is open, the message will not be shown
+            const messagingToken = await MongoMessagingTokens.findOne({ _id: token }).exec();
+            if (messagingToken) {
+                sendNotificationForToken(token, { title: group.name, body: messageNotificationText });
+            }
         }
     }
 }

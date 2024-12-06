@@ -364,7 +364,7 @@ export default defineI18nConfig(() => ({
                     someoneElse: 'Es können Geschenke für bis zu {0} gekauft werden. {1}{2}' +
                         'Jede*r kann ein Geschenk kaufen, aber vergiss nicht, dass {3} für die Geschenke von {4} verantwortlich ist. ' +
                         'Benutze den {5} um zu koordinieren, wer was kauft.',
-                    someoneElseSecret: 'Es können Geschenke für bis zu {0} gekauft werden. {1}' +
+                    someoneElseSecret: 'Es können Geschenke für bis zu {0} gekauft werden. {1} ' +
                         'Benutze den {5} um zu koordinieren, wer was kauft.',
                     chat: 'Chat',
                 },

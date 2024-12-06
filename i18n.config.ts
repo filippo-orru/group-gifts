@@ -135,12 +135,13 @@ export default defineI18nConfig(() => ({
                     someoneElse: 'The group can buy gifts for up to the total budget of {0}. {1}{2} ' +
                         'Everyone can buy a gift, but don\'t forget that {3} is responsible for {4}\'s gifts. ' +
                         'Use the {5} to coordinate who buys what.',
-                    someoneElseSecret: 'The group can buy gifts for up to the total budget of {0}. ' +
+                    someoneElseSecret: 'The group can buy gifts for up to the total budget of {0}. {1} ' +
                         'Use the {5} to coordinate who buys what.',
                     chat: 'chat'
                 },
                 ifBudgetExceeded: 'If the budget is exceeded, the overspent amount will be covered by {0}.',
                 ifBudgetExceededYou: 'you',
+                ifBudgetExceededSecret: 'another person|{n} other people',
                 noGiftsYet: 'No gifts yet.{0}If you bought something for {1}, add it here!',
                 overspentBy: 'Overspent by {0}. The overspent amount will be covered by {1}.',
                 overspentByYou: 'you',
@@ -363,12 +364,13 @@ export default defineI18nConfig(() => ({
                     someoneElse: 'Es können Geschenke für bis zu {0} gekauft werden. {1}{2}' +
                         'Jede*r kann ein Geschenk kaufen, aber vergiss nicht, dass {3} für die Geschenke von {4} verantwortlich ist. ' +
                         'Benutze den {5} um zu koordinieren, wer was kauft.',
-                    someoneElseSecret: 'Es können Geschenke für bis zu {0} gekauft werden. ' +
+                    someoneElseSecret: 'Es können Geschenke für bis zu {0} gekauft werden. {1}' +
                         'Benutze den {5} um zu koordinieren, wer was kauft.',
                     chat: 'Chat',
                 },
                 ifBudgetExceeded: 'Wenn das Budget überschritten wird, werden die Mehrkosten von {0} getragen.',
                 ifBudgetExceededYou: 'dir',
+                ifBudgetExceededSecret: 'einer anderen Person|{n} anderen Personen',
                 noGiftsYet: 'Es gibt noch keine Geschenke.{0}Wenn du etwas für {1} gekauft hast, füge es hier hinzu!',
                 overspentBy: 'Es wurden {0} zu viel ausgegeben. Die Mehrkosten werden von {1} getragen.',
                 overspentByYou: 'dir',

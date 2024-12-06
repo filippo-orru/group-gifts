@@ -77,15 +77,24 @@ const editGift = (gift: MemberGift) => {
 
     <p class="mt-4 mb-2 text-neutral md:mr-32">
       <i18n-t
-        :keypath="'memberHome.giftsInfo.' + (iAmResponsible ? 'you' : responsibleName ? 'someoneElse' : 'someoneElseSecret')">
+        :keypath="'memberHome.giftsInfo.' + (iAmResponsible ? 'you' : group.secretMode ? 'someoneElseSecret' : 'someoneElse')">
         <b>{{ totalBudget }} €</b>
         <span>
           <i18n-t keypath="memberHome.ifBudgetExceeded">
-            <b>{{ formatEnumeration(
-              member.memberIdsWithFlexibleBudget.map(id =>
-                id == group.me.id ? $t('memberHome.ifBudgetExceededYou') : group.members.find(m => m.id == id)?.name ??
-                  "unknown")
-            ) }}</b>
+            <b>{{
+              formatEnumeration(
+                [member.memberIdsWithFlexibleBudget.some(id => id == group.me.id)
+                  ? $t('memberHome.ifBudgetExceededYou') : undefined]
+                  .concat(
+                    group.secretMode
+                      ? [$t('memberHome.ifBudgetExceededSecret', member.memberIdsWithFlexibleBudget.filter(id => id !=
+                        group.me.id).length)]
+                      : member.memberIdsWithFlexibleBudget
+                        .filter(id => id != group.me.id)
+                        .map(id => group.members.find(m => m.id == id)?.name ?? "unknown")
+                  )
+              )
+            }}</b>
           </i18n-t>
         </span>
         <p class="py-1"></p>

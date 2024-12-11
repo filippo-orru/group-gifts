@@ -148,9 +148,9 @@ export default function calculateGroupBudget(group: DbGroup): GroupBudget {
         .toSorted((a, b) => a.overspendCents - b.overspendCents);
 
     adjustedMemberBudgetsByLargeUnderspend.forEach((member) => {
-        let preventOverflow = 0;
-        while (member.overspendCents < 0 && preventOverflow < 50) {
-            preventOverflow++;
+        let preventInfiniteLoop = 0;
+        while (member.overspendCents < 0 && preventInfiniteLoop < 50) {
+            preventInfiniteLoop++;
             // Finds largest overspender first
             const other = adjustedMemberBudgets
                 .toSorted((a, b) => b.overspendCents - a.overspendCents)

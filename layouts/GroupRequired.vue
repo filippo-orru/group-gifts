@@ -7,8 +7,10 @@ const group = await groupsStore.maybeGetGroup(groupId);
 </script>
 
 <template>
-  <GroupHomeNotFound v-if="!group" />
-  <div v-else>
-    <slot />
-  </div>
+  <WithLocaleHead>
+    <GroupHomeNotFound v-if="!group" />
+    <div v-else>
+      <slot />
+    </div>
+  </WithLocaleHead>
 </template>

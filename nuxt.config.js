@@ -106,7 +106,18 @@ export default defineNuxtConfig({
   },
 
   i18n: {
-    locales: ['en', 'de'], // used in URL path prefix
+    seo: true,
+    baseUrl: 'https://gifts.filippo-orru.com',
+    locales: [ // used in URL path prefix
+      {
+        code: 'en',
+        language: 'en-US'
+      },
+      {
+        code: 'de',
+        language: 'de-DE'
+      },
+    ],
     defaultLocale: 'en', // default locale of your project for Nuxt pages and routings
     strategy: 'prefix_and_default',
     detectBrowserLanguage: {

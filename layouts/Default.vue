@@ -1,5 +1,7 @@
 <template>
-  <slot />
+  <WithLocaleHead>
+    <slot />
+  </WithLocaleHead>
 </template>
 
 <script setup lang="ts">

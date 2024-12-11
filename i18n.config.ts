@@ -245,7 +245,7 @@ export default defineI18nConfig(() => ({
                 and: 'und',
             },
             landing: {
-                title: 'Weihnachtsgeschenke,<br>leicht gemacht',
+                title: 'Weihnachts&shy;geschenke,<br>leicht gemacht',
                 subtitle: 'Wunschliste schreiben, Budget festlegen und Geschenke stressfrei organisieren',
                 createGroup: 'Gruppe erstellen',
                 myGroups: 'Meine Gruppen',
@@ -319,7 +319,7 @@ export default defineI18nConfig(() => ({
                 hasMaxBudget: 'Maximales Budget pro Person festlegen',
                 save: 'Speichern',
                 secretMode: 'Geheimer Modus',
-                secretModeDescription: 'Wenn der geheime Modus aktiviert ist, können Mitglieder nur sehen für wen sie verantwortlich sind, aber nicht wer für andere Mitglieder verantwortlich sind.',
+                secretModeDescription: 'Wenn der geheime Modus aktiviert ist, können Mitglieder nur sehen, für wen sie verantwortlich sind, aber nicht, wer für andere Mitglieder verantwortlich ist.',
             },
             join: {
                 error: 'Etwas ist schief gelaufen. Bitte öffne den Einladungslink erneut, oder bitte die Person, die dich eingeladen hat, dir einen neuen Link zu senden.',

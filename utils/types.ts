@@ -10,10 +10,10 @@ export type CreateGroup = {
 }
 
 export type UpdateGroup = {
-    name?: string;
-    maxBudget?: number | null;
-    secretMode?: boolean;
-    fixedBudget?: number | null;
+    name: string;
+    maxBudget: number | null;
+    secretMode: boolean;
+    fixedBudget: number | null;
 }
 
 export type PutBudget = {

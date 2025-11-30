@@ -155,6 +155,11 @@ export const MongoGroups = defineMongooseModel<DbGroup>({
             required: true,
             default: false,
         },
+        fixedBudget: {
+            type: 'number',
+            required: false,
+            default: null,
+        },
         date: {
             type: 'date',
             required: true,

@@ -129,7 +129,7 @@ const notJoinedMembers = computed(() => group.value.members.filter(m => !m.joine
             </div>
           </div>
           <div class="flex-1 w-0 flex flex-col">
-            <div class="flex flex-wrap items-start items-center">
+            <div class="flex flex-wrap items-start">
               <span class="mr-2">
                 <i18n-t keypath="groupHome.giftForYou">
                   <b>{{ group.me.name }}</b>
@@ -149,7 +149,7 @@ const notJoinedMembers = computed(() => group.value.members.filter(m => !m.joine
             </div>
           </div>
           <div class="flex-1 w-0 flex flex-col">
-            <div class="flex flex-wrap items-start items-center">
+            <div class="flex flex-wrap items-start">
               <span class="mr-2">
                 <i18n-t keypath="groupHome.giftFor">
                   <b>{{ memberInGroup.member.name }}</b>
@@ -166,7 +166,7 @@ const notJoinedMembers = computed(() => group.value.members.filter(m => !m.joine
               </span>
             </div>
             <div class="flex flex-col text-sm text-neutral *:flex *:items-center *:gap-1">
-              <div v-if="memberInGroup.member.myBudget === null" class="">
+              <div v-if="group.fixedBudget === null && memberInGroup.member.myBudget === null" class="">
                 <i class="las la-exclamation-circle text-xl"></i>
                 <i18n-t keypath="groupHome.memberNoBudget" tag="span">
                   <b>{{ memberInGroup.member.name.capitalize() }}</b>

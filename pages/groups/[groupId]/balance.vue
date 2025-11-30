@@ -26,7 +26,13 @@ definePageMeta({
     </NavBar>
 
     <GenericPanel>
-      <div class="grow overflow-y-scroll flex flex-col gap-3 py-4">
+      <div v-if="group.fixedBudget === null" class="mt-16 alert alert-info bg-info/70 mx-auto">
+        <i class="las la-info-circle text-2xl"></i>
+        <p>
+          {{ $t('balance.fixedBudgetInfo') }}
+        </p>
+      </div>
+      <div v-else class="grow overflow-y-scroll flex flex-col gap-3 py-4">
         <div class="">
           <h1 class="text-2xl font-bold mb-2">{{ $t('balance.title') }}</h1>
           <p class="text-neutral mb-1">{{ $t('balance.info1') }}</p>

@@ -16,6 +16,7 @@ const maxBudget: Ref<number> = ref(10);
 const secretMode = ref(false);
 // Default date: this christmas
 const date = ref(new Date(new Date().getFullYear(), 11, 28).toISOString().split('T')[0]);
+const fixedBudget: Ref<number | null> = ref(null);
 const memberNames = ref(Array.from({ length: minimumMembers }, () => ({ name: '', focus: false })));
 
 const addMember = (index: number) => {
@@ -59,6 +60,7 @@ const submit = async (event: SubmitEvent) => {
             memberNames: memberNames.value.map(m => m.name),
             maxBudget: hasMaxBudget.value ? maxBudget.value : null,
             secretMode: secretMode.value,
+            fixedBudget: fixedBudget.value,
         };
         const group = await groupsStore.createGroup(createGroupBody);
 
@@ -107,19 +109,9 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
                     <div class="label">{{ $t('newGroup.date') }}</div>
                     <input class="input input-bordered" type="date" v-model="date" />
                 </label>
+
                 <div class="form-control w-full">
-                    <label class="mx-1">
-                        <input type="checkbox" v-model="hasMaxBudget" />
-                        <span class="ml-2">{{ $t('newGroup.hasMaxBudget') }}</span>
-                    </label>
-                    <div class="label text-neutral text-md">{{ $t('newGroup.maxBudgetDescription') }}</div>
-                    <label v-if="hasMaxBudget" class="input input-bordered flex items-center gap-4">
-                        <input class="w-full" type="number" v-model="maxBudget" :min="1" :placeholder="10" />
-                        <span>€</span>
-                    </label>
-                </div>
-                <div class="form-control w-full">
-                    <h1 class="text-lg mb-2">{{ $t('groupSettings.secretMode') }}</h1>
+                    <h1 class="mb-2">{{ $t('groupSettings.secretMode') }}</h1>
                     <p class="text-neutral mb-2">{{ $t('groupSettings.secretModeDescription') }}</p>
 
                     <button class="btn" :class="{ 'btn-primary': secretMode }" type="button" @click="secretMode = !secretMode">
@@ -127,16 +119,46 @@ const onMemberInputKeydown = (event: KeyboardEvent, index: number) => {
                         <span>{{ $t('groupSettings.secretMode') }}</span>
                     </button>
                 </div>
+
+                <div class="form-control w-full">
+                    <h1 class="mb-2">{{ $t('groupSettings.fixedBudget') }}</h1>
+                    <p class="text-neutral mb-2">{{ $t('groupSettings.fixedBudgetDescription') }}</p>
+
+                    <button class="btn mb-2" :class="{ 'btn-primary': fixedBudget !== null }" type="button" @click="fixedBudget = fixedBudget !== null ? null : 10">
+                        <i class="las" :class="{ 'la-check': fixedBudget !== null, 'la-times': fixedBudget === null }"></i>
+                        <span>{{ $t('groupSettings.fixedBudget') }}</span>
+                    </button>
+
+                    <label v-if="fixedBudget !== null" class="input input-bordered flex items-center gap-4 mb-3">
+                        <input class="w-full" type="number" v-model="fixedBudget" :min="1" placeholder="10" />
+                        <span >€</span>
+                    </label>
+                </div>
+
+                <div class="form-control w-full" v-if="fixedBudget === null">
+                    <h1 class="mb-2">{{ $t('groupSettings.hasMaxBudget') }}</h1>
+                    <p class="text-neutral mb-2">{{ $t('groupSettings.maxBudgetDescription') }}</p>
+
+                    <button class="btn mb-2" :class="{ 'btn-primary': hasMaxBudget }" type="button" @click="hasMaxBudget = !hasMaxBudget">
+                        <i class="las" :class="{ 'la-check': hasMaxBudget, 'la-times': !hasMaxBudget }"></i>
+                        <span>{{ $t('groupSettings.hasMaxBudget') }}</span>
+                    </button>
+
+                    <label v-if="hasMaxBudget" class="input input-bordered flex items-center gap-4 mb-3">
+                        <input class="w-full" type="number" v-model="maxBudget" :min="1" placeholder="10" />
+                        <span >€</span>
+                    </label>
+                </div>
+
                 <div>
                     <div class="label">{{ $t('newGroup.members') }}</div>
                     <p class="label pt-0 text-neutral">{{ $t('newGroup.minimumMembers', { count: minimumMembers }) }}
                     </p>
                     <div class="flex flex-col gap-4">
                         <div class="flex gap-2" v-for="(member, index) in memberNames" :key="index">
-                            <label class="input input-bordered flex items-center gap-2 grow group"
-                                v-focus="member.focus" aria-autocomplete="none">
-                                <input class="grow peer"
-                                    :placeholder="index == 0 ? $t('general.you') : $t('general.name')"
+                            <label class="input input-bordered flex items-center gap-2 grow group" v-focus="member.focus"
+                                aria-autocomplete="none">
+                                <input class="grow peer" :placeholder="index == 0 ? $t('general.you') : $t('general.name')"
                                     v-model="memberNames[index].name" required autocomplete="off"
                                     @keydown="(e: KeyboardEvent) => onMemberInputKeydown(e, index)" />
 

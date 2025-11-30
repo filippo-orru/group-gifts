@@ -12,7 +12,9 @@ const responsibleName: ComputedRef<string | null> = computed(() => props.group.s
 
 const chatHref = `/groups/${props.group.id}/members/${props.member.id}/chat`;
 
-const totalBudget = computed(() => props.member.otherBudgetSum + (props.member.myBudget?.amount ?? 0));
+const totalBudget = computed(() =>
+  props.group.fixedBudget ?? (props.member.otherBudgetSum + (props.member.myBudget?.amount ?? 0))
+);
 
 const giftPricesSum = computed(() => props.member.gifts.reduce((sum, gift) => sum + gift.price, 0));
 
@@ -76,24 +78,25 @@ const editGift = (gift: MemberGift) => {
     </div>
 
     <p class="mt-4 mb-2 text-neutral md:mr-32">
-      <i18n-t
-        :keypath="'memberHome.giftsInfo.' + (iAmResponsible ? 'you' : group.secretMode ? 'someoneElseSecret' : 'someoneElse')">
+      <i18n-t :keypath="'memberHome.giftsInfo.' + (iAmResponsible ? 'you' : group.secretMode ? 'someoneElseSecret' : 'someoneElse')">
         <b>{{ totalBudget }} €</b>
         <span>
           <i18n-t keypath="memberHome.ifBudgetExceeded">
             <b>{{
-              formatEnumeration(
-                [member.memberIdsWithFlexibleBudget.some(id => id == group.me.id)
-                  ? $t('memberHome.ifBudgetExceededYou') : undefined]
-                  .concat(
-                    group.secretMode
-                      ? [$t('memberHome.ifBudgetExceededSecret', member.memberIdsWithFlexibleBudget.filter(id => id !=
-                        group.me.id).length)]
-                      : member.memberIdsWithFlexibleBudget
-                        .filter(id => id != group.me.id)
-                        .map(id => group.members.find(m => m.id == id)?.name ?? "unknown")
-                  )
-              )
+              group.fixedBudget !== null
+                ? $t('memberHome.ifBudgetExceededYou')
+                : formatEnumeration(
+                  [member.memberIdsWithFlexibleBudget.some(id => id == group.me.id)
+                    ? $t('memberHome.ifBudgetExceededYou') : undefined]
+                    .concat(
+                      group.secretMode
+                        ? [$t('memberHome.ifBudgetExceededSecret', member.memberIdsWithFlexibleBudget.filter(id => id !=
+                          group.me.id).length)]
+                        : member.memberIdsWithFlexibleBudget
+                          .filter(id => id != group.me.id)
+                          .map(id => group.members.find(m => m.id == id)?.name ?? "unknown")
+                    )
+                )
             }}</b>
           </i18n-t>
         </span>
@@ -119,12 +122,12 @@ const editGift = (gift: MemberGift) => {
           <i class="las la-exclamation-triangle text-2xl"></i>
           <i18n-t keypath='memberHome.overspentBy' tag="span">
             <b>{{ giftPricesSum - totalBudget }} €</b>
-            <b>{{ formatEnumeration(
+            <b>{{formatEnumeration(
               member.memberIdsWithFlexibleBudget.map(id =>
                 id == group.me.id ? $t('memberHome.ifBudgetExceededYou') : group.members.find(m => m.id == id)?.name ??
                   "unknown"
               )
-            ) }}</b>
+            )}}</b>
           </i18n-t>
         </div>
       </div>
@@ -146,7 +149,7 @@ const editGift = (gift: MemberGift) => {
               <i class="las la-gift text-xl invisible"></i>
               <i class="las la-user text-lg"></i>
               <span class="text-start">
-                {{ gift.buyerId == group.me.id ?
+                {{gift.buyerId == group.me.id ?
                   $t('memberHome.giftBoughtBy.you') :
                   $t('memberHome.giftBoughtBy.someoneElse',
                     [group.members.find((member) => member.id == gift.buyerId)?.name ?? "unknown"])
@@ -175,8 +178,8 @@ const editGift = (gift: MemberGift) => {
     </button>
 
     <Transition>
-      <AddOrEditGiftDialog v-if="addOrEditGiftMode.mode" :mode="addOrEditGiftMode" :member="member"
-        :save="addOrEditGift" :cancel="cancelAddOrEditGift" />
+      <AddOrEditGiftDialog v-if="addOrEditGiftMode.mode" :mode="addOrEditGiftMode" :member="member" :save="addOrEditGift"
+        :cancel="cancelAddOrEditGift" />
     </Transition>
   </div>
 </template>

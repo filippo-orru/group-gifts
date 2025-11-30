@@ -31,9 +31,9 @@ const responsibleName: ComputedRef<string | null> = computed(() => group.value.s
           </i18n-t>
         </div>
 
-        <MyBudgetForMember :group="group" :member="member" />
+        <MyBudgetForMember v-if="group.fixedBudget === null" :group="group" :member="member" />
 
-        <hr class="border-neutral/30" />
+        <hr v-if="group.fixedBudget === null" class="border-neutral/30" />
 
         <WishlistOfMember :group="group" :member="member" />
 

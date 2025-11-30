@@ -56,7 +56,7 @@ const goToBalance = () => {
   <div class="h-dvh w-full flex flex-col">
     <NavBar :title="group.name" href='/groups' :useLogo=true>
       <template v-slot:buttons>
-        <button @click="goToBalance" class="btn btn-ghost max-sm:hidden">
+        <button @click="goToBalance" class="btn btn-ghost max-sm:hidden" v-if="group.fixedBudget === null">
           <i class="las la-coins text-xl"></i>
           {{ $t('groupHome.actions.balance') }}
         </button>

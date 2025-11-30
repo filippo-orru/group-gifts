@@ -7,5 +7,15 @@
     "javascriptreact",
     "typescript",
     "vue"
-  ]
+  ],
+  "workbench.colorCustomizations": {
+    "commandCenter.border": "#15202b99",
+    "sash.hoverBorder": "#e2ad0d",
+    "tab.activeBorder": "#e2ad0d",
+    "titleBar.activeBackground": "#b2880a",
+    "titleBar.activeForeground": "#15202b",
+    "titleBar.inactiveBackground": "#b2880a99",
+    "titleBar.inactiveForeground": "#15202b99"
+  },
+  "peacock.color": "#b2880a"
 }

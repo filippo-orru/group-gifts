@@ -32,9 +32,6 @@ export default defineI18nConfig(() => ({
                 title: 'Create Group',
                 groupName: 'Group Name',
                 groupNamePlaceholder: 'Christmas {year}',
-                hasMaxBudget: 'Maximum budget per person',
-                maxBudgetDescription: 'Each person sets an individual budget for each other. ' +
-                    'If this option is enabled, the individual budget is limited. The total budget per person is the sum of all budgets.',
                 date: 'Date',
                 members: 'Members',
                 minimumMembers: 'A group needs at least {count} members',
@@ -81,16 +78,22 @@ export default defineI18nConfig(() => ({
                 memberNoBudget: 'You need to set your budget for {0}',
                 youAreResponsible: 'You are responsible',
                 giftFor: 'Gift for {0}',
-                giftForYou : 'Gift for you ({0})',
+                giftForYou: 'Gift for you ({0})',
             },
             groupSettings: {
                 title: 'Group Settings',
                 description: 'Here you can edit the group\'s settings.',
                 maxBudget: 'Maximum Budget',
-                hasMaxBudget: 'Set maximum budget per person',
                 save: 'Save',
+                hasMaxBudget: 'Maximum budget per person',
+                maxBudgetDescription: 'Each person sets an individual budget for each other. ' +
+                    'If this option is enabled, the individual budget is limited. The total budget per person is the sum of all budgets.',
                 secretMode: 'Secret Mode',
                 secretModeDescription: 'If enabled, members can only see who they are responsible for, but not who is responsible for other members.',
+                secretModeCheckbox: 'Enable Secret Mode',
+                fixedBudget: 'Fixed Budget',
+                fixedBudgetDescription: 'If enabled, each member has the same budget. Members will not be able to set individual budgets.',
+                fixedBudgetCheckbox: 'Enable Fixed Budget',
             },
             join: {
                 error: 'Something went wrong. Please open the invite link again, or ask the person who invited you to send you a new invite link.',
@@ -129,13 +132,13 @@ export default defineI18nConfig(() => ({
                 giftsTitle: 'Gifts',
                 totalBudget: 'Total budget: {0} €',
                 giftsInfo: {
-                    you: 'The group can buy gifts for up to the total budget of {0}. {1}{2}' +
+                    you: 'Buy gifts for up to the total budget of {0}. {1}{2}' +
                         'Everyone can buy a gift, but don\'t forget that {3} are responsible for {4}\'s gifts. ' +
                         'Use the {5} to coordinate who buys what.',
-                    someoneElse: 'The group can buy gifts for up to the total budget of {0}. {1}{2} ' +
+                    someoneElse: 'Buy gifts for up to the total budget of {0}. {1}{2} ' +
                         'Everyone can buy a gift, but don\'t forget that {3} is responsible for {4}\'s gifts. ' +
                         'Use the {5} to coordinate who buys what.',
-                    someoneElseSecret: 'The group can buy gifts for up to the total budget of {0}. {1} ' +
+                    someoneElseSecret: 'Buy gifts for up to the total budget of {0}. {1} ' +
                         'Use the {5} to coordinate who buys what.',
                     chat: 'chat'
                 },
@@ -197,6 +200,7 @@ export default defineI18nConfig(() => ({
                 youDontNeedToMakeTransactions: 'You don\'t need to make any transactions.',
                 noNeedToMakeTransactions: 'No transactions need to be made, your budget is already balanced!',
                 transactionMarkAsDone: 'Mark as done',
+                fixedBudgetInfo: 'The balance feature is not available when using a fixed budget.',
             },
             wishlist: {
                 title: 'Wishlist',
@@ -261,9 +265,6 @@ export default defineI18nConfig(() => ({
                 title: 'Neue Gruppe',
                 groupName: 'Gruppenname',
                 groupNamePlaceholder: 'Weihnachten {year}',
-                hasMaxBudget: 'Maximales Budget pro Person',
-                maxBudgetDescription: 'Jede*r legt ein individuelles Budget für jede*n anderen fest. ' +
-                    'Wenn diese Option aktiviert ist, wird das individuelle Budget begrenzt. Das Gesamtbudget pro Person ist die Summe aller Budgets.',
                 date: 'Datum',
                 members: 'Teilnehmer',
                 minimumMembers: 'Eine Gruppe muss mindestens {count} Teilnehmer haben',
@@ -310,16 +311,22 @@ export default defineI18nConfig(() => ({
                 memberNoBudget: 'Du musst dein Budget für {0} festlegen',
                 youAreResponsible: 'Du bist verantwortlich',
                 giftFor: 'Geschenk für {0}',
-                giftForYou : 'Geschenk für dich ({0})',
+                giftForYou: 'Geschenk für dich ({0})',
             },
             groupSettings: {
                 title: 'Gruppeneinstellungen',
                 description: 'Hier kannst du die Gruppe bearbeiten.',
                 maxBudget: 'Maximales Budget',
-                hasMaxBudget: 'Maximales Budget pro Person festlegen',
                 save: 'Speichern',
+                hasMaxBudget: 'Maximales Budget pro Person',
+                maxBudgetDescription: 'Jede*r legt ein individuelles Budget für jede*n anderen fest. ' +
+                    'Wenn diese Option aktiviert ist, wird das individuelle Budget begrenzt. Das Gesamtbudget pro Person ist die Summe aller Budgets.',
                 secretMode: 'Geheimer Modus',
                 secretModeDescription: 'Wenn der geheime Modus aktiviert ist, können Mitglieder nur sehen, für wen sie verantwortlich sind, aber nicht, wer für andere Mitglieder verantwortlich ist.',
+                secretModeCheckbox: 'Geheimen Modus aktivieren',
+                fixedBudget: 'Fixes Budget',
+                fixedBudgetDescription: 'Wenn diese Option aktiviert ist, haben alle Mitglieder dasselbe Budget. Mitglieder können keine individuellen Budgets festlegen.',
+                fixedBudgetCheckbox: 'Fixes Budget aktivieren',
             },
             join: {
                 error: 'Etwas ist schief gelaufen. Bitte öffne den Einladungslink erneut, oder bitte die Person, die dich eingeladen hat, dir einen neuen Link zu senden.',
@@ -358,13 +365,13 @@ export default defineI18nConfig(() => ({
                 giftsTitle: 'Geschenke',
                 totalBudget: 'Gesamtbudget: {0} €',
                 giftsInfo: {
-                    you: 'Es können Geschenke für bis zu {0} gekauft werden. {1}{2}' +
+                    you: 'Kauft Geschenke für bis zu {0}. {1}{2}' +
                         'Jede*r kann ein Geschenk kaufen, aber vergiss nicht, dass {3} für die Geschenke von {4} verantwortlich bist. ' +
                         'Benutze den {5} um zu koordinieren, wer was kauft.',
-                    someoneElse: 'Es können Geschenke für bis zu {0} gekauft werden. {1}{2}' +
+                    someoneElse: 'Kauft Geschenke für bis zu {0}. {1}{2}' +
                         'Jede*r kann ein Geschenk kaufen, aber vergiss nicht, dass {3} für die Geschenke von {4} verantwortlich ist. ' +
                         'Benutze den {5} um zu koordinieren, wer was kauft.',
-                    someoneElseSecret: 'Es können Geschenke für bis zu {0} gekauft werden. {1} ' +
+                    someoneElseSecret: 'Kauft Geschenke für bis zu {0}. {1} ' +
                         'Benutze den {5} um zu koordinieren, wer was kauft.',
                     chat: 'Chat',
                 },
@@ -426,6 +433,7 @@ export default defineI18nConfig(() => ({
                 youDontNeedToMakeTransactions: 'Du musst keine Transaktionen durchführen.',
                 noNeedToMakeTransactions: 'Es müssen keine Transaktionen durchgeführt werden, dein Budget ist schon ausgeglichen!',
                 transactionMarkAsDone: 'Als erledigt markieren',
+                fixedBudgetInfo: 'Die Bilanzfunktion ist nicht verfügbar, wenn ein fixes Budget verwendet wird.',
             },
             wishlist: {
                 title: 'Wunschliste',

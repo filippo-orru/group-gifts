@@ -37,6 +37,7 @@ export interface DbGroup {
     inviteId: string;
     maxBudget: number | null;
     secretMode: boolean;
+    fixedBudget: number | null;
     date: Date;
     createdDate: Date;
     members: DbGroupMember[];
@@ -199,6 +200,7 @@ export const toClientGroup = async (group: DbGroup & { _id: Types.ObjectId }, me
         id: group._id.toHexString(),
         inviteId: group.inviteId,
         name: group.name,
+        fixedBudget: group.fixedBudget || null,
         maxBudget: group.maxBudget,
         secretMode: group.secretMode,
         date: group.date.getTime(),

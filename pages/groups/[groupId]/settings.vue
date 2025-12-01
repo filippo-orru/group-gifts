@@ -61,7 +61,7 @@ const saveAll = async () => {
           <p class="text-neutral mb-2">{{ $t('groupSettings.secretModeDescription') }}</p>
 
           <label class="mx-1">
-            <input type="checkbox" :value="secretMode" @change="secretMode = !secretMode" />
+            <input type="checkbox" :checked="!!secretMode" @change="secretMode = !secretMode" />
             <span class="ml-2">{{ $t('groupSettings.secretModeCheckbox') }}</span>
           </label>
         </div>
@@ -71,7 +71,7 @@ const saveAll = async () => {
           <p class="text-neutral mb-2">{{ $t('groupSettings.fixedBudgetDescription') }}</p>
 
           <label class="mx-1">
-            <input type="checkbox" :value="fixedBudget" @change="fixedBudget === null ? fixedBudget = 10 : fixedBudget = null" />
+            <input type="checkbox" :checked="!!fixedBudget" @change="fixedBudget === null ? fixedBudget = 10 : fixedBudget = null" />
             <span class="ml-2">{{ $t('groupSettings.fixedBudgetCheckbox') }}</span>
           </label>
 
@@ -86,7 +86,7 @@ const saveAll = async () => {
           <p class="text-neutral mb-2">{{ $t('groupSettings.maxBudgetDescription') }}</p>
 
           <label class="mx-1">
-            <input type="checkbox" :value="hasMaxBudget" @change="hasMaxBudget = !hasMaxBudget" />
+            <input type="checkbox" :checked="!!hasMaxBudget" @change="hasMaxBudget = !hasMaxBudget" />
             <span class="ml-2">{{ $t('groupSettings.hasMaxBudget') }}</span>
           </label>
 

@@ -58,16 +58,17 @@ const showInviteDialog = ref(false);
     </div>
     <div class="flex flex-col gap-2 mt-3">
       <div v-for="wish in sortedWishes" :key="wish.id">
-        <button @click="toggleBought(wish)" class="w-full p-4 rounded-lg flex items-center text-start gap-6
-                hover:bg-neutral hover:text-neutral-content hover:shadow-lg group">
-          <div class="flex-shrink-0 rounded-full h-6 w-6 border border-primary flex items-center justify-center
-                group-hover:border-neutral-content">
-            <span v-if="wish.bought">✓</span>
-          </div>
+        <div class="w-full p-4 rounded-lg flex items-center text-start gap-6">
+          <button @click="toggleBought(wish)" class="flex-shrink-0 p-2">
+            <span class="rounded-full h-6 w-6 border border-primary flex items-center justify-center
+            hover:bg-primary/20 transition-colors">
+              <template v-if="wish.bought">✓</template>
+            </span>
+          </button>
           <span :class="{ 'line-through': wish.bought }">
-            {{ wish.name }}
+            <Urlify :text="wish.name" />
           </span>
-        </button>
+        </div>
         <!--hr class="border" v-if="index < (notBoughtWishes.length - 1) || boughtWishes.length > 0" /-->
       </div>
     </div>

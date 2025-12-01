@@ -55,12 +55,17 @@ const dontAskAgain = (event: Event) => {
 const isIos = navigator.userAgent.match(/(iPod|iPhone|iPad)/) != null;
 
 const isPwaInstalled = (window.navigator as any).standalone === true;
+
+const showNotificationsAlert = computed(() => {
+  return false; // Disabled for now, Firebase notifications are broken
+  return !dismissed.value && state.value !== 'initializing' && (showEvenIfOkay.value || state.value !== 'okay');
+}
+);
 </script>
 
 <template>
   <Transition name="slide-fade">
-    <div v-if="!dismissed && state !== 'initializing' && (showEvenIfOkay || state !== 'okay')" @click="clickInfo"
-      class="w-full mb-3">
+    <div v-if="showNotificationsAlert" @click="clickInfo" class="w-full mb-3">
 
       <button class="w-full flex items-center gap-4 px-6 py-3 rounded-lg border-2 break-all" :class="{
         'border-red-800/60 bg-red-700/20 hover:bg-red-800/30': state !== 'okay',
@@ -73,7 +78,7 @@ const isPwaInstalled = (window.navigator as any).standalone === true;
         <div class="flex flex-col items-start text-start gap-1">
           <p class="font-bold" v-if="state !== 'okay'">{{ $t(`notifications.enable.title`) }}</p>
           <p class="font-bold" v-else>{{ $t(`notifications.enable.titleSuccess`) }}</p>
-          
+
           <div class="hidden sm:block">
             <p v-if="state !== 'okay'">{{ $t(`notifications.enable.description`) }}</p>
             <p v-else>{{ $t(`notifications.enable.descriptionSuccess`) }}</p>
@@ -95,8 +100,7 @@ const isPwaInstalled = (window.navigator as any).standalone === true;
         <p class="pt-4">{{ $t('notifications.enable.dialog.description') }}</p>
 
         <p class="pt-2 text-red-800">
-          <i class="las la-exclamation-circle text-lg mr-1"
-            v-if="state === 'permission-denied' || state === 'error'"></i>
+          <i class="las la-exclamation-circle text-lg mr-1" v-if="state === 'permission-denied' || state === 'error'"></i>
 
           <span v-if="state === 'permission-denied'">
             {{ $t('notifications.enable.dialog.permissionDenied') }}
@@ -107,7 +111,7 @@ const isPwaInstalled = (window.navigator as any).standalone === true;
         </p>
 
         <div class="py-2">
-          <p class="px-2 bg-warning rounded-lg ring ring-8 ring-warning" v-if="isIos && !isPwaInstalled">
+          <p class="px-2 bg-warning rounded-lg ring-8 ring-warning" v-if="isIos && !isPwaInstalled">
             <i class="las la-exclamation-circle text-lg mr-1"></i>
 
             <i18n-t keypath="notifications.enable.dialog.iosMustInstall">

@@ -20,9 +20,6 @@ export default defineEventHandler(async (event) => {
         const newWishlistItem = body.find((i) => i.id === item.id);
         if (newWishlistItem) {
             item.bought = newWishlistItem.bought;
-            console.log('item.bought', item.bought);
-        } else {
-            console.log('item not bought', item.bought);
         }
     });
 
